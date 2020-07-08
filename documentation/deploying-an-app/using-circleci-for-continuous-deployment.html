@@ -224,7 +224,7 @@ use the below as an example:</p>
   <span class="na">apiGroup</span><span class="pi">:</span> <span class="s">rbac.authorization.k8s.io</span>
 </code></pre></div><p>Remember to replace <code>&lt;YOUR-NAMESPACE&gt;</code> with your namespace. Save the above as &lsquo;serviceaccount-circleci.yaml&rsquo; under your <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/master/namespaces">namespace folder</a>.</p>
 <p>Raise a PR for your service account creation. Once approved you should then see your new CircleCI service account in your namespace.</p>
-<div class="highlight"><pre class="highlight yaml"><code>  <span class="s">$ kubectl get serviceaccounts --namespace $ns</span>
+<div class="highlight"><pre class="highlight yaml"><code>  <span class="s">$ kubectl get serviceaccounts --namespace &lt;YOUR-NAMESPACE&gt;</span>
   <span class="s">NAME       SECRETS   AGE</span>
   <span class="s">circleci   1         3h</span>
 
@@ -235,24 +235,22 @@ use the below as an example:</p>
   <span class="na">secrets</span><span class="pi">:</span>
   <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">circleci-token-prlkp</span>
 
-  <span class="s">$ kubectl get secrets --namespace $ns</span>
+  <span class="s">$ kubectl get secrets --namespace &lt;YOUR-NAMESPACE&gt;</span>
   <span class="s">NAME                   TYPE                                  DATA      AGE</span>
   <span class="s">circleci-token-prlkp   kubernetes.io/service-account-token   3         3h</span>
 
-  <span class="s">$ kubectl get secrets/circleci-token-prlkp --namespace $ns -o yaml</span>
+  <span class="s">$ kubectl get secrets/circleci-token-prlkp --namespace &lt;YOUR-NAMESPACE&gt; -o yaml</span>
   <span class="s">...</span>
   <span class="na">namespace</span><span class="pi">:</span> <span class="s">cm..cA==</span>
   <span class="na">token</span><span class="pi">:</span> <span class="s">ZX...EE=</span>
 </code></pre></div><p>There will be a secret for the CircleCI service account. The secret contains the ca.crt and token which we will make available to the CircleCI image container as environment variables. This will allow it to authenticate against the cluster.
 Access to the cluster is scoped for the namespace the service account was created in.</p>
 <h3 id="retrieving-the-service-account-credentials">Retrieving the Service Account credentials</h3><p>Once the CircleCI service account is created above, you can grab the ca.crt as follows:</p>
-<div class="highlight"><pre class="highlight yaml"><code><span class="s">k get secret &lt;NAME-OF-CIRCLECI-SERVICE-ACCOUNT-SECRET&gt; -o yaml -n &lt;NAMESPACE | grep ca.crt</span>
-</code></pre></div><p>Likewise grab the CircleCI service accont token as follows:</p>
-<div class="highlight"><pre class="highlight yaml"><code><span class="s">k get secret &lt;NAME-OF-CIRCLECI-SERVICE-ACCOUNT-SECRET&gt; -o yaml -n &lt;NAMESPACE | grep token</span>
-
-<span class="na">The token will need to be decoded as follows</span><span class="pi">:</span>
-
-<span class="s">echo &lt;ENCODED_TOKEN&gt; | base 64 --decode</span>
+<div class="highlight"><pre class="highlight yaml"><code><span class="s">kubectl get secret &lt;NAME-OF-CIRCLECI-SERVICE-ACCOUNT-SECRET&gt; -o yaml -n &lt;YOUR-NAMESPACE&gt; | grep ca.crt</span>
+</code></pre></div><p>Likewise grab the CircleCI service account token as follows:</p>
+<div class="highlight"><pre class="highlight yaml"><code><span class="s">kubectl get secret &lt;NAME-OF-CIRCLECI-SERVICE-ACCOUNT-SECRET&gt; -o yaml -n &lt;YOUR-NAMESPACE&gt; | grep token</span>
+</code></pre></div><p>The token will need to be decoded as follows:</p>
+<div class="highlight"><pre class="highlight yaml"><code><span class="s">echo &lt;ENCODED_TOKEN&gt; | base64 --decode</span>
 </code></pre></div><p>Both the ca.crt and token will be added as environment variables by creating a context in the CircleCI console, that holds these values as shown below.</p>
 <h3 id="linking-repository-to-circleci">Linking Repository to CircleCI</h3><p>MoJ has as an account with CircleCI, please login to <a href="https://circleci.com">CircleCI</a> using GitHub credentials. Select project, and if config.yml is in the repo CircleCI will build and run tests.</p>
 <h3 id="add-variables-to-circleci">Add variables to CircleCI</h3><p>There is a number of environment variables that you will need to set on your CircleCI project in order to build a docker image, push it to the ECR and trigger a deployment in your environment. On the project page, click the cog icon in the left pane. Click on &lsquo;Contexts&rsquo;. Click &lsquo;Create Context&rsquo;.
