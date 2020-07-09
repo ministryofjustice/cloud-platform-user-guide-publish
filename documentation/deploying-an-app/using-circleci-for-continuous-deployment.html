@@ -197,7 +197,10 @@ use the below as an example:</p>
       <span class="pi">-</span> <span class="s2">"</span><span class="s">create"</span>
       <span class="pi">-</span> <span class="s2">"</span><span class="s">delete"</span>
       <span class="pi">-</span> <span class="s2">"</span><span class="s">list"</span>
-  <span class="pi">-</span> <span class="na">apiGroups</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">extensions</span><span class="pi">,</span> <span class="nv">apps</span><span class="pi">,</span> <span class="nv">networking.k8s.io</span><span class="pi">]</span>
+  <span class="pi">-</span> <span class="na">apiGroups</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">extensions"</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">apps"</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">networking.k8s.io"</span>
     <span class="na">resources</span><span class="pi">:</span>
       <span class="pi">-</span> <span class="s2">"</span><span class="s">deployments"</span>
       <span class="pi">-</span> <span class="s2">"</span><span class="s">ingresses"</span>

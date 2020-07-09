@@ -114,6 +114,9 @@
             <a href="#helm-deployments"><span>Helm Deployments</span></a>
           </li>
           <li>
+            <a href="#update-serviceaccount"><span>Update ServiceAccount</span></a>
+          </li>
+          <li>
             <a href="#getting-help"><span>Getting help</span></a>
           </li>
         </ul>
@@ -284,8 +287,24 @@ helloworld/independent-bobcat-helloworld             cptest   Deployment   apps/
 <p><code>pluto detect-helm --helm-version 3 -n &lt;namespace&gt;  -owide</code></p>
 <p>The output should say:</p>
 <div class="highlight"><pre class="highlight plaintext"><code>APIVersions were found, but none were deprecated. Try --show-all.
+</code></pre></div><h3 id="update-serviceaccount">Update ServiceAccount</h3><p>After updating your manifests to use the latest API versions, if you have any ServiceAccount&rsquo;s created for circleci, update them as shown [here][circleci-sa].</p>
+<div class="highlight"><pre class="highlight plaintext"><code>- apiGroups:
+    - "extensions"
+    - "apps"
+    - "networking.k8s.io"
+  resources:
+    - "deployments"
+    - "ingresses"
+  verbs:
+    - "get"
+    - "update"
+    - "delete"
+    - "create"
+    - "patch"
+
 </code></pre></div><p><strong>NOTE: If you don&rsquo;t update your manifests to use the latest API versions you will get failures when deploying your applications after we upgrade the cluster to kubernetes 1.16</strong></p>
 <h3 id="getting-help">Getting help</h3><p>If you have any questions, please contact us on the <a href="https://mojdt.slack.com/messages/C57UPMZLY">#ask-cloud-platform</a> Slack channel.</p>
+<p>[circleci-sa][https://user-guide.cloud-platform.service.justice.gov.uk/documentation/deploying-an-app/using-circleci-for-continuous-deployment.html#creating-a-service-account-for-circleci]</p>
 
 
               <div data-module='page-expiry' data-last-reviewed-on="2020-09-11">
