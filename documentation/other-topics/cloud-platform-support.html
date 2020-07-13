@@ -96,6 +96,28 @@
                       <ul>
   <li>
     <a href="#cloud-platform-support"><span>Cloud Platform Support</span></a>
+    <ul>
+      <li>
+        <a href="#background"><span>Background</span></a>
+      </li>
+      <li>
+        <a href="#cloud-platform-team-support-processes"><span>Cloud Platform Team Support Processes</span></a>
+      </li>
+      <li>
+        <a href="#what-does-cloud-platform-team-support"><span>What does Cloud Platform Team support</span></a>
+      </li>
+      <li>
+        <a href="#what-the-cloud-platform-team-doesn-t-support"><span>What the Cloud Platform Team doesn’t support</span></a>
+      </li>
+      <li>
+        <a href="#what-this-means-for-cloud-platform-users"><span>What this means for Cloud Platform users</span></a>
+        <ul>
+          <li>
+            <a href="#where-to-find-help"><span>Where to find help</span></a>
+          </li>
+        </ul>
+      </li>
+    </ul>
   </li>
 </ul>
 
@@ -106,20 +128,57 @@
 
         <div class="app-pane__content toc-open-disabled">
           <main id="content" class="technical-documentation" data-module="anchored-headings">
-              <h1 id="cloud-platform-support">Cloud Platform Support</h1><p>This google document describes the Cloud Platform Support process, along with a description of what is/is not supported.</p>
-<p><a href="https://docs.google.com/document/d/1M89TXQJIQAqu8yb2wzatlI8PgsXrgOi-GxLtB76XgjU/edit?usp=sharing">https://docs.google.com/document/d/1M89TXQJIQAqu8yb2wzatlI8PgsXrgOi-GxLtB76XgjU/edit?usp=sharing</a></p>
+              <h1 id="cloud-platform-support">Cloud Platform Support</h1><h2 id="background">Background</h2><p>The Cloud Platform Team is building a new platform to replace Template Deploy. We are employing modern tools and techniques to enable teams to develop and support their modern cloud native software and infrastructure.</p>
+<p>This also provides us with an opportunity to enable teams, through self-service, to develop and support products the way they want to, without having to rely on the Cloud Platform Team for assistance.</p>
+<p>This new flexibility changes the way in which the Cloud Platform team provides support to our users.</p>
+<h2 id="cloud-platform-team-support-processes">Cloud Platform Team Support Processes</h2><p>The Cloud Platform <a href="/documentation/reference/operational-processes.html#cloud-platform-operational-processes">Operational Processes</a> details how we will offer support to our users for the new platform.</p>
+<p>This includes support hours, out-of-hours support, operational communication with users, incident management, and how we measure performance.</p>
+<h2 id="what-does-cloud-platform-team-support">What does Cloud Platform Team support</h2><p>Below is a diagram of the Cloud Platform.</p>
+<p><a href="/images/cloud-platform-diagram.png" target="_blank" rel="noopener noreferrer"><img src="/images/cloud-platform-diagram.png" alt="Cloud Platform Diagram" /></a></p>
+<p>The Cloud Platform Team supports everything outside of a user’s namespace. Namespaces are shaded blue in the picture above.</p>
+<p>Support includes:</p>
+
+<ul>
+<li>responding to failures of the underlying platform e.g. the cluster</li>
+<li>responding to failure of the management layer of the platform</li>
+<li>responding to failure of reusable components created by the Cloud Platform team and provided to users</li>
+<li>responding to failures of the Kubernetes API</li>
+<li>security of the platform</li>
+</ul>
+<h2 id="what-the-cloud-platform-team-doesn-t-support">What the Cloud Platform Team <em>doesn’t</em> support</h2><p>The Cloud Platform Team doesn’t provide:</p>
+
+<ul>
+<li>any application related support, including responding to application-specific alerts or failures</li>
+<li>any support for infrastructure and other tools deployed within a users namespace</li>
+<li>security of the application</li>
+<li>ongoing maintenance of the application, including patching, updating dependencies, and ensuring it remains deployable</li>
+<li>user support for users of the application</li>
+</ul>
+<h2 id="what-this-means-for-cloud-platform-users">What this means for Cloud Platform users</h2><p>It means teams using the platform will be responsible for supporting the infrastructure they build, and the applications running on it.</p>
+<p>We expect teams or service areas using the platform to ensure they can, for the life of the service:</p>
+
+<ul>
+<li>monitor and manage the health of their applications and service-specific infrastructure (setting up and responding to monitoring, logging, and alerts, as appropriate)</li>
+<li>keep their applications and service-specific infrastructure appropriately patched, up-to-date, and secure</li>
+<li>ensure their applications remain deployable end-to-end from source code</li>
+<li>regularly assess whether the service is still meeting user needs, and make appropriate efforts to improve, replace, or end-of-life the service if not</li>
+</ul>
+<p>The Cloud Platform Team will be responsible for support of the underlying platform and “building blocks” that we make available to users.</p>
+<p>The new Cloud Platform introduces modern technology that users may not already be familiar with. The Cloud Platform User Guide is intended to help users understand some of the basic concepts of working with Kubernetes, as well as providing links to useful training and reference materials. In addition, the Cloud Platform Team will be very happy to assist with any queries you might have on the #ask-cloud-platform slack channel.</p>
+<p>You can also speak to your line manager or Head of Profession should you have any further training needs.</p>
+<h3 id="where-to-find-help">Where to find help</h3><p>If you have any questions or require help from the Cloud Platform Team in relation to the new Cloud Platform contact us at the <code>#ask-cloud-platform</code> slack channel.</p>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2020-08-06">
+              <div data-module='page-expiry' data-last-reviewed-on="2020-10-13">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 6 May 2020.
+      This page was last reviewed on 13 July 2020.
 
-        It needs to be reviewed again on 6 August 2020
+        It needs to be reviewed again on 13 October 2020
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 6 August 2020.
+      This page was set to be reviewed before 13 October 2020.
       This might mean the content is out of date.
     </div>
   </div>
