@@ -117,8 +117,8 @@
 
         <div class="app-pane__content toc-open-disabled">
           <main id="content" class="technical-documentation" data-module="anchored-headings">
-              <h1 id="ssl-connections-with-rds">SSL connections with RDS</h1><p>RDS instances are configured to allow SSL connections by default and also the latest versions of the client (<code>psql</code>) and
-libraries (eg.: the <code>pg</code> ruby gem which builds on <code>libpq</code>) will establish an SSL connection by default.</p>
+              <h1 id="ssl-connections-with-rds">SSL connections with RDS</h1><p>RDS instances are configured to allow SSL connections by default, and the latest versions of the postgres client (<code>psql</code>), and
+programming language libraries (e.g. the <code>pg</code> ruby gem which builds on <code>libpq</code>), will establish an SSL connection by default.</p>
 <div class="highlight"><pre class="highlight plaintext"><code>$ psql "$url"
 psql (9.6.13, server 10.6)
 WARNING: psql major version 9.6, server major version 10.
@@ -130,10 +130,10 @@ dba02192a049ed7ce8=&gt;
 </code></pre></div><p>Where <code>$url</code> is of the form <code>postgres://user:pass@host:port/db</code>.</p>
 <p>Additionally, AWS <a href="https://d1.awsstatic.com/whitepapers/aws-security-whitepaper.pdf">offer strong assurances</a> that a malicious actor cannot spoof their traffic or sniff
 another tenant&rsquo;s traffic, even if they operate inside the same VPC.</p>
-<p>However, best practices dictate that an SSL connection should be explicitly forced. PostgreSQL implements various
-<a href="https://www.postgresql.org/docs/current/libpq-ssl.html">modes of operation</a>, each one offering a different level of security. Without any additional setup, we can
-establish an encrypted connection with <code>sslmode=require</code>, which forces an SSL connection but does not verify the server
-certificate.</p>
+<p>However, best practice is to be explicit about insisting on an SSL connection when you communicate with your database.</p>
+<p>PostgreSQL implements various <a href="https://www.postgresql.org/docs/current/libpq-ssl.html">modes of operation</a>, each one offering a different level of security. Without 
+any additional setup, we can establish an encrypted connection by specifying <code>sslmode=require</code>, which forces an SSL connection 
+but does not verify the server certificate.</p>
 <h3 id="full-verification-of-certificates">Full verification of certificates</h3><p>In order to establish a connection with <code>sslmode=verify-full</code>, which offers <a href="https://en.wikipedia.org/wiki/Man-in-the-middle_attack">MITM</a> protection, we have to provide
 the client with the root CA certificate before it is able to verify the chain of trust. AWS offers <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_PostgreSQL.html#PostgreSQL.Concepts.General.SSL">detailed instructions</a>
 on how to do that.</p>
@@ -167,16 +167,16 @@ a connection using <code>sslmode=disable</code>:</p>
 psql: FATAL:  no pg_hba.conf entry for host "172.20.32.241", user "fDsQgBlavX", database "dba02192a049ed7ce8", SSL off
 </code></pre></div>
 
-              <div data-module='page-expiry' data-last-reviewed-on="2020-07-27">
+              <div data-module='page-expiry' data-last-reviewed-on="2020-10-29">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 27 April 2020.
+      This page was last reviewed on 29 July 2020.
 
-        It needs to be reviewed again on 27 July 2020
+        It needs to be reviewed again on 29 October 2020
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 27 July 2020.
+      This page was set to be reviewed before 29 October 2020.
       This might mean the content is out of date.
     </div>
   </div>
