@@ -105,7 +105,7 @@
 
         <div class="app-pane__content toc-open-disabled">
           <main id="content" class="technical-documentation" data-module="anchored-headings">
-              <h1 id="use-iam-role-to-access-resources-in-a-different-aws-account">Use IAM role to access resources in a different AWS account</h1><p>This article explains how to use IAM role to connect and authorize from applications running in Cloud platform to 
+              <h1 id="use-iam-role-to-access-resources-in-a-different-aws-account">Use IAM role to access resources in a different AWS account</h1><p>This article explains how to use IAM role to connect and authorize from applications running in Cloud platform to
  access AWS resources in a different AWS account.</p>
 <p>Cloud Platform Infrastructure uses <a href="https://github.com/uswitch/kiam">KIAM</a> to allow secured access to AWS APIs by associating IAM roles to Pods.
  By annotating the pod and the respective namespace, you can allow the application to assume a role and can get temporary credentials to access AWS resources.</p>
@@ -113,7 +113,7 @@
 
 <ol>
 <li><p><strong>Create IAM role</strong></p>
-<p>Cloud Platform maintain these cross account roles in <a href="https://github.com/ministryofjustice/cloud-platform-infrastructure/tree/master/terraform/cross-account-IAM">cloud-platform-infrastructure</a> repo.</p>
+<p>Cloud Platform maintain these cross account roles in <a href="https://github.com/ministryofjustice/cloud-platform-infrastructure/tree/main/terraform/cross-account-IAM">cloud-platform-infrastructure</a> repo.</p>
 <p>Create a file (<namespace>.tf), update the below template with correct values and raise a PR.</p>
 
 <details><summary> Click here to see a template code block </summary>
@@ -275,7 +275,7 @@ policy_arn = aws_iam_policy.my-namespace-app-iam-policy.arn
 </details></li>
 <li><p><strong>Annotate the pod with the IAM role</strong></p>
 <p>Once the PR in <strong>step 1</strong> is merged and applied, you will get the role ARN, name and id as a kubernetes secret in your namespace.</p>
-<p>Decode the role ARN and annotate the pod to indicate which role which will need access to resource in different AWS account. 
+<p>Decode the role ARN and annotate the pod to indicate which role which will need access to resource in different AWS account.
 A deployment with the Pod template annotated would look like below:</p>
 <div class="highlight"><pre class="highlight plaintext"><code>apiVersion: apps/v1
 kind: Deployment
@@ -333,7 +333,7 @@ spec:
 </code></pre></div></li>
 <li><p><strong>Annotate the namespace to allow the role to AssumeRole</strong></p>
 <p>Next, annotate the namespace to indicate which roles are permitted to be assumed within the namespace.</p>
-<p>Update the <code>annotations</code> section with the below code along with existing annotations list in <code>00-namespace.yaml</code> 
+<p>Update the <code>annotations</code> section with the below code along with existing annotations list in <code>00-namespace.yaml</code>
 for your namespace in the (cloud-platform-environments)[] repo and raise a PR.</p>
 <div class="highlight"><pre class="highlight plaintext"><code>apiVersion: v1
 kind: Namespace
@@ -370,9 +370,9 @@ metadata:
 <div class="highlight"><pre class="highlight plaintext"><code>role_credentials = Aws::AssumeRoleCredentials.new(
   role_arn: role_arn,
   role_session_name: "myapp_session"
-) 
+)
 </code></pre></div><p>The above call will return the <code>role_credentials</code> with a hash which consist of an access key ID, a secret access key, and a security token.</p>
-<p>For more details on using assumeRole check AWS documentation for <a href="https://docs.aws.amazon.com/cli/latest/reference/sts/assume-role.html">AWS assume-role CLI</a> 
+<p>For more details on using assumeRole check AWS documentation for <a href="https://docs.aws.amazon.com/cli/latest/reference/sts/assume-role.html">AWS assume-role CLI</a>
 and <a href="https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/AssumeRoleCredentials.html">AW::AssumeRoleCredentials SDK</a></p></li>
 <li><p><strong>Allow the IAM role to permit access in the target AWS account</strong></p>
 <p>You also need to update the AWS resource policy of the target AWS account to allow permissions for the IAM role to perform actions.</p>

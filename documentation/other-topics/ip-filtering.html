@@ -119,7 +119,7 @@
           <main id="content" class="technical-documentation" data-module="anchored-headings">
               <h1 id="cloud-platform-ip-addresses">Cloud Platform IP Addresses</h1>
 <blockquote>
-<p>Wherever possible, we treat the <a href="https://ministryofjustice.github.io/security-guidance/mythbusting/internet-v-psn/#networks-are-bearers">network as a bearer</a>, rather than a means to confer trust.</p>
+<p>Wherever possible, we treat the <a href="https://ministryofjustice.github.io/security-guidance/security_decisions/mythbusting/internet-v-psn">network as a bearer</a>, rather than a means to confer trust.</p>
 <p>For this reason, explicitly allowing traffic from/to specific IP numbers is discouraged in general.</p>
 </blockquote>
 <h3 id="inbound-ip-filtering">Inbound IP Filtering</h3><p>Allowed client IP source ranges can be specified using the nginx.ingress.kubernetes.io/whitelist-source-range annotation. The value is a comma separated list of CIDRs, e.g. 1.1.1.1/24,10.0.0.0/24.</p>

@@ -165,7 +165,7 @@
 <li>You have created an <a href="/documentation/getting-started/ecr-setup.html#creating-an-ecr-repository">ECR repository</a></li>
 </ul>
 <h3 id="creating-a-service-account-for-circleci">Creating a Service Account for CircleCI</h3><p>As part of the CircleCI deployment pipeline, CircleCI will need to authenticate with the Kubernetes cluster. In order to do so, Kubernetes uses <a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/">Service Accounts</a>. Service Accounts provide an identity for processes that run in a cluster allowing the process to access the API server.</p>
-<p>A Service Account is created in the <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/master/namespaces">namespace creation github repository</a>.</p>
+<p>A Service Account is created in the <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces">namespace creation github repository</a>.</p>
 <p>If you have not created a CircleCI service account along with the role / rolebinding then you may
 use the below as an example:</p>
 <div class="highlight"><pre class="highlight yaml"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
@@ -189,7 +189,7 @@ use the below as an example:</p>
       <span class="pi">-</span> <span class="s2">"</span><span class="s">secrets"</span>
       <span class="pi">-</span> <span class="s2">"</span><span class="s">services"</span>
       <span class="pi">-</span> <span class="s2">"</span><span class="s">pods"</span>
-      <span class="pi">-</span> <span class="s2">"</span><span class="s">jobs"</span>  
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">jobs"</span>
     <span class="na">verbs</span><span class="pi">:</span>
       <span class="pi">-</span> <span class="s2">"</span><span class="s">patch"</span>
       <span class="pi">-</span> <span class="s2">"</span><span class="s">get"</span>
@@ -224,7 +224,7 @@ use the below as an example:</p>
   <span class="na">kind</span><span class="pi">:</span> <span class="s">Role</span>
   <span class="na">name</span><span class="pi">:</span> <span class="s">circleci</span>
   <span class="na">apiGroup</span><span class="pi">:</span> <span class="s">rbac.authorization.k8s.io</span>
-</code></pre></div><p>Remember to replace <code>&lt;YOUR-NAMESPACE&gt;</code> with your namespace. Save the above as &lsquo;serviceaccount-circleci.yaml&rsquo; under your <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/master/namespaces">namespace folder</a>.</p>
+</code></pre></div><p>Remember to replace <code>&lt;YOUR-NAMESPACE&gt;</code> with your namespace. Save the above as &lsquo;serviceaccount-circleci.yaml&rsquo; under your <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces">namespace folder</a>.</p>
 <p>Raise a PR for your service account creation. Once approved you should then see your new CircleCI service account in your namespace.</p>
 <div class="highlight"><pre class="highlight yaml"><code>  <span class="s">$ kubectl get serviceaccounts --namespace &lt;YOUR-NAMESPACE&gt;</span>
   <span class="s">NAME       SECRETS   AGE</span>
