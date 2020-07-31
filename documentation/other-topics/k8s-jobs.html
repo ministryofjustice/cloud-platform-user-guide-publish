@@ -6,23 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
       <meta name="robots" content="noindex">
 
-    <title>Kubernetes Cronjobs - Cloud Platform User Guide</title>
+    <title>Kubernetes jobs - Cloud Platform User Guide</title>
 
     <link href="/stylesheets/manifest.css" rel="stylesheet" />
 
-    <link rel="canonical" href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/Cronjobs.html">
+    <link rel="canonical" href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/k8s-jobs.html">
 
 
       <meta property="og:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
       <meta property="og:site_name" content="Cloud Platform User Guide" />
-      <meta property="og:title" content="Kubernetes Cronjobs" />
+      <meta property="og:title" content="Kubernetes jobs" />
       <meta property="og:type" content="object" />
-      <meta property="og:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/Cronjobs.html" />
+      <meta property="og:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/k8s-jobs.html" />
       <meta property="twitter:card" content="summary" />
       <meta property="twitter:domain" content="user-guide.cloud-platform.service.justice.gov.uk" />
       <meta property="twitter:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
-      <meta property="twitter:title" content="Kubernetes Cronjobs - Cloud Platform User Guide" />
-      <meta property="twitter:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/Cronjobs.html" />
+      <meta property="twitter:title" content="Kubernetes jobs - Cloud Platform User Guide" />
+      <meta property="twitter:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/k8s-jobs.html" />
 
     
   </head>
@@ -94,7 +94,7 @@
               <nav id="toc" class="js-toc-list toc__list" aria-labelledby="toc-heading">
                       <ul>
   <li>
-    <a href="#kubernetes-cronjobs"><span>Kubernetes Cronjobs</span></a>
+    <a href="#kubernetes-jobs"><span>Kubernetes jobs</span></a>
     <ul>
       <li>
         <ul>
@@ -105,7 +105,7 @@
             <a href="#usage"><span>Usage</span></a>
           </li>
           <li>
-            <a href="#deploying-a-cronjob-to-your-namespace"><span>Deploying a Cronjob to your Namespace</span></a>
+            <a href="#deploying-a-job-to-your-namespace"><span>Deploying a job to your Namespace</span></a>
           </li>
           <li>
             <a href="#clean-up-finished-jobs"><span>Clean up finished jobs</span></a>
@@ -123,56 +123,51 @@
 
         <div class="app-pane__content toc-open-disabled">
           <main id="content" class="technical-documentation" data-module="anchored-headings">
-              <h1 id="kubernetes-cronjobs">Kubernetes Cronjobs</h1><h3 id="overview">Overview</h3><p>Kubernetes has the concept of <a href="https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/">Cronjobs</a> which creates Jobs on a time-based schedule, you can use CronJobs to run tasks at a specific time or interval. CronJobs are a good choice for automatic tasks, such as backups, reporting, sending emails, or cleanup tasks.</p>
-<h3 id="usage">Usage</h3><p>CronJobs use <a href="https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/">Job</a> objects to complete their tasks. A CronJob creates a Job object each time it runs. CronJobs are created, managed, scaled, and deleted in the same way as Jobs. Cron jobs require a config file, follow the <a href="https://kubernetes.io/docs/tasks/job/automated-tasks-with-cron-jobs/#creating-a-cron-job">guide</a> on creating a Cronjob.</p>
-<p>This example cron job below prints the current time and a hello message every first minute of every hour from 0200 to 1400 UTC on Sunday, Monday, Friday, and Saturday</p>
-<p>example:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>apiVersion: batch/v1beta1
-kind: CronJob
+              <h1 id="kubernetes-jobs">Kubernetes jobs</h1><h3 id="overview">Overview</h3><p>Kubernetes has the concept of <a href="https://kubernetes.io/docs/concepts/workloads/controllers/job/">jobs</a>. Kubernetes Jobs are created to run pods for a short period of time which are running for completion as opposed to different objects in Kubernetes like Replicasets, Replication Controllers, Demonesets, which is run continuously.</p>
+<h3 id="usage">Usage</h3><p>You can use a Kubernetes Job to run batch processes, ETL jobs, sending emails, scanning database keys, etc. Follow the <a href="https://kubernetes.io/docs/concepts/workloads/controllers/job/#writing-a-job-spec">guide</a> on writing a job spec.</p>
+<p>This example Job will start a busybox container that executes a bunch of shell commands.</p>
+<p>Example:</p>
+<div class="highlight"><pre class="highlight plaintext"><code>apiVersion: batch/v1
+kind: Job
 metadata:
-  name: hello
+  name: job1
 spec:
-  schedule: "1 2-14 * * 0-1,5-6"
-  successfulJobsHistoryLimit: 1
-  failedJobsHistoryLimit: 1
-  jobTemplate:
+  template:
     spec:
-      template:
-        spec:
-          containers:
-          - name: hello
-            image: bitnami/nginx
-            args:
+      containers:
+        - name: job
+          image: busybox
+          args:
             - /bin/sh
             - -c
-            - date; echo "Hello, World!"
-          restartPolicy: OnFailure
-</code></pre></div><h3 id="deploying-a-cronjob-to-your-namespace">Deploying a Cronjob to your Namespace</h3><p>You need a yaml file to define your cronjob. You can either create your own, or use <a href="https://github.com/ministryofjustice/cloud-platform-multi-container-demo-app/tree/cronjob-example-v1.0/k8s_additional_resources">this one</a> as an example. This periodically deletes untagged images in the ECR docker image repository (to ensure we stay within the number of images we are allowed).</p>
+            - date; echo sleeping....; sleep 90s; echo exiting...; date
+      restartPolicy: Never
+      ttlSecondsAfterFinished: 100
+</code></pre></div><h3 id="deploying-a-job-to-your-namespace">Deploying a job to your Namespace</h3><p>You need a yaml file to define your job. You can either create your own, or use above example.</p>
 <div class="highlight"><pre class="highlight plaintext"><code>  ```
-  kubectl apply --filename cronjob-ecr.yaml --namespace [your namespace]
+  kubectl apply -f [file-name].yaml --namespace [your namespace]
   ```
-</code></pre></div><p>Verify the Cronjob is created:</p>
+</code></pre></div><p>Verify the job is created:</p>
 <div class="highlight"><pre class="highlight plaintext"><code>  ```
-  kubectl get cronjob --namespace [your namespace]
+  kubectl get job --namespace [your namespace]
   ```
-</code></pre></div><h3 id="clean-up-finished-jobs">Clean up finished jobs</h3><p>Finished Jobs created by cronjobs are usually no longer needed in the system. Set the job <a href="https://kubernetes.io/docs/tasks/job/automated-tasks-with-cron-jobs/#jobs-history-limits">history limit</a> by using <code>successfulJobsHistoryLimit</code> and <code>failedJobsHistoryLimit</code>, to specify how much history you want to retain for completed and failed Jobs. 
-By default, they are set to 3 and 1 respectively.</p>
+</code></pre></div><h3 id="clean-up-finished-jobs">Clean up finished jobs</h3><p>When a Job completes Pods created by the Job are not deleted. Finished Jobs are usually no longer needed in the system. Use the <a href="https://kubernetes.io/docs/concepts/workloads/controllers/job/#ttl-mechanism-for-finished-jobs">TTL mechanism</a> for finished Jobs by using <code>ttlSecondsAfterFinished</code>, so that a Job can be cleaned up automatically some time after it finishes.</p>
 
 <blockquote>
 <p>Note: Kubernetes uses UTC exclusively. Make sure you take that into account when you’re creating your schedule.</p>
 </blockquote>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2020-11-30">
+              <div data-module='page-expiry' data-last-reviewed-on="2020-10-31">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 31 August 2020.
+      This page was last reviewed on 31 July 2020.
 
-        It needs to be reviewed again on 30 November 2020
+        It needs to be reviewed again on 31 October 2020
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 30 November 2020.
+      This page was set to be reviewed before 31 October 2020.
       This might mean the content is out of date.
     </div>
   </div>
@@ -181,8 +176,8 @@ By default, they are set to 3 and 1 respectively.</p>
 
           <aside>
               <ul class="contribution-banner">
-                <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide/blob/main/source/documentation/other-topics/Cronjobs.html.md.erb">View source</a></li>
-                <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide/issues/new?labels=bug&amp;title=Re:%20'Kubernetes%20Cronjobs'&amp;body=Problem%20with%20'Kubernetes%20Cronjobs'%20(https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/Cronjobs.html)">Report problem</a></li>
+                <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide/blob/main/source/documentation/other-topics/k8s-jobs.html.md.erb">View source</a></li>
+                <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide/issues/new?labels=bug&amp;title=Re:%20'Kubernetes%20jobs'&amp;body=Problem%20with%20'Kubernetes%20jobs'%20(https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/k8s-jobs.html)">Report problem</a></li>
                 <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide">GitHub Repo</a></li>
               </ul>
           </aside>
