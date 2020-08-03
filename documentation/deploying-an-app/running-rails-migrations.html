@@ -114,7 +114,7 @@
         <div class="app-pane__content toc-open-disabled">
           <main id="content" class="technical-documentation" data-module="anchored-headings">
               <h1 id="how-do-i-run-rails-database-migrations">How do I run Rails database migrations?</h1><p>The short and naive answer is that you create a Kubernetes &lsquo;Job&rsquo; yaml file, using your rails application Docker image, and run <code>rails db:migrate</code></p>
-<p>Here is an <a href="https://github.com/ministryofjustice/cloud-platform-multi-container-demo-app/blob/master/kubernetes_deploy/rails-migrations-job.yaml">example</a></p>
+<p>Here is an <a href="https://github.com/ministryofjustice/cloud-platform-multi-container-demo-app/blob/main/kubernetes_deploy/rails-migrations-job.yaml">example</a></p>
 <p>This approach may work for your service, but there are potential issues that
 you should be aware of. In particular, kubernetes makes no guarantees about
 when your job will run, in relation to when the rest of your service starts.</p>
@@ -171,16 +171,16 @@ one-off jobs, use a dedicated job or other kubernetes object to do so.</p>
 </ul>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2020-07-21">
+              <div data-module='page-expiry' data-last-reviewed-on="2020-11-03">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 21 April 2020.
+      This page was last reviewed on 3 August 2020.
 
-        It needs to be reviewed again on 21 July 2020
+        It needs to be reviewed again on 3 November 2020
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 21 July 2020.
+      This page was set to be reviewed before 3 November 2020.
       This might mean the content is out of date.
     </div>
   </div>
