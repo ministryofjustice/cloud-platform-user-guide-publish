@@ -117,6 +117,9 @@
             <a href="#add-an-rds-to-your-namespace"><span>Add an RDS to your namespace</span></a>
           </li>
           <li>
+            <a href="#add-an-s3-bucket-to-your-namespace"><span>Add an S3 Bucket to your namespace</span></a>
+          </li>
+          <li>
             <a href="#add-a-service-account-to-your-namespace"><span>Add a service account to your namespace</span></a>
           </li>
           <li>
@@ -164,6 +167,7 @@ version, so you should only ever have to install it once.</p>
 <li><a href="#create-an-environment">Create an environment</a></li>
 <li><a href="#add-an-ecr-to-your-namespace">Add an ECR to your namespace</a></li>
 <li><a href="#add-an-rds-to-your-namespace">Add an RDS to your namespace</a></li>
+<li><a href="#add-an-s3-bucket-to-your-namespace">Add an S3 Bucket to your namespace</a></li>
 <li><a href="#add-a-service-account-to-your-namespace">Add a service account to your namespace</a></li>
 <li><a href="#check-your-kubernetes-config-file">Check your kubernetes config file</a></li>
 </ul>
@@ -226,6 +230,27 @@ you will need in order to access your database.</p>
 <p>The CLI tool assumes you already have a <code>resources/variables.tf</code> file below
 your namespace folder, and that this defines all the variables which appear in
 the template <code>rds.tf</code> file. If this is not the case, you may need to amend the
+generated file.</p>
+</blockquote>
+<h3 id="add-an-s3-bucket-to-your-namespace">Add an S3 Bucket to your namespace</h3>
+<ul>
+<li>Start from the root of a working copy of the <a href="https://github.com/ministryofjustice/cloud-platform-environments">environments repository</a></li>
+<li>Create a new branch</li>
+<li><code>cd</code> into your <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live-1.cloud-platform.service.justice.gov.uk">namespace folder</a></li>
+<li><p>Run <code>cloud-platform environment s3 create</code></p>
+<p>This will create a <code>resources/s3.tf</code> file in your working copy.</p></li>
+<li><p><code>git add</code> and <code>git commit</code> the new file, and raise a PR</p></li>
+</ul>
+<p>After the cloud platform team have approved your PR, please merge it, and your
+S3 bucket will be created a little while later.</p>
+<p>When your S3 bucket has been created, you will see a new kubernetes secret in your
+namespace called <code>s3</code>. This secret contains the credentials
+you will need in order to access your s3 bucket.</p>
+
+<blockquote>
+<p>The CLI tool assumes you already have a <code>resources/variables.tf</code> file below
+your namespace folder, and that this defines all the variables which appear in
+the template <code>s3.tf</code> file. If this is not the case, you may need to amend the
 generated file.</p>
 </blockquote>
 <h3 id="add-a-service-account-to-your-namespace">Add a service account to your namespace</h3>
