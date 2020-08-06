@@ -162,7 +162,7 @@ the <code>kubectl</code> tool in the namespace you have created.</p>
 you to <a href="/documentation/deploying-an-app/helloworld-app-deploy.html#deploying-a-39-hello-world-39-application-to-the-cloud-platform">deploy an application</a> into.</p>
 <h2 id="create-an-environment">Create an environment</h2><h3 id="pre-requisites">Pre-requisites</h3>
 <ul>
-<li>Docker</li>
+<li>Install the <a href="/documentation/getting-started/cloud-platform-cli.html">Cloud Platform CLI</a> tool</li>
 <li>Git</li>
 <li>You must be a member of the <code>ministryofjustice</code> organisation on GitHub</li>
 </ul>
@@ -172,10 +172,10 @@ files in the following GitHub repository:</p>
 <p>To create a namespace, clone the repository:</p>
 <div class="highlight"><pre class="highlight plaintext"><code>$ git clone git@github.com:ministryofjustice/cloud-platform-environments.git
 $ cd cloud-platform-environments
-</code></pre></div><p>Then, run the script to create your namespace:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>$ make namespace
+</code></pre></div><p>Then, run this command to create your namespace:</p>
+<div class="highlight"><pre class="highlight plaintext"><code>$ cloud-platform environment create
 </code></pre></div><p>You will be prompted to provide information about the new namespace, and the
-script will create the necessary YAML and Terraform files in the correct
+CLI tool will create the necessary YAML and Terraform files in the correct
 location in the repository.</p>
 <p>Please create a new branch, add the new files and raise a pull request. The
 cloud platform team need to approve your pull request before you can merge it.
@@ -222,23 +222,34 @@ your namespace:</p>
 place on it so that we have security and resource allocation properties. We describe each
 of these files <a href="#00-namespace-yaml">in more detail below</a> in case you want to
 make future changes.</p>
-<p>In addition to the Kubernetes configuration files, we create a terraform config
-file:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>resources/main.tf
-</code></pre></div><p>This file defines the standard terraform backend and providers which you will
+<p>In addition to the Kubernetes configuration files, we create three terraform files:</p>
+
+<ul>
+<li>resources/main.tf</li>
+<li>resources/versions.tf</li>
+<li>resources/variables.tf</li>
+</ul>
+<p>These files define the standard terraform backend and providers which you will
 need when you add terraform modules to create the AWS resources your service
 will use (e.g. an <a href="/documentation/getting-started/ecr-setup.html#creating-an-ecr-repository">ECR</a> for your docker images, <a href="/documentation/deploying-an-app/multicontainer-app-deploy.html#create-an-rds-instance">RDS
-databases</a>, and S3 buckets).</p>
+databases</a>, and S3 buckets). The <code>resources/variables.tf</code> file
+contains attributes of your namespace which those later terraform files will
+refer to.</p>
 <h2 id="namespace-yaml-files">Namespace YAML files</h2><p>These files define key elements of the namespace and restrictions we want to
 place on it so that we have security and resource allocation properties.</p>
 <h3 id="00-namespace-yaml"><code>00-namespace.yaml</code></h3><p>The <code>00-namespace.yaml</code> file defines the namespace so that the Kubernetes
 cluster knows to create the namespace and what to call it.</p>
-<div class="highlight"><pre class="highlight plaintext"><code>apiVersion: v1
+<div class="highlight"><pre class="highlight plaintext"><code>
+apiVersion: v1
 kind: Namespace
 metadata:
-  name: myapp-dev ### This is where you will define your &lt;servicename-env&gt;
+  name: myapp-dev
   labels:
-    name: myapp-dev ### Also your &lt;servicename-env&gt;
+    cloud-platform.justice.gov.uk/is-production: "false"
+    cloud-platform.justice.gov.uk/environment-name: "development"
+  annotations:
+    cloud-platform.justice.gov.uk/application: "My Service"
+    ...
 </code></pre></div><p>The namespace is your (team&rsquo;s) &lsquo;private&rsquo; part of the cluster. The name of
 your namespace must be unique across the whole of the cluster. If you try to
 create a new namespace using the name of one which already exists, you will get
@@ -293,8 +304,8 @@ metadata:
 spec:
   limits:
   - default:
-      cpu: 50m
-      memory: 500Mi
+      cpu: 1000m
+      memory: 1000Mi
     defaultRequest:
       cpu: 10m
       memory: 100Mi
@@ -334,6 +345,7 @@ kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
   name: allow-ingress-controllers
+  namespace: myapp-dev
 spec:
   podSelector: {}
   policyTypes:
@@ -345,16 +357,16 @@ spec:
           component: ingress-controllers
 </code></pre></div>
 
-              <div data-module='page-expiry' data-last-reviewed-on="2020-09-16">
+              <div data-module='page-expiry' data-last-reviewed-on="2020-11-06">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 16 June 2020.
+      This page was last reviewed on 6 August 2020.
 
-        It needs to be reviewed again on 16 September 2020
+        It needs to be reviewed again on 6 November 2020
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 16 September 2020.
+      This page was set to be reviewed before 6 November 2020.
       This might mean the content is out of date.
     </div>
   </div>
