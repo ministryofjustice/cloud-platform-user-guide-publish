@@ -131,42 +131,36 @@
           <main id="content" class="technical-documentation" data-module="anchored-headings">
               <h1 id="creating-an-ecr-repository">Creating an ECR repository</h1><h2 id="introduction">Introduction</h2><p>This guide will guide you through the creation of an ECR (Elastic Container Registry) repository for your application&rsquo;s docker image.</p>
 <p>AWS resources are provisioned through the <a href="https://github.com/ministryofjustice/cloud-platform-environments/">cloud-platform-environments</a> repository, per environment. Your application might be using multiple namespaces, however you typically only need one image repository and once created in any of them you can copy credentials for it to the others via <code>kubectl get/create secret</code>.</p>
-<h3 id="creating-the-registry">Creating the registry</h3>
+<h3 id="creating-the-registry">Creating the registry</h3><p>You need to have the <a href="/documentation/getting-started/cloud-platform-cli.html">Cloud Platform CLI</a> tool installed.</p>
+
 <ol>
-<li>In order to create the ECR Docker registry, git clone the environments repo and create a new branch.</li>
+<li>Clone the environments repo and create a new branch</li>
 </ol>
 <div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span>git clone git@github.com:ministryofjustice/cloud-platform-environments.git
 <span class="nv">$ </span><span class="nb">cd </span>cloud-platform-environments
 <span class="nv">$ </span>git checkout <span class="nt">-b</span> add_ecr
 </code></pre></div>
 <ol>
-<li>You will need to navigate to your service&rsquo;s directory which is located in the namespaces directory. Create a directory named &ldquo;resources&rdquo;.</li>
+<li>Navigate to your namespace directory</li>
 </ol>
 <div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span><span class="nb">cd </span>namespaces/live-1.cloud-platform.service.justice.gov.uk/<span class="nv">$your_service</span>
-<span class="nv">$ </span><span class="nb">mkdir </span>resources <span class="c">### make directory called resources</span>
-<span class="nv">$ </span><span class="nb">cd </span>resources
 </code></pre></div>
 <ol>
-<li>Create a terraform file within the resources directory.</li>
+<li>Use the CLI tool to create your ECR</li>
 </ol>
-<div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span>vi ecr.tf
-</code></pre></div>
+<div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span>cloud-platform environment ecr create
+</code></pre></div><p>This will create a <code>resources/ecr.tf</code> file in your namespace folder.</p>
+
 <ol>
-<li><p>Adapt the definition from the example described in the <a href="https://github.com/ministryofjustice/cloud-platform-terraform-ecr-credentials/tree/main/examples">cloud-platform-terraform-ecr-credentials module</a>; make sure you adjust the values of <code>team_name</code>, <code>repo_name</code> <code>name</code> and <code>namespace</code> to what is appropriate for your environment.</p></li>
-<li><p>git add, commit and push to your branch.</p></li>
+<li><p>git add, commit and push to your branch</p></li>
+<li><p>Raise a PR to have your change approved</p></li>
 </ol>
-<div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span>git add ecr.tf
-<span class="nv">$ </span>git commit
-<span class="nv">$ </span>git push
-</code></pre></div>
-<ol>
-<li>Once your pull request has been approved and the branches are merged, it will trigger our build pipeline which will apply the Terraform module and create the resources.</li>
-</ol>
+<p>Once your pull request has been approved and merged, it will trigger our build pipeline which will create your ECR.</p>
 <p>For more information about the terraform module being used, please read the documentation <a href="https://github.com/ministryofjustice/cloud-platform-terraform-ecr-credentials">here</a>.</p>
-<h2 id="accessing-the-credentials">Accessing the credentials</h2><p>The end result will be a <a href="https://kubernetes.io/docs/concepts/configuration/secret/">Kubernetes secret</a> inside your environment, called <code>example-team-ecr-credentials-output</code> (or whatever you changed that to); the secret holds IAM access keys to authenticate with the registry and the actual repository URL.</p>
-<p>Note: For <code>example-team-ecr-credentials-output</code> you should put whatever you used as the value of the <code>name</code> property of the <code>kubernetes_secret</code> resource in the <code>ecr.tf</code> file you created previously.</p>
+<h2 id="accessing-the-credentials">Accessing the credentials</h2><p>After your ECR has been created, there will be a <a href="https://kubernetes.io/docs/concepts/configuration/secret/">Kubernetes secret</a> in your namespace, called <code>ecr-repo-[your-namespace]</code></p>
+<p>The secret stores the IAM access keys to authenticate with the registry, and the actual repository URL.</p>
 <p>To retrieve the credentials:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>kubectl -n &lt;namespace_name&gt; get secret example-team-ecr-credentials-output -o yaml
+<div class="highlight"><pre class="highlight plaintext"><code>kubectl -n &lt;namespace_name&gt; get secret ecr-repo-[your-namespace] -o yaml
 </code></pre></div><p>The values in kubernetes secrets are always <code>base64</code> encoded so you will have to decode them before you can use them outside kubernetes (inside your namespace, the base64 decoding is handled automatically). This can be done at the command line using the following:</p>
 <div class="highlight"><pre class="highlight plaintext"><code>echo QWxhZGRpbjpvcGVuIHNlc2FtZQ== | base64 --decode; echo
 </code></pre></div><h2 id="managing-your-ecr-repository">Managing your ECR repository</h2><p>There is a maximum number of images per repository for Amazon Elastic Container Registry(ECR). If a new image is created and pushed to ECR on every code change, repositories can quickly fill up with new revisions. So it is important to regularly delete images which are no longer required.</p>
@@ -176,16 +170,16 @@
 <h2 id="next-steps">Next steps</h2><p>Try <a href="/documentation/deploying-an-app/app-deploy-helm.html#deploying-an-application-to-the-cloud-platform-with-helm">deploying an app</a> with <a href="https://helm.sh/">Helm</a>, a Kubernetes package manager, or <a href="/documentation/deploying-an-app/helloworld-app-deploy.html#deploying-a-39-hello-world-39-application-to-the-cloud-platform">deploying manually</a> by writing some custom YAML files.</p>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2020-08-07">
+              <div data-module='page-expiry' data-last-reviewed-on="2020-11-06">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 7 May 2020.
+      This page was last reviewed on 6 August 2020.
 
-        It needs to be reviewed again on 7 August 2020
+        It needs to be reviewed again on 6 November 2020
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 7 August 2020.
+      This page was set to be reviewed before 6 November 2020.
       This might mean the content is out of date.
     </div>
   </div>
