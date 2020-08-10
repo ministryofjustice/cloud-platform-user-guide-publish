@@ -102,7 +102,7 @@
             <a href="#introduction"><span>Introduction</span></a>
           </li>
           <li>
-            <a href="#what-is-prometheus"><span>What is Prometheus</span></a>
+            <a href="#what-is-prometheus"><span>What is Prometheus?</span></a>
           </li>
           <li>
             <a href="#what-is-alertmanager"><span>What is AlertManager</span></a>
@@ -129,17 +129,19 @@
 
         <div class="app-pane__content toc-open-disabled">
           <main id="content" class="technical-documentation" data-module="anchored-headings">
-              <h1 id="using-the-cloud-platform-prometheus-alertmanager-and-grafana">Using the Cloud Platform Prometheus, AlertManager and Grafana</h1><h3 id="introduction">Introduction</h3><p>Prometheus, AlertManager and Grafana have been installed on Live-1 to ensure the reliability and availability of the Cloud Platform. This document will briefly outline how to access the monitoring tools and where to find further information.</p>
-<h3 id="what-is-prometheus">What is Prometheus</h3><p>Prometheus is an open-source systems monitoring and alerting toolkit originally built at SoundCloud. The Cloud Platform uses <a href="https://github.com/coreos/prometheus-operator">Prometheus Operator from CoreOS</a> which allows a number of Prometheus instances to be installed on a cluster.</p>
-<p>Prometheus scrapes metrics from instrumented jobs, either directly or via an intermediary push gateway for short-lived jobs. It stores all scraped samples locally and runs rules over this data to either aggregate and record new time series from existing data or generate alerts. Grafana or other API consumers can be used to visualize the collected data.</p>
-<h3 id="what-is-alertmanager">What is AlertManager</h3><p>The Alertmanager handles alerts sent by client applications such as the Prometheus server. It takes care of deduplicating, grouping, and routing them to the correct receiver integration such PagerDuty. It also takes care of silencing and inhibition of alerts.</p>
-<h3 id="what-is-grafana">What is Grafana</h3><p>Grafana allows you to query, visualize, alert on and understand your metrics no matter where they are stored. Create, explore, and share dashboards with your team and foster a data driven culture.</p>
-<h4 id="creating-dashboards">Creating dashboards</h4><p>Grafana is set up as a stateless app, managed entirely through code. This also helps achieve better availability. However, it means that dashboards will not persist in its database. To create a dashboard:</p>
+              <h1 id="using-the-cloud-platform-prometheus-alertmanager-and-grafana">Using the Cloud Platform Prometheus, AlertManager and Grafana</h1><h3 id="introduction">Introduction</h3><p>This is a brief introduction to the Cloud Platform monitoring stack: Prometheus, AlertManager and Grafana.</p>
+<h3 id="what-is-prometheus">What is Prometheus?</h3><p>Prometheus is an open-source systems monitoring and alerting toolkit originally built at SoundCloud. The Cloud Platform uses <a href="https://github.com/coreos/prometheus-operator">Prometheus Operator from CoreOS</a> which allows a number of Prometheus instances to be installed on a cluster (although we currently use a single Prometheus instance for the whole cluster).</p>
+<p>Prometheus scrapes metrics from instrumented jobs, either directly or via an intermediary push gateway for short-lived jobs. It stores all scraped samples locally and runs rules over this data to either aggregate and record new time series from existing data, or to generate alerts. Grafana or other API consumers can be used to visualize the collected data.</p>
+<h3 id="what-is-alertmanager">What is AlertManager</h3><p>[AlertManager] handles alerts sent by client applications such as the Prometheus server. It takes care of deduplicating, grouping, and routing them to the correct receiver integration such as PagerDuty. It also takes care of the silencing and inhibition of alerts.</p>
+<h3 id="what-is-grafana">What is Grafana</h3><p><a href="https://grafana.com/">Grafana</a> allows you to query, visualize, alert on and understand your metrics no matter where they are stored. Create, explore, and share dashboards with your team and foster a data driven culture.</p>
+<h4 id="creating-dashboards">Creating dashboards</h4><p>Grafana is set up as a stateless app, managed entirely through code. This helps achieve better availability, but it means that dashboards you create will not automatically persist in its database.</p>
+<p>To create a dashboard:</p>
 
 <ol>
 <li><p>Login to Grafana (see the links below) with your GitHub account. All users are able to edit dashboards but cannot save the changes. Find the dashboard titled &lsquo;Blank Dashboard&rsquo; and modify it as you see fit.</p></li>
-<li><p>Once happy with your dashboard, click the share icon on the top right corner, select the <code>Export</code> tab, check the <code>Export for sharing externally</code> box and click on <code>View JSON</code>. Copy the JSON string into a <code>ConfigMap</code> according to the example below.</p></li>
+<li><p>When you are happy with your dashboard, click the share icon on the top right corner, select the <code>Export</code> tab, check the <code>Export for sharing externally</code> box and click on <code>View JSON</code>. Copy the resulting JSON string into a <code>ConfigMap</code> in your namespace.</p></li>
 </ol>
+<p>To do this, create a YAML file like this:</p>
 <div class="highlight"><pre class="highlight plaintext"><code>---
 apiVersion: v1
 kind: ConfigMap
@@ -151,12 +153,12 @@ metadata:
 data:
   my-dashboard.json: |
     {
-      [ ... ]
+      [ ...your JSON document goes here, minus the outermost braces... ]
     }
-</code></pre></div><p>Make sure you&rsquo;ve included the <code>label</code> and that the JSON string is properly indented. Also, name of the key in the <code>ConfigMap</code> must end in <code>-dashboard.json</code>. Please note that you can have multiple dashboards exported in a single <code>ConfigMap</code> as well.</p>
+</code></pre></div><p>Make sure that the JSON string is properly indented. Also, name of the key in the <code>ConfigMap</code> must end in <code>-dashboard.json</code> (as in <code>my-dashboard.json</code> above). Please note that you can have multiple dashboards exported in a single <code>ConfigMap</code> as well.</p>
 
 <ol>
-<li>Use <code>kubectl</code> to apply the <code>ConfigMap</code> above, your dashboard should be visible in Grafana shortly.</li>
+<li>Use <code>kubectl</code> to apply the <code>ConfigMap</code> above, and your dashboard should be visible in Grafana shortly.</li>
 </ol>
 <h3 id="how-to-access-monitoring-tools">How to access monitoring tools</h3><p>All links provided below require you to authenticate with your Github account.</p>
 <p>Prometheus: <a href="https://prometheus.cloud-platform.service.justice.gov.uk">https://prometheus.cloud-platform.service.justice.gov.uk</a></p>
@@ -167,16 +169,16 @@ data:
 <p><a href="https://prometheus.io/docs/introduction/overview/###architecture">Architecture</a></p>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2020-08-06">
+              <div data-module='page-expiry' data-last-reviewed-on="2020-11-07">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 6 May 2020.
+      This page was last reviewed on 7 August 2020.
 
-        It needs to be reviewed again on 6 August 2020
+        It needs to be reviewed again on 7 November 2020
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 6 August 2020.
+      This page was set to be reviewed before 7 November 2020.
       This might mean the content is out of date.
     </div>
   </div>
