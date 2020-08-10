@@ -97,10 +97,16 @@
     <a href="#create-a-postgres-container"><span>Create a Postgres container</span></a>
     <ul>
       <li>
-        <ul>
-          <li>
-          </li>
-        </ul>
+        <a href="#pre-requisites"><span>Pre-requisites</span></a>
+      </li>
+      <li>
+        <a href="#set-up"><span>Set up</span></a>
+      </li>
+      <li>
+        <a href="#accessing-your-postgresql-db"><span>Accessing your PostgreSQL DB</span></a>
+      </li>
+      <li>
+        <a href="#cleaning-up"><span>Cleaning up</span></a>
       </li>
     </ul>
   </li>
@@ -115,60 +121,67 @@
           <main id="content" class="technical-documentation" data-module="anchored-headings">
               <h1 id="create-a-postgres-container">Create a Postgres container</h1><p>If you need a quick, ephemeral database for testing/development, you can create a pod in your namespace running postgres in a container.</p>
 <p>The <a href="https://github.com/helm/charts/tree/master/stable/postgresql">Bitnami PostgreSQL</a> helm chart is the easiest way to get started with PostgreSQL on Kubernetes. This chart bootstraps a PostgreSQL deployment on a Kubernetes cluster using the Helm package manager.</p>
-<p>The <a href="/documentation/deploying-an-app/app-deploy-helm.html#deploying-an-application-to-the-cloud-platform-with-helm">django-reference-application</a> uses Bitnami PostgreSQL Helm Chart to add a postgres instance, you can use the same Chart to setup postgres in your namespace.</p>
 
 <blockquote>
 <p>Note: Using a postgres container is only recommended for ephemeral testing/development purposes. For any production, or long-lived development/testing environments, we strongly recommend using the <a href="https://aws.amazon.com/rds/">AWS RDS</a> managed database service.</p>
 </blockquote>
-<h4 id="pre-requisites">Pre-requisites</h4>
+<h2 id="pre-requisites">Pre-requisites</h2>
 <ul>
 <li>You have <a href="/documentation/getting-started/env-create.html#creating-a-cloud-platform-environment">created an environment for your application</a></li>
 <li>You have installed <a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/">Kubectl</a> on your local machine</li>
 <li>You have <a href="/documentation/getting-started/kubectl-config.html#authentication">Authenticated</a> to the cloud platform</li>
-<li>You have configured Helm</li>
+<li>You have installed <a href="https://helm.sh/">Helm</a> on your local machine</li>
 </ul>
-<h4 id="set-up">Set up</h4><p>First copy the <a href="https://github.com/ministryofjustice/cloud-platform-reference-app/blob/master/helm_deploy/django-app/charts/postgresql/values.yaml">values.yaml</a> file to your working directory.</p>
-<p>You should edit the file to set your own values for:</p>
+<h2 id="set-up">Set up</h2><p>First copy this <a href="https://github.com/ministryofjustice/cloud-platform-reference-app/blob/master/helm_deploy/django-app/charts/postgresql/values.yaml">values.yaml</a> file to your working directory.</p>
+<div class="highlight"><pre class="highlight plaintext"><code>wget https://raw.githubusercontent.com/ministryofjustice/cloud-platform-reference-app/main/helm_deploy/django-app/charts/postgresql/values.yaml
+</code></pre></div><p>You should edit the file to set your own values for:</p>
 
 <ul>
 <li><code>postgresqlUsername</code></li>
 <li><code>postgresqlPassword</code></li>
 <li><code>postgresqlDatabase</code></li>
 </ul>
-<p>Or, you can provide those as an argument to the installation command. Below, the <code>--set</code> values override the values in the <code>value.yaml</code> file:</p>
-<div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span>helm <span class="nb">install</span> <span class="nt">--name</span> &lt;YourName&gt; <span class="nt">-f</span> values.yaml stable/postgresql <span class="se">\</span>
-  <span class="nt">--namespace</span> &lt;env-name&gt; <span class="se">\</span>
-  <span class="nt">--set</span> <span class="nv">postgresqlUsername</span><span class="o">=</span>postgres,postgresqlPassword<span class="o">=</span>secretpassword,postgresqlDatabase<span class="o">=</span>my-database <span class="se">\</span>
-  <span class="nt">--tiller-namespace</span> &lt;env-name&gt;
-</code></pre></div><p>Check that the PostgreSQL Helm Chart is deployed sucessfully:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>$ kubectl get pods --namespace &lt;env-name&gt;
+<p>The postgres helm chart is in the &ldquo;bitnami&rdquo; chart repository, so you need to add that:</p>
+<div class="highlight"><pre class="highlight plaintext"><code>helm repo add bitnami https://charts.bitnami.com/bitnami
+</code></pre></div><p>Then install the edited chart like this:</p>
+<div class="highlight"><pre class="highlight shell"><code>helm <span class="nb">install </span>mydb bitnami/postgresql <span class="nt">-f</span> values.yaml <span class="nt">--namespace</span> &lt;your namespace&gt;
+</code></pre></div><p>Change <code>mydb</code> to whatever name you want your pod to have.</p>
+<p>Check that the PostgreSQL Helm Chart is deployed sucessfully:</p>
+<div class="highlight"><pre class="highlight plaintext"><code>kubectl get pods --namespace &lt;your namespace&gt;
 </code></pre></div><p>If the Installation was successful you should see something similar to this:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>NAME                              READY     STATUS    RESTARTS   AGE
-&lt;YourName&gt;-postgresql-0           1/1       Running   0          39m
+<div class="highlight"><pre class="highlight plaintext"><code>NAME                        READY     STATUS    RESTARTS   AGE
+mydb-postgresql-0           1/1       Running   0          39m
 </code></pre></div><p>You should have a postgres pod with the status <strong>running</strong>. You can also check the logs of the PostgreSQL pod:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>$ kubectl --namespace &lt;env-name&gt; logs &lt;YourName&gt;-postgresql-0
+<div class="highlight"><pre class="highlight plaintext"><code>kubectl --namespace &lt;your namespace&gt; logs mydb-postgresql-0
 </code></pre></div><p>If the PostgreSQL setup was successful, the last line should be something like:</p>
-<div class="highlight"><pre class="highlight plaintext"><code> 12:49:28.02 INFO  ==&gt; ** PostgreSQL setup finished! **
-</code></pre></div><h4 id="accessing-your-postgresql-db">Accessing your PostgreSQL DB</h4><p>PostgreSQL can be accessed via port 5432 on the following DNS name from within your cluster:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>&lt;YourName&gt;-postgresql.&lt;env-name&gt;.svc.cluster.local - Read/Write connection
+<div class="highlight"><pre class="highlight plaintext"><code>2020-08-07 14:32:58.158 GMT [1] LOG:  database system is ready to accept connections
+</code></pre></div><h2 id="accessing-your-postgresql-db">Accessing your PostgreSQL DB</h2><p>PostgreSQL can be accessed via port 5432 on the following DNS name from within your cluster:</p>
+<div class="highlight"><pre class="highlight plaintext"><code>mydb-postgresql.&lt;your namespace&gt;.svc.cluster.local - Read/Write connection
 </code></pre></div><p>The <code>postgresqlPassword</code> you have set will be stored as a secret in your namespace, to get the password for the <code>postgres</code> datase user, run:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>export POSTGRES_PASSWORD=$(kubectl get secret --namespace &lt;env-name&gt; &lt;YourName&gt;-postgresql -o jsonpath="{.data.postgresql-password}" | base64 --decode)
+<div class="highlight"><pre class="highlight plaintext"><code>export POSTGRES_PASSWORD=$(kubectl get secret --namespace &lt;your namespace&gt; mydb-postgresql -o jsonpath="{.data.postgresql-password}" | base64 --decode)
 </code></pre></div><p>To connect to your database from outside the cluster execute the following commands:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>kubectl port-forward --namespace &lt;env-name&gt; svc/&lt;YourName&gt;-postgresql 5432:5432 &amp;
+<div class="highlight"><pre class="highlight plaintext"><code>kubectl port-forward --namespace &lt;your namespace&gt; svc/mydb-postgresql 5432:5432 &amp;
 
 PGPASSWORD="$POSTGRES_PASSWORD" psql --host 127.0.0.1 -U postgres -d my-database -p 5432
+</code></pre></div><h2 id="cleaning-up">Cleaning up</h2><p>When you have finished with your postgres instance, you can get rid of it like this:</p>
+<div class="highlight"><pre class="highlight plaintext"><code>helm uninstall mydb --namespace &lt;your namespace&gt;
 </code></pre></div>
+<blockquote>
+<p>If you used something other than <code>mydb</code> as the name of your installation, you
+will need to use that name instead.</p>
+</blockquote>
 
-              <div data-module='page-expiry' data-last-reviewed-on="2020-08-06">
+
+              <div data-module='page-expiry' data-last-reviewed-on="2020-11-07">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 6 May 2020.
+      This page was last reviewed on 7 August 2020.
 
-        It needs to be reviewed again on 6 August 2020
+        It needs to be reviewed again on 7 November 2020
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 6 August 2020.
+      This page was set to be reviewed before 7 November 2020.
       This might mean the content is out of date.
     </div>
   </div>
