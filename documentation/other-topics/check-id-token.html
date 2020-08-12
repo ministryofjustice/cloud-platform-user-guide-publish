@@ -95,11 +95,6 @@
                       <ul>
   <li>
     <a href="#checking-the-github-groups-in-your-id-token"><span>Checking the GitHub groups in your ID token</span></a>
-    <ul>
-      <li>
-        <a href="#jwt-decoder"><span>JWT decoder</span></a>
-      </li>
-    </ul>
   </li>
 </ul>
 
@@ -110,64 +105,53 @@
 
         <div class="app-pane__content toc-open-disabled">
           <main id="content" class="technical-documentation" data-module="anchored-headings">
-              <h1 id="checking-the-github-groups-in-your-id-token">Checking the GitHub groups in your ID token</h1><p>This guide explains how you can confirm that the token in your <code>~/.kube/config</code> file lists the correct github groups.</p>
-<h2 id="jwt-decoder">JWT decoder</h2><p>Inside your <code>~/.kube/config</code> file there is an <code>id-token</code> value. This token is the credential that the cluster uses to decide which operations you are authorised to do.</p>
-<p>In particular, the token contains a list of the github groups you are in, and this is used to grant/block access to specific namespaces in the cluster.</p>
-<p>The token is a <a href="https://en.wikipedia.org/wiki/JSON_Web_Token">JWT</a> and you can check that the correct github groups are listed by decoding it to view the contents.</p>
+              <h1 id="checking-the-github-groups-in-your-id-token">Checking the GitHub groups in your ID token</h1><p>This guide explains how you can confirm that the token in your <code>~/.kube/config</code>
+file lists the correct github groups.</p>
+<p>Inside your <code>~/.kube/config</code> file there is an <code>id-token</code> value. This token is
+the credential that the cluster uses to decide which operations you are
+authorised to do.</p>
+<p>In particular, the token contains a list of the github groups you are in, and
+this is used to grant/block access to specific namespaces in the cluster.</p>
+<p>The token is a <a href="https://en.wikipedia.org/wiki/JSON_Web_Token">JWT</a> and you can
+check that the correct github groups are listed by decoding it to view the
+contents.</p>
 
 <blockquote>
-<p>Please do not paste your ID token into an online JWT decoder. Your token is an important security credential and needs to be kept secret, just like passwords or AWS keypairs.</p>
+<p>Please do not paste your ID token into an online JWT decoder. Your token is
+an important security credential and needs to be kept secret, just like
+passwords or AWS keypairs.</p>
 </blockquote>
-<p>You can use this code snippet to create a function that will decode your ID token.</p>
-<div class="highlight"><pre class="highlight shell"><code><span class="k">function </span>jwt<span class="o">()</span> <span class="o">{</span>
-  <span class="k">for </span>part <span class="k">in </span>1 2<span class="p">;</span> <span class="k">do
-    </span><span class="nv">b64</span><span class="o">=</span><span class="s2">"</span><span class="si">$(</span><span class="nb">cut</span> <span class="nt">-f</span><span class="nv">$part</span> <span class="nt">-d</span><span class="nb">.</span> <span class="o">&lt;&lt;&lt;</span> <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span> | <span class="nb">tr</span> <span class="s1">'_-'</span> <span class="s1">'/+'</span><span class="si">)</span><span class="s2">"</span>
-    <span class="nv">len</span><span class="o">=</span><span class="k">${#</span><span class="nv">b64</span><span class="k">}</span>
-    <span class="nv">n</span><span class="o">=</span><span class="k">$((</span>len <span class="o">%</span> <span class="m">4</span><span class="k">))</span>
-    <span class="k">if</span> <span class="o">[[</span> 2 <span class="nt">-eq</span> n <span class="o">]]</span><span class="p">;</span> <span class="k">then
-      </span><span class="nv">b64</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">b64</span><span class="k">}</span><span class="s2">=="</span>
-    <span class="k">elif</span> <span class="o">[[</span> 3 <span class="nt">-eq</span> n <span class="o">]]</span><span class="p">;</span> <span class="k">then
-      </span><span class="nv">b64</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">b64</span><span class="k">}</span><span class="s2">="</span>
-    <span class="k">fi
-    </span><span class="nv">d</span><span class="o">=</span><span class="s2">"</span><span class="si">$(</span>openssl enc <span class="nt">-base64</span> <span class="nt">-d</span> <span class="nt">-A</span> <span class="o">&lt;&lt;&lt;</span> <span class="s2">"</span><span class="nv">$b64</span><span class="s2">"</span><span class="si">)</span><span class="s2">"</span>
-    <span class="nb">echo</span> <span class="s2">"</span><span class="nv">$d</span><span class="s2">"</span>
-    <span class="c"># don't decode further if this is an encrypted JWT (JWE)</span>
-    <span class="k">if</span> <span class="o">[[</span> 1 <span class="nt">-eq</span> part <span class="o">]]</span> <span class="o">&amp;&amp;</span> <span class="nb">grep</span> <span class="s1">'"enc":'</span> <span class="o">&lt;&lt;&lt;</span> <span class="s2">"</span><span class="nv">$d</span><span class="s2">"</span> <span class="o">&gt;</span>/dev/null <span class="p">;</span> <span class="k">then
-        </span><span class="nb">exit </span>0
-    <span class="k">fi
-  done</span>
-<span class="o">}</span>
-</code></pre></div><p>(from <a href="https://www.jvt.me/posts/2019/06/13/pretty-printing-jwt-openssl/">this article</a>)</p>
-<p>Paste the code above into a file (e.g. <code>jwt.sh</code>) and then run <code>. jwt.sh</code> to define the function in your current shell (these instructions are for <code>bash</code> - you may need to adapt them if you use a different shell).</p>
-<p>You can now decode your id-token like this:</p>
-<div class="highlight"><pre class="highlight shell"><code>jwt <span class="si">$(</span><span class="nb">grep </span>id-token ~/.kube/config | <span class="nb">sed</span> <span class="s1">'s/.*id-token: //'</span><span class="si">)</span> | jq
-</code></pre></div><p>In this case, we are using <a href="https://stedolan.github.io/jq/">jq</a> to pretty-print the JSON output. Just remove the <code>| jq</code> if you don&rsquo;t have jq installed.</p>
-<p>You should see a few lines of output including something similar to this:</p>
+<p>The easiest way to check which github groups are listed in your id-token is to
+use the <a href="/documentation/getting-started/cloud-platform-cli.html">cloud platform CLI</a> tool. If you have the CLI installed, just run:</p>
+<div class="highlight"><pre class="highlight plaintext"><code>cloud-platform kubecfg id-token-claims
+</code></pre></div><p>You should see a JSON output similar to this:</p>
 <div class="highlight"><pre class="highlight json"><code><span class="err">...</span><span class="w">
-</span><span class="p">{</span><span class="w">
   </span><span class="nl">"https://k8s.integration.dsd.io/groups"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="s2">"github:webops"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"github:technical-architects"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"github:moj-cjse"</span><span class="w">
-  </span><span class="p">],</span><span class="w">
-  </span><span class="nl">"nickname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"digitalronin"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"David Salgado"</span><span class="p">,</span><span class="w">
+  </span><span class="p">]</span><span class="err">,</span><span class="w">
+  </span><span class="nl">"nickname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"digitalronin"</span><span class="err">,</span><span class="w">
+  </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"David Salgado"</span><span class="err">,</span><span class="w">
 </span><span class="err">...</span><span class="w">
-</span></code></pre></div><p>If you do not see the github group corresponding to the namespace you are trying to work on, you will get:</p>
+</span></code></pre></div><p>The groups listed here must include a group specified in you namespace&rsquo;s
+<code>01-rbac.yml</code> file, in the <a href="https://github.com/ministryofjustice/cloud-platform-environments">environments repository</a>.</p>
+<p>If you do not see the github group corresponding to the namespace you are
+trying to work on, you will get:</p>
 <div class="highlight"><pre class="highlight plaintext"><code>Error from server (Forbidden)...
 </code></pre></div><p>&hellip;when you try to run commands using <code>kubectl</code>.</p>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2020-10-02">
+              <div data-module='page-expiry' data-last-reviewed-on="2020-11-11">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 2 July 2020.
+      This page was last reviewed on 11 August 2020.
 
-        It needs to be reviewed again on 2 October 2020
+        It needs to be reviewed again on 11 November 2020
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 2 October 2020.
+      This page was set to be reviewed before 11 November 2020.
       This might mean the content is out of date.
     </div>
   </div>
