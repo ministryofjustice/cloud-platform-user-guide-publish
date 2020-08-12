@@ -120,23 +120,23 @@
 
         <div class="app-pane__content toc-open-disabled">
           <main id="content" class="technical-documentation" data-module="anchored-headings">
-              <h1 id="application-log-collection-and-storage">Application Log Collection and Storage</h1><h3 id="overview">Overview</h3><p>The Cloud Platform automatically collects and stores your application logs, and lets you access them via an AWS-Hosted Kibana dashboard.</p>
-<p>Logs are collected via <a href="https://www.fluentd.org/">Fluentd</a>, and stored in an AWS-Hosted <a href="https://aws.amazon.com/elasticsearch-service/">ElasticSearch Cluster</a>.</p>
-<h3 id="log-collection">Log Collection</h3><p>Fluentd is a cluster-wide log collection service.</p>
-<p>The Fluentd application is configured with cluster-wide read permissions. The only requirement for Fluentd to start automatically collecting your application&rsquo;s logs is to have your application output logs to <code>stdout</code>.</p>
-<h3 id="log-storage">Log Storage</h3><p>The logs are shipped from Fluentd and stored in an AWS-Hosted ElasticSearch cluster. All application logs are retained for 30 days.</p>
+              <h1 id="application-log-collection-and-storage">Application Log Collection and Storage</h1><h3 id="overview">Overview</h3><p>The Cloud Platform automatically collects and stores your application logs, and lets you access them via an AWS-Hosted <a href="https://kibana.cloud-platform.service.justice.gov.uk/_plugin/kibana/app/kibana">Kibana dashboard</a>.</p>
+<p>Logs are collected via <a href="https://fluentbit.io/">Fluentbit</a> and <a href="https://www.fluentd.org/">Fluentd</a>, and stored in an AWS-Hosted <a href="https://aws.amazon.com/elasticsearch-service/">ElasticSearch Cluster</a>.</p>
+<h3 id="log-collection">Log Collection</h3><p>Fluentbit/Fluentd is a cluster-wide log collection service.</p>
+<p>The Fluentbit and Fluentd applications are configured with cluster-wide read permissions. As long as your application logs to <code>stdout</code>, your logs will be collected.</p>
+<h3 id="log-storage">Log Storage</h3><p>The logs are shipped to an AWS-Hosted ElasticSearch cluster. All application logs are retained for 30 days.</p>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2020-08-07">
+              <div data-module='page-expiry' data-last-reviewed-on="2020-11-12">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 7 May 2020.
+      This page was last reviewed on 12 August 2020.
 
-        It needs to be reviewed again on 7 August 2020
+        It needs to be reviewed again on 12 November 2020
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 7 August 2020.
+      This page was set to be reviewed before 12 November 2020.
       This might mean the content is out of date.
     </div>
   </div>
