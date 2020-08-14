@@ -138,6 +138,10 @@
         <div class="app-pane__content toc-open-disabled">
           <main id="content" class="technical-documentation" data-module="anchored-headings">
               <h1 id="migrating-to-the-cloud-platform-from-template-deploy">Migrating to the Cloud Platform from Template Deploy</h1><p>These are some of the things to think about when migrating your application from <a href="https://dsdmoj.atlassian.net/wiki/spaces/PLAT/pages/86310992/Template+Deploy">Template Deploy</a> (TD) to the <a href="https://github.com/ministryofjustice/cloud-platform">Cloud Platform</a> (CP).</p>
+
+<blockquote>
+<p>Note to maintainers: This page is sometimes referenced for general migration advice. When we remove template deploy-specific pages, content on this page should be replaced by a generic migration advice page, and this page should link to that one, so that anyone following an old link can still find the information they need.</p>
+</blockquote>
 <h2 id="production-infrastructure">Production infrastructure</h2><p>Any infrastructure resources, such as databases or cache servers, should be of the same size, and running the same software (e.g. postgres) version, for the CP version of your app. as for the TD version.</p>
 <h2 id="allowing-network-traffic-to-from-your-service">Allowing network traffic to/from your service</h2><p>The IP numbers from which your app&rsquo;s traffic originates will change. If your app. talks to any external services which care about its source IP addresses, you may need to arrange for those services to allow traffic from the cluster IPs.</p>
 <p>If you have configured your service to allow inbound traffic from any specific IPs, you will need to add the corresponding config to your kubernetes deployment files.</p>
