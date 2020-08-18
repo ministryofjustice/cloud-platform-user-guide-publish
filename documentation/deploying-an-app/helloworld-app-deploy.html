@@ -216,9 +216,13 @@
 <p>You can pipe the yaml through <a href="https://github.com/ministryofjustice/cloud-platform-environments/blob/master/bin/decode.rb">this script</a> in order to decode the values, or you can do the following:</p>
 <div class="highlight"><pre class="highlight plaintext"><code>  echo 'your_access_key_id_value' | base64 --decode
 </code></pre></div><p>Once you have your <code>access_key_id</code> and <code>secret_access_key</code>, set up an AWS profile using the AWS cli tool.</p>
-<div class="highlight"><pre class="highlight plaintext"><code>  aws configure
-</code></pre></div><p>Supply your credentials when prompted.</p>
-<p>This guide assumes you are using these credentials in your <code>default</code> AWS profile. If you have used a different name for this AWS profile, please add <code>--profile [YOUR PROFILE]</code> to all of the following AWS commands.</p>
+<div class="highlight"><pre class="highlight plaintext"><code>  aws configure --profile [namespace name]
+</code></pre></div><p>You can call the profile anything you want.</p>
+<p>Supply your credentials when prompted. For region, enter <code>eu-west-2</code> This is London, which is the region all cloud platform resources are in.</p>
+<p>When prompted for <code>Default output format [None]:</code>, just press enter.</p>
+<p>Now, tell the aws command-line tool to use these credentials by running:</p>
+<div class="highlight"><pre class="highlight plaintext"><code>export AWS_PROFILE=[profile name]
+</code></pre></div><p>Where <code>[profile name]</code> is whatever you entered for <code>--profile</code> in the <code>aws configure</code> command.</p>
 <h3 id="authenticating-with-the-repository">Authenticating with the repository</h3><p>The command to login to Amazon ECR is slightly different, depending on your version of the <code>aws</code> command-line tool. You can find this out by running:</p>
 <div class="highlight"><pre class="highlight plaintext"><code>  aws --version
 </code></pre></div><p>For AWS version 1.x use the following command to login to Amazon ECR</p>
@@ -237,9 +241,7 @@
 <p>Your specific ECR will be:</p>
 <div class="highlight"><pre class="highlight plaintext"><code>  754256621582.dkr.ecr.eu-west-2.amazonaws.com/[team_name]/[repo_name]
 </code></pre></div><p>Where <code>team_name</code> and <code>repo_name</code> are the values from your <code>ecr.tf</code> file.</p>
-<p>Ensure the Docker image for your application has been built and is stored locally on your machine.</p>
-<div class="highlight"><pre class="highlight plaintext"><code>  docker build -t [team_name]/[repo_name] .
-</code></pre></div><p>Now we need to tag the image so it can be pushed into the correct repository.</p>
+<p>We need to tag the image you built earlier so it can be pushed into the correct repository.</p>
 <div class="highlight"><pre class="highlight plaintext"><code>  docker tag [team_name]/[repo_name]:latest 754256621582.dkr.ecr.eu-west-2.amazonaws.com/[team_name]/[repo_name]:latest
 </code></pre></div><p>Finish by running the last command to push the image to your repository.</p>
 <div class="highlight"><pre class="highlight plaintext"><code>docker push 754256621582.dkr.ecr.eu-west-2.amazonaws.com/[team_name]/[repo_name]:latest
