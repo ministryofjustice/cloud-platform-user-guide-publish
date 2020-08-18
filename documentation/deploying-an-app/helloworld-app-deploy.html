@@ -241,6 +241,7 @@
 <p>Your specific ECR will be:</p>
 <div class="highlight"><pre class="highlight plaintext"><code>  754256621582.dkr.ecr.eu-west-2.amazonaws.com/[team_name]/[repo_name]
 </code></pre></div><p>Where <code>team_name</code> and <code>repo_name</code> are the values from your <code>ecr.tf</code> file.</p>
+<p>You can also see this as the value of <code>repo_url</code> in the kubernetes secret containing your ECR information.</p>
 <p>We need to tag the image you built earlier so it can be pushed into the correct repository.</p>
 <div class="highlight"><pre class="highlight plaintext"><code>  docker tag [team_name]/[repo_name]:latest 754256621582.dkr.ecr.eu-west-2.amazonaws.com/[team_name]/[repo_name]:latest
 </code></pre></div><p>Finish by running the last command to push the image to your repository.</p>
