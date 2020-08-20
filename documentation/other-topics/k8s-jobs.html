@@ -151,23 +151,24 @@ spec:
 <div class="highlight"><pre class="highlight plaintext"><code>  ```
   kubectl get job --namespace [your namespace]
   ```
-</code></pre></div><h3 id="clean-up-finished-jobs">Clean up finished jobs</h3><p>When a Job completes Pods created by the Job are not deleted. Finished Jobs are usually no longer needed in the system. Use the <a href="https://kubernetes.io/docs/concepts/workloads/controllers/job/#ttl-mechanism-for-finished-jobs">TTL mechanism</a> for finished Jobs by using <code>ttlSecondsAfterFinished</code>, so that a Job can be cleaned up automatically some time after it finishes.</p>
+</code></pre></div><h3 id="clean-up-finished-jobs">Clean up finished jobs</h3><p>When a Job completes Pods created by the Job are not deleted. Finished Jobs are usually no longer needed in the system. Use the <a href="https://kubernetes.io/docs/concepts/workloads/controllers/job/#ttl-mechanism-for-finished-jobs">TTL mechanism</a> for Jobs by settting <code>ttlSecondsAfterFinished</code>, so that a Job can be cleaned up automatically some time after it finishes.</p>
+<p>We have <a href="https://concourse.cloud-platform.service.justice.gov.uk/teams/main/pipelines/maintenance/jobs/delete-completed-jobs">delete-completed-jobs</a> concourse pipleline setup to clean up all the completed jobs, which does not have <code>ttlSecondsAfterFinished</code>, deleting a completed Job will clean up the Pods it created. You can still see the logs of the deleted Pod in <a href="https://kibana.cloud-platform.service.justice.gov.uk/_plugin/kibana">kibana</a></p>
 
 <blockquote>
-<p>Note: Kubernetes uses UTC exclusively. Make sure you take that into account when you’re creating your schedule.</p>
+<p>Note: Kubernetes uses UTC exclusively. Make sure you take that into account when you’re creating your schedule or setting up ttlSecondsAfterFinished.</p>
 </blockquote>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2020-10-31">
+              <div data-module='page-expiry' data-last-reviewed-on="2020-11-20">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 31 July 2020.
+      This page was last reviewed on 20 August 2020.
 
-        It needs to be reviewed again on 31 October 2020
+        It needs to be reviewed again on 20 November 2020
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 31 October 2020.
+      This page was set to be reviewed before 20 November 2020.
       This might mean the content is out of date.
     </div>
   </div>

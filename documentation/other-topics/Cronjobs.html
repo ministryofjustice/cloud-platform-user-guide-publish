@@ -137,6 +137,7 @@ spec:
   failedJobsHistoryLimit: 1
   jobTemplate:
     spec:
+      ttlSecondsAfterFinished: 100
       template:
         spec:
           containers:
@@ -155,24 +156,24 @@ spec:
 <div class="highlight"><pre class="highlight plaintext"><code>  ```
   kubectl get cronjob --namespace [your namespace]
   ```
-</code></pre></div><h3 id="clean-up-finished-jobs">Clean up finished jobs</h3><p>Finished Jobs created by cronjobs are usually no longer needed in the system. Set the job <a href="https://kubernetes.io/docs/tasks/job/automated-tasks-with-cron-jobs/#jobs-history-limits">history limit</a> by using <code>successfulJobsHistoryLimit</code> and <code>failedJobsHistoryLimit</code>, to specify how much history you want to retain for completed and failed Jobs. 
-By default, they are set to 3 and 1 respectively.</p>
+</code></pre></div><h3 id="clean-up-finished-jobs">Clean up finished jobs</h3><p>Finished Jobs created by cronjobs are usually no longer needed in the system. Use the [TTL mechanism][TTL-mechanism] for Cronjob by settting <code>ttlSecondsAfterFinished</code>, so that a Job can be cleaned up automatically some time after it finishes.</p>
+<p>We have <a href="https://concourse.cloud-platform.service.justice.gov.uk/teams/main/pipelines/maintenance/jobs/delete-completed-jobs">delete-completed-jobs</a> setup to clean up all the completed jobs, which does not have <code>ttlSecondsAfterFinished</code>, deleting a completed Jobs will clean up the Pods it created. You can still see the logs of the deleted Pod in <a href="https://kibana.cloud-platform.service.justice.gov.uk/_plugin/kibana">kibana</a></p>
 
 <blockquote>
-<p>Note: Kubernetes uses UTC exclusively. Make sure you take that into account when you’re creating your schedule.</p>
+<p>Note: Kubernetes uses UTC exclusively. Make sure you take that into account when you’re creating your schedule or setting up ttlSecondsAfterFinished.</p>
 </blockquote>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2020-11-30">
+              <div data-module='page-expiry' data-last-reviewed-on="2020-11-20">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 31 August 2020.
+      This page was last reviewed on 20 August 2020.
 
-        It needs to be reviewed again on 30 November 2020
+        It needs to be reviewed again on 20 November 2020
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 30 November 2020.
+      This page was set to be reviewed before 20 November 2020.
       This might mean the content is out of date.
     </div>
   </div>
