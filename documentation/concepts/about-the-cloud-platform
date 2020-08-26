@@ -1,0 +1,14 @@
+<p>The MoJ Cloud Platform is a modern hosting platform for digital services:</p>
+
+<ul>
+<li>It makes it quick and easy to &lsquo;just deploy an app&rsquo;</li>
+<li>Teams get the features they need to operate their service, such as
+easy scalability, zero downtime deploys, security scanning,
+monitoring, logging, and more, all setup for you by default</li>
+<li>When you need the full power of AWS or Kubernetes, it&rsquo;s all available</li>
+<li>Configuration is all self-service, using Infrastructure as Code with
+managed CI/CD and GitOps processes</li>
+<li>The Cloud Platform team manage the hosting and provide support for
+the platform</li>
+</ul>
+<p>For guidance on all MoJ hosting options, see <a href="https://ministryofjustice.github.io/technical-guidance/documentation/standards/hosting.html">MoJ Technical Guidance: Hosting</a></p>
