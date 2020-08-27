@@ -105,16 +105,13 @@
             <a href="#pre-requisites"><span>Pre-Requisites</span></a>
           </li>
           <li>
-            <a href="#considerations"><span>Considerations</span></a>
-          </li>
-          <li>
             <a href="#deploying"><span>Deploying</span></a>
           </li>
           <li>
             <a href="#using-the-new-ingress-controller"><span>Using the new ingress-controller</span></a>
           </li>
           <li>
-            <a href="#best-practices"><span>Best practices</span></a>
+            <a href="#certificates"><span>Certificates</span></a>
           </li>
           <li>
             <a href="#more-information"><span>More information</span></a>
@@ -135,45 +132,87 @@
               <h1 id="having-your-own-nginx-ingress-controller">Having your own nginx ingress controller</h1><h3 id="background">Background</h3><p>Cloud Platform ingress controller(s) are having performance issues due to the amount of ingresses
 handled. We are encouraging teams to host their own controllers so we don&rsquo;t have a single
 service managing all ingresses.</p>
-<p>Having your own ingress controller allows you to customise multiple load balancer components (error pages, HTTP errors, 
+<p>Having your own ingress controller allows you to customise multiple load balancer components (error pages, HTTP errors,
 backends, etc). You are not able to do that by using the cloud-platform&rsquo;s controller.</p>
 <h3 id="pre-requisites">Pre-Requisites</h3><p>This guide assumes you have an environment already created in <code>live-1</code> cluster and defined in the <a href="https://github.com/ministryofjustice/cloud-platform-environments">cloud-platform-environments repository</a></p>
-<h3 id="considerations">Considerations</h3>
-<ul>
-<li>Ingress controller&rsquo;s pods won&rsquo;t be visible because they&rsquo;re running inside a cloud-platform&rsquo;s namespace where teams don&rsquo;t have access to.</li>
-<li>Ingress controller&rsquo;s deployment can only happen from <a href="https://github.com/ministryofjustice/cloud-platform-environments">cloud-platform-environments repository</a>.</li>
-</ul>
 <h3 id="deploying">Deploying</h3><div class="highlight"><pre class="highlight hcl"><code><span class="nx">module</span> <span class="s2">"ingress_controller"</span> <span class="p">{</span>
-  <span class="nx">source</span> <span class="p">=</span> <span class="s2">"github.com/ministryofjustice/cloud-platform-terraform-teams-ingress-controller?ref=0.0.2"</span>
+  <span class="nx">source</span> <span class="p">=</span> <span class="s2">"github.com/ministryofjustice/cloud-platform-terraform-teams-ingress-controller?ref=0.0.7"</span>
 
-  <span class="nx">namespace</span> <span class="p">=</span> <span class="s2">"&lt;your-namespace&gt;"</span>
+  <span class="nx">namespace</span> <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">namespace</span>
+  <span class="nx">is_production</span> <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">is_production</span>
 <span class="p">}</span>
-</code></pre></div><h3 id="using-the-new-ingress-controller">Using the new ingress-controller</h3><p>By default, ingresses will always use cloud-platform&rsquo;s ingress controller
-unless indicated otherwise. In order to use the controller deployed 
-the following annotation must be added to your 
-<a href="https://kubernetes.io/docs/concepts/services-networking/ingress/">ingress object</a>:</p>
+</code></pre></div>
+<blockquote>
+<p>The <code>is_production</code> value will determine how many ingress controller pods get
+created. For production namespaces we run 2 pods, and 1 for non-production
+namespaces.</p>
+<p>Please check that your <code>variables.tf</code> file defines an <code>is_production</code>
+variable (<code>is-production</code> will not work).</p>
+</blockquote>
+<p>After merging a PR which adds this file to your namespace <code>resources</code> folder in
+the <a href="https://github.com/ministryofjustice/cloud-platform-environments">environments repository</a>, the pipeline will create one or more pods in the
+<code>ingress-controllers</code> namespace.</p>
+
+<blockquote>
+<p>You cannot directly list the pods in the <code>ingress-controller</code> namespace, but
+you can check this <a href="https://grafana.cloud-platform.service.justice.gov.uk/d/bbb2a765a623ae38130206c7d94a160f/kubernetes-networking-namespace-workload?orgId=1&amp;refresh=10s&amp;var-datasource=default&amp;var-namespace=ingress-controllers&amp;var-type=deployment&amp;var-resolution=5m&amp;var-interval=4h">grafana dashboard</a> to confirm that your ingress-controller
+pod exists. Check any of the lists to see if there is an entry which includes
+your namespace name.</p>
+</blockquote>
+<h3 id="using-the-new-ingress-controller">Using the new ingress-controller</h3><p>By default, ingresses will always use cloud-platform&rsquo;s ingress controller
+unless indicated otherwise. In order to use the controller deployed
+the following annotation must be added to your
+<a href="https://kubernetes.io/docs/concepts/services-networking/ingress/">ingress.yaml</a> file:</p>
 <div class="highlight"><pre class="highlight yaml"><code>  <span class="na">annotations</span><span class="pi">:</span>
     <span class="s">kubernetes.io/ingress.class</span><span class="pi">:</span> <span class="s">&lt;your-namespace-name&gt;</span>
-</code></pre></div><p><code>kubernetes.io/ingress.class</code> specifies the controller name (which has the 
+</code></pre></div><p><code>kubernetes.io/ingress.class</code> specifies the controller name (which has the
 same namespace name) which is going to claim that ingress. If nothing is specified
 it will use the default one (&ldquo;nginx&rdquo;) which is the name hold by cloud-platform&rsquo;s controller.</p>
-<h3 id="best-practices">Best practices</h3>
-<ul>
-<li><a href="https://itnext.io/kubernetes-ingress-controllers-how-to-choose-the-right-one-part-1-41d3554978d2">Do not share Nginx Ingress for multiple environments</a>, deploy a controller per namespace</li>
-<li>Try to stick with the default configuration provided so there is no need to maintain it and we&rsquo;ll keep it up to date for you.</li>
-</ul>
+<p>When you add this annotation to your <code>ingress.yaml</code> and apply it to the cluster, two things happen:</p>
+
+<ol>
+<li>Your namespace&rsquo;s VirtualHost entry is removed from the default ingress controller, and</li>
+<li>A new VirtualHost entry (the only one) is added to your dedicated ingress controller</li>
+</ol>
+<p>This happens instantaneously. So, at this point, the default ingress controller
+&ldquo;forgets&rdquo; how to handle traffic to your domain name, and the dedicated ingress
+controller learns how to do it.</p>
+
+<blockquote>
+<p>Users of your service may still have a cached DNS entry pointing to the old,
+shared load-balancer. So, requests for your service will still hit the old
+ingress controller until the users&rsquo; DNS cache expires. So, in effect, your
+service is temporarily down for some users, for a couple of minutes.</p>
+</blockquote>
+<h3 id="certificates">Certificates</h3><p>There are two possibilities for how you need to manage SSL certificates in light
+of the change to dedicated ingress controllers.</p>
+<h4 id="if-your-services-use-the-cloud-platform-wildcard-domain">If your services use the Cloud Platform wildcard domain</h4><p>If the service in your namespace is using a domain matching:</p>
+<div class="highlight"><pre class="highlight plaintext"><code>*.apps.live-1.cloud-platform.service.justice.gov.uk
+</code></pre></div><p>Then you should <strong>not</strong> add a <code>certificate.yaml</code> file to your namespace, and
+you should <strong>not</strong> specify a <code>secretName</code> in your <code>ingress.yaml</code> file.</p>
+<p>This will cause your ingress to use the cluster default SSL certificate, which
+matches the wildcard domain.</p>
+<h4 id="if-your-services-use-a-custom-domain-name">If your services use a custom domain name</h4><p>If you are using any other domain name, you should already have a
+<code>certificate.yaml</code> file in your namespace. This will have a <code>secretName</code>
+defining a kubernetes secret in your namespace (automatically created by
+<code>cert-manager</code>), and your <code>ingress.yaml</code> should reference this secret.</p>
+<p>i.e. if you are using a custom domain, you don&rsquo;t need to change anything about
+your SSL certificate setup when you switch from the default ingress controller
+to a dedicated ingress controller.</p>
+<p>See <a href="/documentation/other-topics/custom-domain-cert.html">this page</a> for more information about custom
+domains.</p>
 <h3 id="more-information">More information</h3>
 
-              <div data-module='page-expiry' data-last-reviewed-on="2020-10-23">
+              <div data-module='page-expiry' data-last-reviewed-on="2020-11-27">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 23 July 2020.
+      This page was last reviewed on 27 August 2020.
 
-        It needs to be reviewed again on 23 October 2020
+        It needs to be reviewed again on 27 November 2020
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 23 October 2020.
+      This page was set to be reviewed before 27 November 2020.
       This might mean the content is out of date.
     </div>
   </div>
