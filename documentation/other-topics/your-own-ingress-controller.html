@@ -201,6 +201,11 @@ your SSL certificate setup when you switch from the default ingress controller
 to a dedicated ingress controller.</p>
 <p>See <a href="/documentation/other-topics/custom-domain-cert.html">this page</a> for more information about custom
 domains.</p>
+<h4 id="custom-values">Custom Values</h4><p>It is possible to customise your ingress, if you have unusual requirements 
+(e.g. if you have to enable older versions of TLS to accomodate a group of 
+users who have to use older browsers), you can do so if necessary. Here is an 
+example:</p>
+<p><a href="https://github.com/ministryofjustice/cloud-platform-environments/blob/main/namespaces/live-1.cloud-platform.service.justice.gov.uk/hmpps-book-secure-move-frontend-production/resources/ingress.tf">customised ingress.tf</a></p>
 <h3 id="more-information">More information</h3>
 
               <div data-module='page-expiry' data-last-reviewed-on="2020-11-27">
