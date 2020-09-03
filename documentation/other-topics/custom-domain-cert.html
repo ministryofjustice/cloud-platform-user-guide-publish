@@ -209,6 +209,8 @@ the event of any problems with our certificate/DNS systems.</p>
      metadata:
        name: &lt;my-ingress&gt;
        namespace: &lt;my-namespace&gt;
+       annotations:
+         kubernetes.io/ingress.class: &lt;my-namespace&gt;
      spec:
        tls:
        - hosts:
