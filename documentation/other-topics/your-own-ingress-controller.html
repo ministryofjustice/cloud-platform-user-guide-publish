@@ -136,7 +136,7 @@ service managing all ingresses.</p>
 backends, etc). You are not able to do that by using the cloud-platform&rsquo;s controller.</p>
 <h3 id="pre-requisites">Pre-Requisites</h3><p>This guide assumes you have an environment already created in <code>live-1</code> cluster and defined in the <a href="https://github.com/ministryofjustice/cloud-platform-environments">cloud-platform-environments repository</a></p>
 <h3 id="deploying">Deploying</h3><div class="highlight"><pre class="highlight hcl"><code><span class="nx">module</span> <span class="s2">"ingress_controller"</span> <span class="p">{</span>
-  <span class="nx">source</span> <span class="p">=</span> <span class="s2">"github.com/ministryofjustice/cloud-platform-terraform-teams-ingress-controller?ref=0.0.7"</span>
+  <span class="nx">source</span> <span class="p">=</span> <span class="s2">"github.com/ministryofjustice/cloud-platform-terraform-teams-ingress-controller?ref=0.0.9"</span>
 
   <span class="nx">namespace</span> <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">namespace</span>
   <span class="nx">is_production</span> <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">is_production</span>
