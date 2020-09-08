@@ -215,21 +215,8 @@ deploying changes to the application:</p>
 define an instance of the application for kubernetes.</p>
 <p>Before we can deploy the application, we need to make some changes to run it in
 your new namespace.</p>
-<p>Edit your local copy of the <code>kubectl_deploy/ingress.yaml</code> file, and make the
-following changes:</p>
-
-<ul>
-<li>Change the <code>kubernetes.io/ingress.class</code> annotation to the name of your namespace</li>
-</ul>
-<p>This tells kubernetes that we want the ingress-controller belonging to your
-namespace to handle traffic to your application. The ingress controller is
-created by the <code>resources/ingress.tf</code> file which formed part of the PR you
-raised to create your namespace.</p>
-
-<ul>
-<li>Change the hostname for the application</li>
-</ul>
-<p>The current hostname for the demo application is:</p>
+<p>Edit your local copy of the <code>kubectl_deploy/ingress.yaml</code> file, and change the 
+hostname for the application. The current hostname for the demo application is:</p>
 <div class="highlight"><pre class="highlight plaintext"><code>helloworld-rubyapp.apps.live-1.cloud-platform.service.justice.gov.uk
 </code></pre></div><p>We need a unique domain name for this instance of the application. There is a
 &ldquo;wildcard&rdquo; domain and SSL certificate available on the Cloud Platform, so we
@@ -264,8 +251,6 @@ directory to the namespace called <code>my-namespace</code> (or whatever you cal
 kind: Ingress
 metadata:
   name: helloworld-rubyapp-ingress
-  annotations:
-    kubernetes.io/ingress.class: mynamespace
 spec:
   tls:
   - hosts:
@@ -278,10 +263,9 @@ spec:
         backend:
           serviceName: rubyapp-service
           servicePort: 4567
-</code></pre></div><p>This tells the cluster that our ingress-controller (found by matching the
-ingress class annotation to the name in the <code>resources/ingress.tf</code> file) should
-accept web traffic to the hostname we defined, and should route that traffic to
-port 4567 of the &ldquo;service&rdquo; called <code>rubyapp-service</code>.</p>
+</code></pre></div><p>This tells the cluster that our ingress should accept web traffic to the hostname we 
+defined, and should route that traffic to port 4567 of the &ldquo;service&rdquo; called 
+<code>rubyapp-service</code>.</p>
 <h3 id="service-yaml">service.yaml</h3><div class="highlight"><pre class="highlight plaintext"><code>apiVersion: v1
 kind: Service
 metadata:
@@ -427,8 +411,6 @@ page.</p>
 <div class="highlight"><pre class="highlight yaml"><code><span class="nn">...</span>
 <span class="na">metadata</span><span class="pi">:</span>
   <span class="na">name</span><span class="pi">:</span> <span class="s">helloworld-rubyapp-ingress</span>
-  <span class="na">annotations</span><span class="pi">:</span>
-    <span class="s">kubernetes.io/ingress.class</span><span class="pi">:</span> <span class="s">mynamespace</span>
 <span class="na">spec</span><span class="pi">:</span>
 <span class="nn">...</span>
 </code></pre></div><p>&hellip;with this:</p>
@@ -436,7 +418,6 @@ page.</p>
 <span class="na">metadata</span><span class="pi">:</span>
   <span class="na">name</span><span class="pi">:</span> <span class="s">helloworld-rubyapp-ingress</span>
   <span class="na">annotations</span><span class="pi">:</span>
-    <span class="s">kubernetes.io/ingress.class</span><span class="pi">:</span> <span class="s">mynamespace</span>
     <span class="s">nginx.ingress.kubernetes.io/auth-type</span><span class="pi">:</span> <span class="s">basic</span>
     <span class="s">nginx.ingress.kubernetes.io/auth-secret</span><span class="pi">:</span> <span class="s">basic-auth</span>
 <span class="na">spec</span><span class="pi">:</span>
