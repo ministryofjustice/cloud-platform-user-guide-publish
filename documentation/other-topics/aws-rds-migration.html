@@ -143,6 +143,10 @@ This is a standard approach using<code>pg_dump</code> and <code>psql</code>.</p>
 <li>The migration happens from a <em>source</em> postresql RDS instance to a <em>target</em> postresql RDS instance</li>
 <li>Elevated &amp; short-lived sets of postgres credentials are available for both <em>source</em> and <em>target</em></li>
 </ul>
+
+<blockquote>
+<p>Generating these credentials for your source database depends on where it is. For the target database, in the Cloud Platform, if your regular credentials have enough access, you can use those, or post in #ask-cloud-platform when you&rsquo;re ready, and the team can generate credentials with elevated privileges and put them into a secret in your namespace.</p>
+</blockquote>
 <h3 id="overview">Overview</h3><h4 id="postgres-utilities">Postgres utilities</h4><p>It is possible to do a full database migration using only official CLI tools, provided by Postgres. 
 Using <code>pg_dump</code> and <code>psql</code>, this document describes the migration process.</p>
 <p><a href="https://www.postgresql.org/docs/9.4/app-pgdump.html">pg_dump</a></p>
