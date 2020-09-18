@@ -106,7 +106,7 @@
         <div class="app-pane__content toc-open-disabled">
           <main id="content" class="technical-documentation" data-module="anchored-headings">
               <h1 id="viewing-rds-database-metrics">Viewing RDS Database Metrics</h1><p><a href="/documentation/monitoring-an-app/prometheus.html">Prometheus</a> collects metrics data on RDS instances via the <a href="/documentation/monitoring-an-app/how-to-use-cloudwatch-datasource.html">CloudWatch Exporter</a>.</p>
-<p>The available metrics are listed [here][metrics list].</p>
+<p>The available metrics are listed <a href="/documentation/other-topics/alert-rds.html#rds-metrics">here</a>.</p>
 <p>You can view any of these metrics as a graph using the <a href="https://prometheus.cloud-platform.service.justice.gov.uk/">Prometheus UI</a> by writing it as an expression like this:</p>
 <div class="highlight"><pre class="highlight plaintext"><code>aws_rds_free_storage_space_average{dbinstance_identifier="&lt;YOUR DATABASE IDENTIFIER&gt;"}
 </code></pre></div><p>Put your expression into the <code>Expression</code> text field, then click the <code>Execute</code> button and view the <code>Graph</code> tab.</p>
