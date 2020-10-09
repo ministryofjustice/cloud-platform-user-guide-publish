@@ -152,7 +152,7 @@ pushed to the image repository).</p>
 Doing this makes it difficult or impossible to reproduce a known state, for
 example if you wanted to roll back a deployment to an earlier version.</p>
 <p><strong>Always specify specific tagged versions of your docker images.</strong></p>
-<h2 id="multiple-replicas">Multiple replicas</h2><p>Kubernetes makes it trivially simple to deploy your services in a
+<h2 id="multiple-replicas">Multiple replicas</h2><p>Kubernetes makes it very easy to deploy your services in a
 high-availability configuration.  All you need to do is set the value of
 <code>replicas</code> in your <a href="https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#creating-a-deployment">deployments</a> to a value higher than
 1. For production services, we recommend 4 as a sensible number of replicas.</p>
@@ -162,17 +162,18 @@ so that there is no downtime for your service while the missing replica is
 replaced.</p>
 
 <blockquote>
-<p>Note: Kubernetes will automatically try to schedule your replicas on
+<p>Kubernetes will automatically try to schedule your replicas on
 different worker nodes, to minimise the impact of a node outage on all the
 services running in the cluster.</p>
 </blockquote>
-<p>NB: Running multiple replicas is usually sensible for things like web
+<p>Running multiple replicas is usually sensible for things like web
 application servers, where you just want to be sure that an instance of your
 app. is always available to service web requests. But, for some types of
 workload, such as background job processing, it might make sense to ensure that
-you have zero or one instances, rather than one or more. An example of this
+you have zero or one instances, rather than one or more.</p>
+<p>An example of this
 would be a job processing tasks which <strong>must</strong> be handled in FIFO order -
-running multiple replicas in this case would mean tasks could be processed out
+running multiple replicas in this case could mean tasks get processed out
 of order. For workloads like this, consider a <a href="https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#recreate-deployment">Recreate</a> deployment strategy.</p>
 <h2 id="zero-downtime-deploys">Zero Downtime Deploys</h2><p>This is another feature you get &lsquo;for free&rsquo; from kubernetes.</p>
 <p>Your <a href="https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#creating-a-deployment">deployments</a> have a <code>strategy</code> section, which
@@ -195,9 +196,9 @@ then take care of launching new pods and deleting old ones.</p>
 <p>More information about deployment strategies is available in the <a href="https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#creating-a-deployment">kubernetes
 documentation</a>, and there is more discussion of zero
 downtime deployments in <a href="/documentation/other-topics/zero-downtime-deployment.html">this article</a>.</p>
-<h2 id="horizontal-pod-autoscaling">Horizontal Pod Autoscaling</h2><p>The Horizontal Pod Autoscaler is a built-in Kubernetes feature that allows you to horizontally scale applications based on one or more monitored metrics such as cpu or memory.</p>
+<h2 id="horizontal-pod-autoscaling">Horizontal Pod Autoscaling</h2><p>The Horizontal Pod Autoscaler is a built-in Kubernetes feature that allows you to horizontally scale applications based on one or more monitored metrics such as cpu or memory usage.</p>
 <p>The metrics you specify in the <code>HorizontalPodAutoscaler</code> manifest will determine the minimum and maximum number of pods needed, and set the thresholds at which pods should be created or removed.</p>
-<p>The Horizontal Pod Autoscaler can ensure that critical applications are elastic and can scale out to meet increasing demand as well scale down to ensure optimal resource usage, it is also a great tool in saving money by auto-scaling down non-production work loads when not in use, such as overnight or the weekend.</p>
+<p>The Horizontal Pod Autoscaler can ensure that critical applications are elastic and can scale out to meet increasing demand as well scale down to ensure optimal resource usage, it is also a great tool in saving money by auto-scaling down non-production work loads when not in use, such as overnight or at the weekend.</p>
 <h4 id="important-aspects-of-the-horizontalpodautoscaler-to-be-aware-of">Important aspects of the HorizontalPodAutoscaler to be aware of:</h4>
 <ul>
 <li>Resource Limits - You need to set resource limits otherwise HPA will not work, as it will not have a value to quantify from.</li>
@@ -221,10 +222,10 @@ spec:
   targetCPUUtilizationPercentage: 50
 </code></pre></div><p>The above manifest will ensure a minimum of 1 replica is available for the deployment called my-app-name, but will increase replicas up to 5 when the CPU utilization is above 50%.</p>
 <p>Run the following command to apply:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>kubectl apply -f hpa-myapp.yaml -n my-namespace
+<div class="highlight"><pre class="highlight plaintext"><code>$ kubectl apply -f hpa-myapp.yaml -n my-namespace
 horizontalpodautoscaler.autoscaling/hpa-myapp autoscaled
 </code></pre></div><p>Run the following to describe the status of the pod autoscaler:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>kubectl describe hpa -n my-namespace my-app-name
+<div class="highlight"><pre class="highlight plaintext"><code>$ kubectl describe hpa -n my-namespace my-app-name
 </code></pre></div><div class="highlight"><pre class="highlight plaintext"><code>Name:                                                  my-app-name
 Namespace:                                             my-namespace
 Labels:                                                app=my-app-name
@@ -244,19 +245,19 @@ Conditions:
   ScalingLimited  False   DesiredWithinRange  the desired count is within the acceptable range
 </code></pre></div><p>For the above, the current use is 10% of the resource limit, if/when the CPU consumption exceeds the threshold of 50% for more than 3 minutes, the deployment will scale up.</p>
 <p>It is also possible to use custom metrics with the horizontal pod-autoscaler. However. this requires a bit more input from the development and Cloud-Platform team. If this is something you may be interested in, please speak to a member of the team on #ask-cloud-platform</p>
-<p>Click <a href="https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough">HERE</a> for the official Kubernetes documentation on the horizontal pod autoscaler walkthrough.</p>
+<p>Click <a href="https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough">here</a> for the official Kubernetes documentation on the horizontal pod autoscaler walkthrough.</p>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2020-09-12">
+              <div data-module='page-expiry' data-last-reviewed-on="2021-01-09">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 12 June 2020.
+      This page was last reviewed on 9 October 2020.
 
-        It needs to be reviewed again on 12 September 2020
+        It needs to be reviewed again on 9 January 2021
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 12 September 2020.
+      This page was set to be reviewed before 9 January 2021.
       This might mean the content is out of date.
     </div>
   </div>
