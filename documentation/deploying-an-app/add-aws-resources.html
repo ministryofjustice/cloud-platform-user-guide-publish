@@ -124,11 +124,17 @@
 
         <div class="app-pane__content toc-open-disabled">
           <main id="content" class="technical-documentation" data-module="anchored-headings">
-              <h1 id="adding-aws-resources-to-your-environment">Adding AWS resources to your environment</h1><p>Through the <a href="https://github.com/ministryofjustice/cloud-platform-environments/">cloud-platform-environments</a> repository, you can provision AWS resources for your environments. This is done using terraform and more specifically, terraform modules we provide for use on the Cloud Platform.</p>
-<p>The documentation for the modules lives in each module&rsquo;s repository and you can find a list of the available ones below.</p>
-<h2 id="available-modules">Available modules</h2><p>The updated list of terraform modules provided by the MoJ are available here: <a href="https://github.com/ministryofjustice/cloud-platform#terraform-modules">Terraform Modules</a></p>
-<h2 id="usage">Usage</h2><p>In each terraform module repository, you will find a directory named <code>example</code> which includes sample configuration for use in Cloud Platform.</p>
+              <h1 id="adding-aws-resources-to-your-environment">Adding AWS resources to your environment</h1><p>Through the <a href="https://github.com/ministryofjustice/cloud-platform-environments/">cloud-platform-environments</a> repository, you can provision AWS resources for your environments. This is done using terraform and more specifically, terraform modules the Cloud Platform team provides.</p>
+<p>The documentation for the modules lives in each module&rsquo;s repository.</p>
+<h2 id="available-modules">Available modules</h2><p>The updated list of terraform modules provided by the Cloud Platform team is available here: <a href="https://github.com/ministryofjustice/cloud-platform#terraform-modules">Terraform Modules</a></p>
+<h2 id="usage">Usage</h2><p>In each terraform module repository, you will find a directory named <code>example</code> which includes sample configuration for use on the Cloud Platform.</p>
 <p>In your namespace&rsquo;s path in the <a href="https://github.com/ministryofjustice/cloud-platform-environments/">cloud-platform-environments</a> repository, cd to the <code>resources</code> directory and refer to the module&rsquo;s example to define your resources.</p>
+
+<blockquote>
+<p>Terraform configs for some AWS resources can be created using the <a href="/documentation/getting-started/cloud-platform-cli.html">cloud-platform</a> CLI tool, e.g.</p>
+<div class="highlight"><pre class="highlight plaintext"><code>cloud-platform environment rds create
+</code></pre></div><p>&hellip;will create an <code>rds.tf</code> file in your resources directory.</p>
+</blockquote>
 <p>Each example will have some global configuration defined, however, this should only be declared once, regardless of the number of modules used:</p>
 <div class="highlight"><pre class="highlight plaintext"><code>terraform {
   backend "s3" {}
@@ -145,28 +151,34 @@ variable "cluster_state_bucket" {}
 <h3 id="outputs">Outputs</h3><p>Each module will have its own outputs. These expose useful information, such as endpoints, credentials etc. The module examples all use a common approach: they employ the <code>kubernetes_secret</code> terraform resource to push the outputs straight into your namespace in the form of a <code>Secret</code> which you could then extract information from or directly reference in <code>Pods</code>.</p>
 <p>This is currently the only supported way of accessing terraform outputs.</p>
 <p>See <a href="/documentation/deploying-an-app/add-secrets-to-deployment.html#using-the-secret-in-your-applications">this article</a> for instructions on how to use these secrets in your applications.</p>
-<h3 id="versioning">Versioning</h3><p>All modules are versioned. This allows us to implement changes without breaking existing resources. To use a specific version of a module you need to define it in the <code>source</code> attribute by specifying the <code>ref</code> attribute in the query string of the source URL:</p>
+<h3 id="versioning">Versioning</h3><p>Only the latest version of a Cloud Platform terraform module may be used.</p>
+<p>The Cloud Platform team will upgrade all existing instances of a module, whenever a new version is released, as per this <a href="https://github.com/ministryofjustice/cloud-platform/blob/main/architecture-decision-record/015-Keeping-Terraform-modules-up-to-date.md#keeping-terraform-modules-up-to-date">architecture decision record</a></p>
+<p>Please check the version badge for the module you are using (visit the web page of the module&rsquo;s github repository - the version badge will be just below the heading), and make sure you are using the latest version of the module in your configuration, by specifying the <code>ref</code> attribute in the query string of the source URL:</p>
 <div class="highlight"><pre class="highlight plaintext"><code>module "my_module" {
   source = "https://github.com/ministryofjustice/cloud-platform-terraform-ecr-credentials?ref=1.0"
 }
-</code></pre></div><p>Please check the version badge for the module you are using (visit the web page of the module&rsquo;s github repository - the version badge will be just below the heading), and make sure you are using the latest version of the module in your configuration.</p>
-<p>Upgrading to a new major version usually means that the configured resource will have to be re-created by terraform.</p>
-<p>Refer to the <a href="http://terraform.io/docs/modules">terraform documentation on modules</a> for more information on usage.</p>
+</code></pre></div><p>Refer to the <a href="http://terraform.io/docs/modules">terraform documentation on modules</a> for more information on usage.</p>
 <h3 id="monitoring-aws-resources">Monitoring AWS Resources</h3><p>All resources are monitored by AWS CloudWatch by default. We use <a href="https://github.com/prometheus/cloudwatch_exporter">CloudWatch Exporter</a> to export a number of the metrics for the <a href="https://github.com/ministryofjustice/cloud-platform#terraform-modules">Terraform Modules</a> we provide into Prometheus.</p>
-<p>To view the current set of metrics available: log into Prometheus  &gt; Click on &lsquo;insert metric at cursor&rsquo; &gt; type &lsquo;aws_&rsquo;</p>
+<p>To view the current set of metrics available:</p>
+
+<ul>
+<li>Log into <a href="https://prometheus.cloud-platform.service.justice.gov.uk/graph">Prometheus</a></li>
+<li>Click on &lsquo;insert metric at cursor&rsquo;</li>
+<li>type &lsquo;aws_&rsquo;</li>
+</ul>
 <p>You can view all metrics AWS make available <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/aws-services-cloudwatch-metrics.html">here</a></p>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2020-10-07">
+              <div data-module='page-expiry' data-last-reviewed-on="2021-01-09">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 7 July 2020.
+      This page was last reviewed on 9 October 2020.
 
-        It needs to be reviewed again on 7 October 2020
+        It needs to be reviewed again on 9 January 2021
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 7 October 2020.
+      This page was set to be reviewed before 9 January 2021.
       This might mean the content is out of date.
     </div>
   </div>
