@@ -99,6 +99,8 @@
       <li>
         <ul>
           <li>
+          </li>
+          <li>
             <a href="#introduction"><span>Introduction</span></a>
           </li>
           <li>
@@ -123,17 +125,28 @@
 
         <div class="app-pane__content toc-open-disabled">
           <main id="content" class="technical-documentation" data-module="anchored-headings">
-              <h1 id="modsecurity-web-application-firewall">ModSecurity - Web Application Firewall</h1><h3 id="introduction">Introduction</h3><h4 id="what-is-a-web-application-firewall-waf">What is a Web Application Firewall (WAF)?</h4><p>A Web Application Firewall or WAF helps protect web applications by filtering and monitoring HTTP traffic between a web application and the Internet. A WAF is a <a href="https://en.wikipedia.org/wiki/OSI_model">layer 7</a> defense and is one of the most common means of protecting against malicious web application security flaws at the application layer. However, it must be noted that a WAF is not designed and does not protect against all types of attacks.</p>
+              <h1 id="modsecurity-web-application-firewall">ModSecurity - Web Application Firewall</h1>
+<blockquote>
+<h4 id="quick-start">Quick Start</h4><p>We have a dedicated ingress-controller with ModSecurity enabled.</p>
+<p>To enable and point your application to this ingress-controller, use the following annotations on your ingress manifest file:</p>
+<div class="highlight"><pre class="highlight plaintext"><code>annotations:
+ kubernetes.io/ingress.class: "modsec01"
+ nginx.ingress.kubernetes.io/enable-modsecurity: "true"
+ nginx.ingress.kubernetes.io/modsecurity-snippet: |
+  SecRuleEngine On
+</code></pre></div></blockquote>
+<h3 id="introduction">Introduction</h3><h4 id="what-is-a-web-application-firewall-waf">What is a Web Application Firewall (WAF)?</h4><p>A Web Application Firewall or WAF helps protect web applications by filtering and monitoring HTTP traffic between a web application and the Internet. A WAF is a <a href="https://en.wikipedia.org/wiki/OSI_model">layer 7</a> defense and is one of the most common means of protecting against malicious web application security flaws at the application layer. However, it must be noted that a WAF is not designed and does not protect against all types of attacks.</p>
 <h4 id="modsecurity">ModSecurity</h4><p><a href="http://www.modsecurity.org/about.html">ModSecurity</a> is an open source, cross platform web application firewall (WAF) developed by Trustwave&rsquo;s SpiderLabs. It has a robust event-based programming language which provides protection from a range of attacks against web applications and allows for HTTP traffic monitoring and logging.</p>
 <p>For the Cloud Platform, ModSecurity has been configured as an opt-in feature. New and current applications will require a specific set of annotations to be added to their ingress manifest file.</p>
-<h3 id="ingress-annotations">Ingress Annotations</h3><p>To enable ModSecurity for your application, for following an annotations need to be added to the ingress manifest file:</p>
+<h3 id="ingress-annotations">Ingress Annotations</h3><p>We have a dedicated ingress-controller with ModSecurity enabled separate from the default ingress-controller. 
+To point your application to the ModSec ingress-controller, add the following annotation to your ingress manifest file:</p>
+<div class="highlight"><pre class="highlight yaml"><code><span class="s">kubernetes.io/ingress.class</span><span class="pi">:</span> <span class="s2">"</span><span class="s">modsec01"</span>
+</code></pre></div><p>To enable ModSecurity for your application, add the following annotation to your ingress manifest file:</p>
 <div class="highlight"><pre class="highlight yaml"><code><span class="s">nginx.ingress.kubernetes.io/enable-modsecurity</span><span class="pi">:</span> <span class="s2">"</span><span class="s">true"</span>
 </code></pre></div><p>This annotation enables ModSecurity for the ingress on the nginx ingress-controller in detection only mode. There is no disruptive action if a critical rule triggers, but it is logged in the nginx-ingress.log file. The <code>SecRuleEngine</code> is set to <code>Detection Only Mode</code>.</p>
 <div class="highlight"><pre class="highlight yaml"><code><span class="s">nginx.ingress.kubernetes.io/modsecurity-snippet</span><span class="pi">:</span> <span class="pi">|</span>
-      <span class="s">Include /etc/nginx/owasp-modsecurity-crs/nginx-modsecurity.conf</span>
       <span class="s">SecRuleEngine On</span>
-</code></pre></div><p>This configures the nginx ingress-controller to use the <code>nginx-modsecurity.conf</code> file for the CRS settings.
-The <code>SecRuleEngine On</code> configures ModSecurity to actively block traffic classed as malicious using Anomaly Scoring.</p>
+</code></pre></div><p>The <code>SecRuleEngine On</code> configures ModSecurity to actively block traffic classed as malicious using Anomaly Scoring.</p>
 <div class="highlight"><pre class="highlight yaml"><code><span class="s">nginx.ingress.kubernetes.io/modsecurity-transaction-id</span><span class="pi">:</span> <span class="s2">"</span><span class="s">$request_id"</span>
 </code></pre></div><p>The above annotation is optional, but it can be used to pass transactionIDs from nginx.</p>
 <p>Example:</p>
@@ -145,7 +158,6 @@ The <code>SecRuleEngine On</code> configures ModSecurity to actively block traff
     <span class="s">kubernetes.io/ingress.class</span><span class="pi">:</span> <span class="s2">"</span><span class="s">nginx"</span>
     <span class="s">nginx.ingress.kubernetes.io/enable-modsecurity</span><span class="pi">:</span> <span class="s2">"</span><span class="s">true"</span>
     <span class="s">nginx.ingress.kubernetes.io/modsecurity-snippet</span><span class="pi">:</span> <span class="pi">|</span>
-      <span class="s">Include /etc/nginx/owasp-modsecurity-crs/nginx-modsecurity.conf</span>
       <span class="s">SecRuleEngine On</span>
 <span class="na">spec</span><span class="pi">:</span>
   <span class="na">tls</span><span class="pi">:</span>
@@ -168,7 +180,7 @@ Fluentd is used to ship error logs into the Cloud Platform ELK stack. To view an
  [severity "2"] [ver ""] [maturity "0"] [accuracy "0"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag 
  "attack-generic"] [hostname "12.123.1.12"] [uri "/"] [unique_id "12345678.12345"] [ref ""],
 client: 12.123.1.12, server: test-ingress.url, request: "GET /?exec=/bin/bash HTTP/2.0", host: "test-ingress.url"
-</code></pre></div><h3 id="owasp-rules">OWASP Rules</h3><p>The <a href="https://coreruleset.org/faq/">OWASP ModSecurity Core Rule Set (CRS)</a> is a set of generic attack detection rules for use with ModSecurity. The CRS aims to protect web applications from a wide range of attacks, including the OWASP Top Ten, with a minimum of false alerts. The CRS provides protection against many common attack categories, including:</p>
+</code></pre></div><h3 id="owasp-rules">OWASP Rules</h3><p>The <a href="https://coreruleset.org/faq/">OWASP ModSecurity Core Rule Set (CRS)</a> is a set of generic attack detection rules for use with ModSecurity. These rules are enabled on the ingress-controller level on the dedicated ModSec ingress-controller. The CRS aims to protect web applications from a wide range of attacks, including the OWASP Top Ten, with a minimum of false alerts. The CRS provides protection against many common attack categories, including:</p>
 
 <ul>
 <li>SQL Injection (SQLi)</li>
