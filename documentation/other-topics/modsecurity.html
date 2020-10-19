@@ -155,7 +155,7 @@ To point your application to the ModSec ingress-controller, add the following an
 <span class="na">metadata</span><span class="pi">:</span>
   <span class="na">name</span><span class="pi">:</span> <span class="s">app-ingress</span>
   <span class="na">annotations</span><span class="pi">:</span>
-    <span class="s">kubernetes.io/ingress.class</span><span class="pi">:</span> <span class="s2">"</span><span class="s">nginx"</span>
+    <span class="s">kubernetes.io/ingress.class</span><span class="pi">:</span> <span class="s2">"</span><span class="s">modsec01"</span>
     <span class="s">nginx.ingress.kubernetes.io/enable-modsecurity</span><span class="pi">:</span> <span class="s2">"</span><span class="s">true"</span>
     <span class="s">nginx.ingress.kubernetes.io/modsecurity-snippet</span><span class="pi">:</span> <span class="pi">|</span>
       <span class="s">SecRuleEngine On</span>
