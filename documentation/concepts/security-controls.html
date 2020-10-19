@@ -124,10 +124,15 @@
               <h1 id="security-controls-on-the-cloud-platform">Security Controls on the Cloud Platform</h1><p>The purpose of this page is to explain some of the security issues which often
 come up during &ldquo;code of connection&rdquo; processes, when connecting to external
 systems.</p>
-<h2 id="network-architecture">Network architecture</h2><p>The Cloud Platform (CP) is hosted in <a href="https://aws.amazon.com/">Amazon AWS</a>, and consists of a single
-<a href="https://kubernetes.io/">kubernetes</a> cluster, inside which services are hosted in <a href="https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/">namespaces</a>, plus
-additional AWS managed services such as database instances, S3 buckets, etc.</p>
-<p>The cluster and all the AWS resources that services use are hosted in a single
+<h2 id="network-architecture">Network architecture</h2><p>The Cloud Platform (CP) is hosted in <a href="https://aws.amazon.com/">Amazon AWS</a>, and consists of two <a href="https://kubernetes.io/">kubernetes</a> clusters:</p>
+
+<ul>
+<li>live-1 - the &ldquo;application&rdquo; cluster, managed via <a href="https://github.com/kubernetes/kops">Kops</a>, which runs all hosted services</li>
+<li>manager - an <a href="https://aws.amazon.com/eks/">EKS</a> cluster which runs shared services such as monitoring and CI/CD pipelines</li>
+</ul>
+<p>&hellip;plus additional AWS managed services such as database instances, S3 buckets,
+etc.</p>
+<p>The clusters and all the AWS resources that services use are hosted in a single
 <a href="https://aws.amazon.com/vpc/">VPC</a>, which is only accessible to the outside world via either https
 connections, or via the kubernetes API and SSH through a bastion host (only the
 CP team have access to these).</p>
@@ -144,7 +149,7 @@ infrastructure from other components in the same VPC.</p>
 <p>The kubernetes cluster has a pool of <a href="https://kubernetes.io/docs/concepts/architecture/nodes/">worker nodes</a> (EC2 instances) which are
 entirely interchangeable from the point of view of the services hosted in the
 cluster. Services do not know, and should not care, which worker nodes are
-hosting them at any given moment. So, network connections to for example an
+hosting them at any given moment. So, network connections to, for example, an
 RDS instance could come from <strong>any</strong> of the worker nodes in the cluster.</p>
 <p>Security groups work at the EC2 instance level. i.e. requests to an RDS
 instance from a specific set of EC2 instances would be allowed, and others
@@ -158,16 +163,16 @@ keys, which are usually made available to services via <a href="https://kubernet
 the namespaces in which the services run.</p>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2020-04-30">
+              <div data-module='page-expiry' data-last-reviewed-on="2021-01-19">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 30 January 2020.
+      This page was last reviewed on 19 October 2020.
 
-        It needs to be reviewed again on 30 April 2020
+        It needs to be reviewed again on 19 January 2021
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 30 April 2020.
+      This page was set to be reviewed before 19 January 2021.
       This might mean the content is out of date.
     </div>
   </div>
