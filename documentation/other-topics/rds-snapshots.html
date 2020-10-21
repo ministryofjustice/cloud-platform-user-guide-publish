@@ -157,13 +157,17 @@
 <li><p><strong>Contact the Cloud Platform team</strong> about the restore, providing the <code>db-instance-identifier</code> and the PR raised.</p></li>
 <li><p>Before the PR can be merged, the Cloud Platform team have to:</p>
 
-<blockquote>
 <ul>
 <li>pause the concourse pipeline, and</li>
 <li>rename the DB Instance via the AWS console</li>
 </ul>
-</blockquote>
-<p>This allows the pipeline to create the new DB Instance from the snapshot, using the same name and settings as the original, and preserves the database endpoint and credentials.</p></li>
+<p>This allows the pipeline to create the new DB Instance from the snapshot, using the same name and settings as the original, and preserves the database endpoint and credentials.</p>
+
+<blockquote>
+<p>Sometimes pipeline throw error <code>InvalidParameterCombination: Cannot upgrade mariadb from 10.4.13 to 10.4.8</code>. This will happen if the AWS upgraded the minor version automatically 
+and terraform stored the exact db_engine_version in its state. To fix this, change the <code>db_engine_version</code> from <code>10.4</code> to the one AWS upgraded to, in this case <code>10.4.13</code> and do <strong>step 4</strong> again.
+Once the the terraform apply is successful and DB instance created, revert the changes made for <code>db_engine_version</code>.</p>
+</blockquote></li>
 <li><p>Merge the PR to master and check that the build pipeline creates the new DB instance with the same identifier and endpoints. The Cloud Platform team can also apply your changes manually if this is time critical.</p></li>
 </ol>
 <p>Once the new DB instance is restored and available, your application should be able to access the database with the same database credentials and endpoint as before.</p>
