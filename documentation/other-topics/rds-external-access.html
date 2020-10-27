@@ -153,7 +153,6 @@ the following steps:</p>
 <div class="highlight"><pre class="highlight plaintext"><code>kubectl \
   -n [your namespace] \
   run port-forward-pod \
-  --generator=run-pod/v1 \
   --image=ministryofjustice/port-forward \
   --port=5432 \
   --env="REMOTE_HOST=[your database hostname]" \
