@@ -105,7 +105,7 @@
             <a href="#prerequisites"><span>Prerequisites</span></a>
           </li>
           <li>
-            <a href="#create-a-slack-webhook-and-amend-alertmanager"><span>Create a slack webhook and amend Alertmanager</span></a>
+            <a href="#create-a-slack-webhook-and-amend-alertmanager"><span>Create a slack webhook, and amend Alertmanager</span></a>
           </li>
           <li>
             <a href="#create-a-prometheusrule"><span>Create a PrometheusRule</span></a>
@@ -114,7 +114,7 @@
             <a href="#prometheusrule-examples"><span>PrometheusRule examples</span></a>
           </li>
           <li>
-            <a href="#advisory-note-1-prometheusrules-status-incase-of-dr-requirement-for-a-new-prometheus-install"><span>Advisory Note 1: PrometheusRules status incase of DR/requirement for a new Prometheus Install</span></a>
+            <a href="#advisory-note-1-if-prometheus-gets-re-installed"><span>Advisory Note 1: If Prometheus gets re-installed</span></a>
           </li>
           <li>
             <a href="#advisory-note-2-cputhrottlinghigh-alert"><span>Advisory Note 2: CPUThrottlingHigh Alert</span></a>
@@ -135,14 +135,14 @@
 
         <div class="app-pane__content toc-open-disabled">
           <main id="content" class="technical-documentation" data-module="anchored-headings">
-              <h1 id="creating-your-own-custom-alerts">Creating your own custom alerts</h1><h3 id="overview">Overview</h3><p>Alertmanager allows you define your own alert conditions based on <a href="https://prometheus.io/docs/prometheus/latest/querying/basics">Prometheus expression language</a> expressions.</p>
-<p>The aim of this document is to provide you with the necessary information to create and send application specific alerts to a Slack channel of your choosing.</p>
+              <h1 id="creating-your-own-custom-alerts">Creating your own custom alerts</h1><h3 id="overview">Overview</h3><p>Alertmanager allows you to define your own alert conditions based on <a href="https://prometheus.io/docs/prometheus/latest/querying/basics">Prometheus expression language</a> expressions.</p>
+<p>The aim of this document is to provide you with the necessary information to create and send application-specific alerts to a Slack channel of your choosing.</p>
 <h3 id="prerequisites">Prerequisites</h3><p>This guide assumes the following:</p>
 
 <ul>
 <li>You have <a href="/documentation/getting-started/env-create.html#creating-a-cloud-platform-environment">created a namespace for your application</a></li>
 </ul>
-<h3 id="create-a-slack-webhook-and-amend-alertmanager">Create a slack webhook and amend Alertmanager</h3>
+<h3 id="create-a-slack-webhook-and-amend-alertmanager">Create a slack webhook, and amend Alertmanager</h3>
 <ol>
 <li><p>Create a <a href="https://slack.com/intl/en-gb/help/articles/115005265063-Incoming-webhooks-for-Slack">slack webhook</a> if you dont already have one for the channel you want to send the alerts.</p></li>
 <li><p>Create a <a href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/deploying-an-app/add-secrets-to-deployment.html#adding-a-secret-to-an-application">kubernetes secret</a> to store the slack webhook.</p></li>
@@ -157,15 +157,15 @@
 <li>kubernetes secret name where the webhook url is stored</li>
 <li>severity level (warning/information)</li>
 </ul>
-<p>If you want an event/information type slack message for monitoring non-problem/non-failure type events 
+<p>If you want an event/information type slack message for monitoring non-problem/non-failure type events
 - e.g. a team wants to positively know something happened (like a database refresh, or app deployment etc), specify the severity level as <code>information</code></p>
-<p>The team will provide you with a &ldquo;<code>custom severity level</code>&rdquo; that&rsquo;ll need to be defined in the next step. Please copy it to your clipboard.</p>
+<p>The team will provide you with a &ldquo;<code>custom severity level</code>&rdquo; that will need to be defined in the next step. Please copy it to your clipboard.</p>
 <h3 id="create-a-prometheusrule">Create a PrometheusRule</h3><p>A <code>PrometheusRule</code> is a custom resource that defines your triggered alert. This file will contain the alert name, promql expression and time of check.</p>
 <p>To create your own custom alert you&rsquo;ll need to fill in the template below and deploy it to your namespace (tip: you can check rules in your namespace by running <code>kubectl get prometheusrule -n &lt;namespace&gt;</code>).</p>
 
 <ul>
 <li>Create a file called <code>prometheus-custom-rules-&lt;application_name&gt;.yaml</code></li>
-<li>Copy in the template below and replace the bracket values, specifying the requirements of your alert. The <code>&lt;custom_severity_level&gt;</code> field is the value you were passed earlier.</li>
+<li>Copy in the template below and replace the bracket values, specifying the requirements of your alert. The <code>&lt;custom_severity_level&gt;</code> field is the value you were given earlier, by the cloud platform team.</li>
 </ul>
 <div class="highlight"><pre class="highlight yaml"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">monitoring.coreos.com/v1</span>
 <span class="na">kind</span><span class="pi">:</span> <span class="s">PrometheusRule</span>
@@ -188,9 +188,10 @@
         <span class="na">runbook_url</span><span class="pi">:</span> <span class="s">&lt;http://my-support-docs&gt;</span>
 </code></pre></div>
 <ul>
-<li>Run <code>kubectl apply -f prometheus-custom-rules-&lt;application_name&gt;.yaml -n &lt;namespace&gt;</code></li>
+<li>Run:</li>
 </ul>
-<p>A working example of this would be:</p>
+<div class="highlight"><pre class="highlight plaintext"><code>kubectl apply -f prometheus-custom-rules-&lt;application_name&gt;.yaml -n &lt;namespace&gt;
+</code></pre></div><p>A working example of this would be:</p>
 <div class="highlight"><pre class="highlight yaml"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">monitoring.coreos.com/v1</span>
 <span class="na">kind</span><span class="pi">:</span> <span class="s">PrometheusRule</span>
 <span class="na">metadata</span><span class="pi">:</span>
@@ -216,10 +217,13 @@
 <p>You can view the applied rules with the following command:</p>
 <div class="highlight"><pre class="highlight shell"><code>kubectl <span class="nt">-n</span> &lt;namespace&gt; describe prometheusrules prometheus-custom-rules-&lt;application_name&gt;
 </code></pre></div><h3 id="prometheusrule-examples">PrometheusRule examples</h3><p>If you&rsquo;re struggling for ideas on how and which alerts to setup, please see some examples <a href="https://github.com/ministryofjustice/cloud-platform-infrastructure/blob/master/terraform/cloud-platform-components/resources/prometheusrule-examples/application-alerts.yaml">here</a>.</p>
-<h3 id="advisory-note-1-prometheusrules-status-incase-of-dr-requirement-for-a-new-prometheus-install">Advisory Note 1: PrometheusRules status incase of DR/requirement for a new Prometheus Install</h3><p>The  <code>PrometheusRule</code> is a <a href="https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/##customresourcedefinitions">CRD</a> that declaratively defines a desired Prometheus rule to be consumed by Prometheus and applied using a YAML file. However, if for any reason Prometheus has to be uninstalled, <code>all PrometheusRules are removed with the CRD.</code></p>
-<p>We recommend all PrometheusRules to be added to the <a href="https://github.com/ministryofjustice/cloud-platform-environments">Environments Repo</a> within the namespace folder the rules refer to. This will ensure all rules are applied/present at all times.</p>
+<h3 id="advisory-note-1-if-prometheus-gets-re-installed">Advisory Note 1: If Prometheus gets re-installed</h3><p>In the event of a serious failure, or for a required upgrade, it may be necessary to re-install Prometheus.</p>
+<p><code>PrometheusRule</code> is a <a href="https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/##customresourcedefinitions">CRD</a> that declaratively defines a desired Prometheus rule.</p>
+<p>If for any reason Prometheus has to be re-installed, <strong>all PrometheusRules are removed with the CRD.</strong></p>
+<p>We recommend that all PrometheusRules are added to your namespace folder in the <a href="https://github.com/ministryofjustice/cloud-platform-environments">Environments Repo</a>. This will ensure all rules are applied/present at all times.</p>
 <p>PrometheusRules can still be tested/amended/applied manually, then a PR can be created to add to the Environments Repo when ready.</p>
-<h3 id="advisory-note-2-cputhrottlinghigh-alert">Advisory Note 2: CPUThrottlingHigh Alert</h3><p>The <code>CPUThrottlingHigh</code> alert is configured as part of the default rules when installing prometheus-operator. The alert can trigger when containers have low cpu limits, spiky workloads but very low average usage. CPU throttling can activate during those spikes. CPU usage is based on <a href="https://en.wikipedia.org/wiki/Completely_Fair_Scheduler">CFS</a>.</p>
+<h3 id="advisory-note-2-cputhrottlinghigh-alert">Advisory Note 2: CPUThrottlingHigh Alert</h3><p>The <code>CPUThrottlingHigh</code> alert is configured as part of the default rules when installing prometheus-operator.</p>
+<p>This alert can trigger if containers have low CPU limits, and/or spiky workloads but with very low average usage. CPU throttling can activate during those spikes. CPU usage is based on <a href="https://en.wikipedia.org/wiki/Completely_Fair_Scheduler">CFS</a>.</p>
 <p>If you think this may be causing an issue with your application, we recommend raising your CPU limit, whilst keeping the container CPU request as close to the 95%-ile average usage as possible.</p>
 <h3 id="further-reading">Further reading</h3>
 <ul>
@@ -228,16 +232,16 @@
 </ul>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2020-10-28">
+              <div data-module='page-expiry' data-last-reviewed-on="2021-01-29">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 28 July 2020.
+      This page was last reviewed on 29 October 2020.
 
-        It needs to be reviewed again on 28 October 2020
+        It needs to be reviewed again on 29 January 2021
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 28 October 2020.
+      This page was set to be reviewed before 29 January 2021.
       This might mean the content is out of date.
     </div>
   </div>
