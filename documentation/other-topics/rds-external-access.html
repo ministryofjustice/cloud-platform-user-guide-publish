@@ -153,6 +153,7 @@ the following steps:</p>
 <div class="highlight"><pre class="highlight plaintext"><code>kubectl \
   -n [your namespace] \
   run port-forward-pod \
+  --generator=run-pod/v1 \
   --image=ministryofjustice/port-forward \
   --port=5432 \
   --env="REMOTE_HOST=[your database hostname]" \
@@ -192,16 +193,16 @@ this, please make it part of a <a href="https://kubernetes.io/docs/tasks/run-app
 <div class="highlight"><pre class="highlight plaintext"><code>kubectl delete pod port-forward-pod -n [your namespace]
 </code></pre></div>
 
-              <div data-module='page-expiry' data-last-reviewed-on="2020-10-28">
+              <div data-module='page-expiry' data-last-reviewed-on="2021-01-29">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 28 July 2020.
+      This page was last reviewed on 29 October 2020.
 
-        It needs to be reviewed again on 28 October 2020
+        It needs to be reviewed again on 29 January 2021
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 28 October 2020.
+      This page was set to be reviewed before 29 January 2021.
       This might mean the content is out of date.
     </div>
   </div>
