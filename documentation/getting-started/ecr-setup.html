@@ -160,26 +160,25 @@
 <h2 id="accessing-the-credentials">Accessing the credentials</h2><p>After your ECR has been created, there will be a <a href="https://kubernetes.io/docs/concepts/configuration/secret/">Kubernetes secret</a> in your namespace, called <code>ecr-repo-[your-namespace]</code></p>
 <p>The secret stores the IAM access keys to authenticate with the registry, and the actual repository URL.</p>
 <p>To retrieve the credentials:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>kubectl -n &lt;namespace_name&gt; get secret ecr-repo-[your-namespace] -o yaml
-</code></pre></div><p>The values in kubernetes secrets are always <code>base64</code> encoded so you will have to decode them before you can use them outside kubernetes (inside your namespace, the base64 decoding is handled automatically). This can be done at the command line using the following:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>echo QWxhZGRpbjpvcGVuIHNlc2FtZQ== | base64 --decode; echo
-</code></pre></div><h2 id="managing-your-ecr-repository">Managing your ECR repository</h2><p>There is a maximum number of images per repository for Amazon Elastic Container Registry(ECR). If a new image is created and pushed to ECR on every code change, repositories can quickly fill up with new revisions. So it is important to regularly delete images which are no longer required.</p>
+<div class="highlight"><pre class="highlight plaintext"><code>kubectl -n &lt;namespace_name&gt; get secrets/ecr-repo-[your-namespace] --template={{.data.access_key_id}} | base64 --decode
+kubectl -n &lt;namespace_name&gt; get secrets/ecr-repo-[your-namespace] --template={{.data.secret_access_key}} | base64 --decode
+</code></pre></div><h2 id="managing-your-ecr-repository">Managing your ECR repository</h2><p>There is a maximum number of images per repository for Amazon Elastic Container Registry (ECR). If a new image is created and pushed to ECR on every code change, repositories can quickly fill up with new revisions. So it is important to regularly delete images which are no longer required.</p>
 <p>You can delete an image with the AWS CLI using this <a href="https://docs.aws.amazon.com/AmazonECR/latest/userguide/delete_image.html">guide</a>.</p>
 <p>You can create <a href="/documentation/monitoring-an-app/how-to-create-alarms.html#creating-your-own-custom-alerts">custom-alerts</a> to monitor the number of ECR images in your Repository using <a href="https://prometheus.cloud-platform.service.justice.gov.uk/graph?g0.range_input=1h&amp;g0.expr=aws_ecr_repository_image_count&amp;g0.tab=1">Prometheus ecr-metrics</a>.</p>
 <h3 id="setting-up-circleci">Setting up CircleCI</h3><p>In your CircleCI project, go to the settings (the cog icon) and select &lsquo;AWS Permissions&rsquo; from the left hand menu. Fill in the IAM credentials from the kubernetes secret, and CircleCI will be able to pull images from your ECR. For more information please see <a href="https://circleci.com/docs/2.0/private-images/">the official docs</a>.</p>
 <h2 id="next-steps">Next steps</h2><p>Try <a href="/documentation/deploying-an-app/app-deploy-helm.html#deploying-an-application-to-the-cloud-platform-with-helm">deploying an app</a> with <a href="https://helm.sh/">Helm</a>, a Kubernetes package manager, or <a href="/documentation/deploying-an-app/helloworld-app-deploy.html#deploying-a-39-hello-world-39-application-to-the-cloud-platform">deploying manually</a> by writing some custom YAML files.</p>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2020-11-06">
+              <div data-module='page-expiry' data-last-reviewed-on="2021-02-11">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 6 August 2020.
+      This page was last reviewed on 11 November 2020.
 
-        It needs to be reviewed again on 6 November 2020
+        It needs to be reviewed again on 11 February 2021
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 6 November 2020.
+      This page was set to be reviewed before 11 February 2021.
       This might mean the content is out of date.
     </div>
   </div>
