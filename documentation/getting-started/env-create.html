@@ -157,17 +157,17 @@ logical separation within our cluster that provides isolation from any other
 namespace. You can think of a namespace as a separate portion of the cloud platform
 set aside for your service.</p>
 <p>Once you have created an environment you will be able to perform actions using
-the <code>kubectl</code> tool in the namespace you have created.</p>
+the <a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/">kubectl</a> tool in the namespace you have created.</p>
 <h2 id="objective">Objective</h2><p>By the end of this guide you&rsquo;ll have created a Kubernetes namespace ready for
 you to <a href="/documentation/deploying-an-app/helloworld-app-deploy.html#deploying-a-39-hello-world-39-application-to-the-cloud-platform">deploy an application</a> into.</p>
 <h2 id="create-an-environment">Create an environment</h2><h3 id="pre-requisites">Pre-requisites</h3>
 <ul>
 <li>Install the <a href="/documentation/getting-started/cloud-platform-cli.html">Cloud Platform CLI</a> tool</li>
 <li>Git</li>
-<li>You must be a member of the <code>ministryofjustice</code> organisation on GitHub</li>
+<li>You must be a member of at least one team in the <code>ministryofjustice</code> organisation on GitHub</li>
 </ul>
 <p>You create an environment by adding the definition of the environment as YAML
-files in the following GitHub repository:</p>
+files in the following GitHub repository, using the <code>cloud-platform</code> CLI tool:</p>
 <p><a href="https://github.com/ministryofjustice/cloud-platform-environments">cloud-platform-environments</a></p>
 <p>To create a namespace, clone the repository:</p>
 <div class="highlight"><pre class="highlight plaintext"><code>$ git clone git@github.com:ministryofjustice/cloud-platform-environments.git
@@ -357,16 +357,16 @@ spec:
           component: ingress-controllers
 </code></pre></div>
 
-              <div data-module='page-expiry' data-last-reviewed-on="2020-11-06">
+              <div data-module='page-expiry' data-last-reviewed-on="2021-02-12">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 6 August 2020.
+      This page was last reviewed on 12 November 2020.
 
-        It needs to be reviewed again on 6 November 2020
+        It needs to be reviewed again on 12 February 2021
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 6 November 2020.
+      This page was set to be reviewed before 12 February 2021.
       This might mean the content is out of date.
     </div>
   </div>
