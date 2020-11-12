@@ -155,7 +155,7 @@ mydb-postgresql-0           1/1       Running   0          39m
 <div class="highlight"><pre class="highlight plaintext"><code>kubectl --namespace &lt;your namespace&gt; logs mydb-postgresql-0
 </code></pre></div><p>If the PostgreSQL setup was successful, the last line should be something like:</p>
 <div class="highlight"><pre class="highlight plaintext"><code>2020-08-07 14:32:58.158 GMT [1] LOG:  database system is ready to accept connections
-</code></pre></div><h2 id="accessing-your-postgresql-db">Accessing your PostgreSQL DB</h2><p>PostgreSQL can be accessed via port 5432 on the following DNS name from within your cluster:</p>
+</code></pre></div><h2 id="accessing-your-postgresql-db">Accessing your PostgreSQL DB</h2><p>PostgreSQL can be accessed via port 5432 on the following DNS name from within the cluster:</p>
 <div class="highlight"><pre class="highlight plaintext"><code>mydb-postgresql.&lt;your namespace&gt;.svc.cluster.local - Read/Write connection
 </code></pre></div><p>The <code>postgresqlPassword</code> you have set will be stored as a secret in your namespace, to get the password for the <code>postgres</code> datase user, run:</p>
 <div class="highlight"><pre class="highlight plaintext"><code>export POSTGRES_PASSWORD=$(kubectl get secret --namespace &lt;your namespace&gt; mydb-postgresql -o jsonpath="{.data.postgresql-password}" | base64 --decode)
@@ -172,16 +172,16 @@ will need to use that name instead.</p>
 </blockquote>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2020-11-07">
+              <div data-module='page-expiry' data-last-reviewed-on="2021-02-12">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 7 August 2020.
+      This page was last reviewed on 12 November 2020.
 
-        It needs to be reviewed again on 7 November 2020
+        It needs to be reviewed again on 12 February 2021
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 7 November 2020.
+      This page was set to be reviewed before 12 February 2021.
       This might mean the content is out of date.
     </div>
   </div>
