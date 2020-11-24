@@ -203,19 +203,19 @@ run Rails.application
 <h3 id="applications-configured-to-use-multiple-processes">Applications configured to use multiple processes</h3><p>If you&rsquo;re using a pre-forking web server (like unicorn or puma for Ruby, or gunicorn for Python) and have it configured to use multiple processes, then you need to use a Prometheus client library that supports exporting metrics from multiple processes. Not all the official clients do that. If you don&rsquo;t use a library which supports this, then requests to <code>/metrics</code> could be served by any of the processes, which would mean Prometheus sees inconsistent data on each scrape. The <code>prometheus-client</code> library we used in the example above supports multi-process metrics so will need to be aggregated, to report coherent total numbers. For more information on this please read <a href="https://github.com/prometheus/client_ruby#aggregation-settings-for-multi-process-stores">this</a> article.</p>
 <h3 id="more-information-on-service-monitors">More information on Service Monitors</h3><p><a href="https://coreos.com/blog/the-prometheus-operator.html">CoreOS Blog on Prometheus Operator and ServiceMonitor</a></p>
 <p><a href="https://github.com/coreos/prometheus-operator#customresourcedefinitions">CoreOS README on Custom Resource Definitions</a></p>
-<p><a href="https://coreos.com/operators/prometheus/docs/latest/user-guides/running-exporters.html">Example ServiceMonitors</a></p>
+<p><a href="https://github.com/prometheus-operator/prometheus-operator/blob/v0.17.0/Documentation/user-guides/running-exporters.md">Example ServiceMonitors</a></p>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2020-11-14">
+              <div data-module='page-expiry' data-last-reviewed-on="2021-02-23">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 14 August 2020.
+      This page was last reviewed on 23 November 2020.
 
-        It needs to be reviewed again on 14 November 2020
+        It needs to be reviewed again on 23 February 2021
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 14 November 2020.
+      This page was set to be reviewed before 23 February 2021.
       This might mean the content is out of date.
     </div>
   </div>
