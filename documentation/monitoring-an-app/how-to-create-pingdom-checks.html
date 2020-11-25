@@ -149,7 +149,7 @@
 <span class="err">}</span>
 
 </code></pre></div><p><strong>Note</strong>: You&rsquo;ll need to include the <code>provider &quot;pingdom&quot;</code> and <code>terraform</code> blocks either in this file or in a <code>main.tf</code> file.</p>
-<p>This basic check simply checks that the host/url (in this case; uat.claim-criminal-injuries-compensation.service.justice.gov.uk) returns a 200 every minute (resolution = 1 minute). When six (sendnotificationwhendown = 6) consecutive checks fail it triggers an alarm. As publicreport is set to true, you can view the status of your check by visiting the public status page - http://pingdom.service.dsd.io, where this check would appear with the name &ldquo;cica - uat - cloud-platform - claim&rdquo;.</p>
+<p>This basic check simply checks that the host/url (in this case; uat.claim-criminal-injuries-compensation.service.justice.gov.uk) returns a 200 every minute (resolution = 1 minute). When six (sendnotificationwhendown = 6) consecutive checks fail it triggers an alarm. As publicreport is set to true, you can view the status of your check by visiting the public status page - <a href="http://pingdom.service.dsd.io">http://pingdom.service.dsd.io</a>, where this check would appear with the name &ldquo;cica - uat - cloud-platform - claim&rdquo;.</p>
 <p><a href="https://github.com/russellcardullo/terraform-provider-pingdom#pingdom-check">This</a> page explains all the attributes used in the check.</p>
 <p>All resources, including Pingdom checks <strong>must</strong> be tagged and adhere to the technical guidance outlined <a href="https://ministryofjustice.github.io/technical-guidance/documentation/standards/documenting-infrastructure-owners.html">here</a>. Ensure your check has appropriate tags before submitting a pull request.</p>
 <p>Once reviewed and merged to master, the pipeline will create your check in the MoJ Pingdom account.</p>
@@ -184,16 +184,16 @@
 <span class="err">}</span>
 </code></pre></div>
 
-              <div data-module='page-expiry' data-last-reviewed-on="2020-11-20">
+              <div data-module='page-expiry' data-last-reviewed-on="2021-02-25">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 20 August 2020.
+      This page was last reviewed on 25 November 2020.
 
-        It needs to be reviewed again on 20 November 2020
+        It needs to be reviewed again on 25 February 2021
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 20 November 2020.
+      This page was set to be reviewed before 25 February 2021.
       This might mean the content is out of date.
     </div>
   </div>
