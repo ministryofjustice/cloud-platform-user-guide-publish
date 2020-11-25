@@ -99,9 +99,6 @@
       <li>
         <ul>
           <li>
-            <a href="#overview"><span>Overview</span></a>
-          </li>
-          <li>
             <a href="#usage"><span>Usage</span></a>
           </li>
           <li>
@@ -123,10 +120,9 @@
 
         <div class="app-pane__content toc-open-disabled">
           <main id="content" class="technical-documentation" data-module="anchored-headings">
-              <h1 id="kubernetes-cronjobs">Kubernetes Cronjobs</h1><h3 id="overview">Overview</h3><p>Kubernetes has the concept of <a href="https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/">Cronjobs</a> which creates Jobs on a time-based schedule, you can use CronJobs to run tasks at a specific time or interval. CronJobs are a good choice for automatic tasks, such as backups, reporting, sending emails, or cleanup tasks.</p>
-<h3 id="usage">Usage</h3><p>CronJobs use <a href="https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/">Job</a> objects to complete their tasks. A CronJob creates a Job object each time it runs. CronJobs are created, managed, scaled, and deleted in the same way as Jobs. Cron jobs require a config file, follow the <a href="https://kubernetes.io/docs/tasks/job/automated-tasks-with-cron-jobs/#creating-a-cron-job">guide</a> on creating a Cronjob.</p>
-<p>This example cron job below prints the current time and a hello message every first minute of every hour from 0200 to 1400 UTC on Sunday, Monday, Friday, and Saturday</p>
-<p>example:</p>
+              <h1 id="kubernetes-cronjobs">Kubernetes Cronjobs</h1><p>Kubernetes has the concept of <a href="https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/">Cronjobs</a> which create Jobs according to a schedule. You can use CronJobs to run tasks at a specific time or interval. CronJobs are a good choice for automatic tasks such as backups, reporting, sending emails, or cleanup tasks.</p>
+<h3 id="usage">Usage</h3><p>CronJobs use <a href="https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/">Job</a> objects to complete their tasks. A CronJob creates a Job object each time it runs. CronJobs are created, managed, scaled, and deleted in the same way as Jobs. Cron jobs require a config file. Follow this <a href="https://kubernetes.io/docs/tasks/job/automated-tasks-with-cron-jobs/#creating-a-cron-job">guide</a> to create a Cronjob.</p>
+<p>The example cron job below prints the current time and a hello message every first minute of every hour from 0200 to 1400 UTC on Sunday, Monday, Friday, and Saturday:</p>
 <div class="highlight"><pre class="highlight plaintext"><code>apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
@@ -149,31 +145,28 @@ spec:
             - date; echo "Hello, World!"
           restartPolicy: OnFailure
 </code></pre></div><h3 id="deploying-a-cronjob-to-your-namespace">Deploying a Cronjob to your Namespace</h3><p>You need a yaml file to define your cronjob. You can either create your own, or use <a href="https://github.com/ministryofjustice/cloud-platform-multi-container-demo-app/tree/cronjob-example-v1.0/k8s_additional_resources">this one</a> as an example. This periodically deletes untagged images in the ECR docker image repository (to ensure we stay within the number of images we are allowed).</p>
-<div class="highlight"><pre class="highlight plaintext"><code>  ```
-  kubectl apply --filename cronjob-ecr.yaml --namespace [your namespace]
-  ```
+<div class="highlight"><pre class="highlight plaintext"><code>kubectl apply --filename cronjob-ecr.yaml --namespace [your namespace]
 </code></pre></div><p>Verify the Cronjob is created:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>  ```
-  kubectl get cronjob --namespace [your namespace]
-  ```
-</code></pre></div><h3 id="clean-up-finished-jobs">Clean up finished jobs</h3><p>Finished Jobs created by cronjobs are usually no longer needed in the system. Use the [TTL mechanism][TTL-mechanism] for Cronjob by settting <code>ttlSecondsAfterFinished</code>, so that a Job can be cleaned up automatically some time after it finishes.</p>
-<p>We have <a href="https://concourse.cloud-platform.service.justice.gov.uk/teams/main/pipelines/maintenance/jobs/delete-completed-jobs">delete-completed-jobs</a> setup to clean up all the completed jobs, which does not have <code>ttlSecondsAfterFinished</code>, deleting a completed Jobs will clean up the Pods it created. You can still see the logs of the deleted Pod in <a href="https://kibana.cloud-platform.service.justice.gov.uk/_plugin/kibana">kibana</a></p>
+<div class="highlight"><pre class="highlight plaintext"><code>kubectl get cronjob --namespace [your namespace]
+</code></pre></div><h3 id="clean-up-finished-jobs">Clean up finished jobs</h3><p>Jobs created by CronJobs are usually not needed after they have run to completion. Use the <a href="https://kubernetes.io/docs/concepts/workloads/controllers/ttlafterfinished/">TTL mechanism</a> to automatically clean them up by settting <code>ttlSecondsAfterFinished</code>, to tell kubernetes when it can delete the completed Job.</p>
+<p>We also have a <a href="https://concourse.cloud-platform.service.justice.gov.uk/teams/main/pipelines/maintenance/jobs/delete-completed-jobs">delete-completed-jobs</a> concourse job which will clean up all completed jobs which do not have <code>ttlSecondsAfterFinished</code> defined.</p>
+<p>Deleting completed Jobs cleans up the Pods they create, which helps the kubernetes cluster to use its CPU and memory resources efficiently. You can still see the logs of the deleted Pod in <a href="https://kibana.cloud-platform.service.justice.gov.uk/_plugin/kibana">kibana</a>.</p>
 
 <blockquote>
-<p>Note: Kubernetes uses UTC exclusively. Make sure you take that into account when you’re creating your schedule or setting up ttlSecondsAfterFinished.</p>
+<p>Note: Kubernetes uses UTC exclusively. Make sure you take that into account when you’re creating your schedule or defining <code>ttlSecondsAfterFinished</code>.</p>
 </blockquote>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2020-11-20">
+              <div data-module='page-expiry' data-last-reviewed-on="2021-02-25">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 20 August 2020.
+      This page was last reviewed on 25 November 2020.
 
-        It needs to be reviewed again on 20 November 2020
+        It needs to be reviewed again on 25 February 2021
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 20 November 2020.
+      This page was set to be reviewed before 25 February 2021.
       This might mean the content is out of date.
     </div>
   </div>
