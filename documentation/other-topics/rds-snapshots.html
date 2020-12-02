@@ -100,7 +100,7 @@
         <a href="#considerations"><span>Considerations</span></a>
       </li>
       <li>
-        <a href="#restoring-live-services-from-a-rds-db-snapshot"><span>Restoring live services from a RDS DB snapshot</span></a>
+        <a href="#restoring-live-services-from-an-rds-db-snapshot"><span>Restoring live services from an RDS DB snapshot</span></a>
       </li>
     </ul>
   </li>
@@ -113,15 +113,15 @@
 
         <div class="app-pane__content toc-open-disabled">
           <main id="content" class="technical-documentation" data-module="anchored-headings">
-              <h1 id="rds-snapshots">RDS Snapshots</h1><p>In RDS, snapshots have multiple purposes: migrations, backups, etc. When RDS DB instances are created using <a href="https://github.com/ministryofjustice/cloud-platform-terraform-rds-instance">Cloud Platform RDS terraform module</a> an IAM user account is created for management purposes (e.g RDS snapshots) - allowing snapshot create, delete, copy, restore.</p>
-<p>Examples about managing RDS DB snapshots using AWS CLI can be found in the <a href="https://github.com/ministryofjustice/cloud-platform-terraform-rds-instance#4-managing-rds-snapshots---backups-and-restores">README</a> within the <a href="https://github.com/ministryofjustice/cloud-platform-terraform-rds-instance">RDS terraform module</a></p>
+              <h1 id="rds-snapshots">RDS Snapshots</h1><p>RDS snapshots have multiple purposes: migrations, backups, etc. When RDS DB instances are created using the <a href="https://github.com/ministryofjustice/cloud-platform-terraform-rds-instance">Cloud Platform RDS terraform module</a> an IAM user account is created for management purposes. This user can create, delete, copy, and restore RDS snapshots.</p>
+<p>Examples of managing RDS DB snapshots using the AWS CLI can be found in the <a href="https://github.com/ministryofjustice/cloud-platform-terraform-rds-instance#4-managing-rds-snapshots---backups-and-restores">README</a> within the <a href="https://github.com/ministryofjustice/cloud-platform-terraform-rds-instance">RDS terraform module</a></p>
 <h2 id="considerations">Considerations</h2>
 <ul>
 <li>The amount of manual snapshots per AWS account is limited, so it&rsquo;s important to cleanup old snapshots</li>
-<li>Daily snapshots are already happening out of the box. It&rsquo;s important to keep in mind that daily snapshots <strong>are not related</strong> with &ldquo;Manual Snapshots&rdquo;</li>
+<li>Daily snapshots are provided &ldquo;out of the box&rdquo;, and <strong>do not count</strong> towards the &ldquo;Manual Snapshots&rdquo; total</li>
 <li>Managing snapshots is the teams&rsquo; responsibility (as are snapshot restores), so teams are responsible for cleaning up unneeded manual snapshots in order to avoid hitting our AWS account limits</li>
 </ul>
-<h2 id="restoring-live-services-from-a-rds-db-snapshot">Restoring live services from a RDS DB snapshot</h2><p>If you want to restore your production RDS DB instance from a previous snapshot, either because the database is corrupted or the whole database was deleted, here is the procedure:</p>
+<h2 id="restoring-live-services-from-an-rds-db-snapshot">Restoring live services from an RDS DB snapshot</h2><p>If you want to restore your production RDS DB instance from a previous snapshot, either because the database is corrupted or the whole database was deleted, here is the procedure:</p>
 
 <ol>
 <li><p>Get the <code>DBSnapshotIdentifier</code> of your DB instance from which you want to restore using the AWS CLI:</p>
@@ -161,29 +161,32 @@
 <li>pause the concourse pipeline, and</li>
 <li>rename the DB Instance via the AWS console</li>
 </ul>
-<p>This allows the pipeline to create the new DB Instance from the snapshot, using the same name and settings as the original, and preserves the database endpoint and credentials.</p>
+<p>This allows the pipeline to create the new DB Instance from the snapshot, using the same name and settings as the original, and preserves the database endpoint and credentials.</p></li>
+</ol>
 
 <blockquote>
-<p>Sometimes pipeline throw error <code>InvalidParameterCombination: Cannot upgrade mariadb from 10.4.13 to 10.4.8</code>. This will happen if the AWS upgraded the minor version automatically 
-and terraform stored the exact db_engine_version in its state. To fix this, change the <code>db_engine_version</code> from <code>10.4</code> to the one AWS upgraded to, in this case <code>10.4.13</code> and do <strong>step 4</strong> again.
-Once the the terraform apply is successful and DB instance created, revert the changes made for <code>db_engine_version</code>.</p>
-</blockquote></li>
-<li><p>Merge the PR to master and check that the build pipeline creates the new DB instance with the same identifier and endpoints. The Cloud Platform team can also apply your changes manually if this is time critical.</p></li>
+<p>Sometimes the pipeline throws an error: <code>InvalidParameterCombination: Cannot upgrade mariadb from 10.4.13 to 10.4.8</code>. This will happen if AWS upgraded the minor version automatically 
+    &gt;and terraform stored the exact db_engine_version in its state. To fix this, change the <code>db_engine_version</code> from <code>10.4</code> to the one AWS upgraded to, in this case <code>10.4.13</code> and do <strong>step 4</strong> again.
+    &gt;Once the the terraform apply is successful and DB instance has been created, revert the changes made for <code>db_engine_version</code>.</p>
+</blockquote>
+
+<ol>
+<li>Merge the PR to master and check that the build pipeline creates the new DB instance with the same identifier and endpoints. The Cloud Platform team can also apply your changes manually if this is time critical.</li>
 </ol>
 <p>Once the new DB instance is restored and available, your application should be able to access the database with the same database credentials and endpoint as before.</p>
-<p>After you have verified that your DB instance and the database is working as expected, let the Cloud Platform team know, so they can delete the renamed DB instance created in Step 4 above.</p>
+<p>After you have verified that your DB instance and the database is working as expected, let the Cloud Platform team know so they can delete the renamed DB instance created in Step 4 above.</p>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2020-11-24">
+              <div data-module='page-expiry' data-last-reviewed-on="2021-03-01">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 24 August 2020.
+      This page was last reviewed on 1 December 2020.
 
-        It needs to be reviewed again on 24 November 2020
+        It needs to be reviewed again on 1 March 2021
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 24 November 2020.
+      This page was set to be reviewed before 1 March 2021.
       This might mean the content is out of date.
     </div>
   </div>

@@ -144,8 +144,9 @@
 </ul>
 <h3 id="using-kibana">Using Kibana</h3><p>As a quick example, we will filter down to the logs of a particular environment.</p>
 <p>1) On the Kibana dashboard, select the &lsquo;Discover&rsquo; tab.</p>
-<p>2) Select &lsquo;Add a filter +&rsquo;</p>
-<p>3) Filter <code>kubernetes.[namespace_name]</code>, with operator <code>is</code> and the value equal to your environment name (without the []).</p>
+<p>2) Ensure the index selected is <code>kubernetes_cluster*</code> (which is the default).</p>
+<p>3) Select &lsquo;Add a filter +&rsquo;</p>
+<p>4) Filter <code>kubernetes.namespace_name</code>, with operator <code>is</code> and the value equal to your environment name.</p>
 <p>The log entries will contain any data that your pods wrote to STDOUT/STDERR.</p>
 <h3 id="accessing-ingress-logs">Accessing Ingress logs</h3><p>A special case is the Nginx Ingress which serves as reverse proxy for all the other applications in the cluster. Its logs originate in the <code>ingress-controllers</code> namespace and are indexed separately. To search:</p>
 <p>1) On the same Kibana &lsquo;Discover&rsquo; tab, change the index pattern to &lsquo;index-json*&rsquo; in the drop-down on the left</p>
