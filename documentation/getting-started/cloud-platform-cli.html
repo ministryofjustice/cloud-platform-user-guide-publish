@@ -125,6 +125,9 @@
           <li>
             <a href="#check-your-kubernetes-config-file"><span>Check your kubernetes config file</span></a>
           </li>
+          <li>
+            <a href="#base64-decode-a-kubernetes-secret"><span>Base64 decode a kubernetes secret</span></a>
+          </li>
         </ul>
       </li>
     </ul>
@@ -292,7 +295,34 @@ people are unable to access objects in their namespaces.</p>
 <span class="o">}</span>
 </code></pre></div><p>The github teams are listed under <code>https://k8s.integration.dsd.io/groups</code> as
 above.</p>
+<h3 id="base64-decode-a-kubernetes-secret">Base64 decode a kubernetes secret</h3><div class="highlight"><pre class="highlight shell"><code>cloud-platform decode-secret <span class="nt">-n</span> &lt;namespace_name&gt; <span class="nt">-s</span> &lt;secret_name&gt;
+</code></pre></div><p>e.g.</p>
+<div class="highlight"><pre class="highlight shell"><code>cloud-platform decode-secret <span class="nt">-n</span> dstest <span class="nt">-s</span> rds-instance-output
 
+<span class="o">{</span>
+    <span class="s2">"apiVersion"</span>: <span class="s2">"v1"</span>,
+    <span class="s2">"data"</span>: <span class="o">{</span>
+        <span class="s2">"access_key_id"</span>: <span class="s2">"AKIAXXXXXXXXXXXXXXXX"</span>,
+        <span class="s2">"database_name"</span>: <span class="s2">"db2axxxxxxxxxxxxxx"</span>,
+        <span class="s2">"database_password"</span>: <span class="s2">"xxxxxxxxxxxxxxxx"</span>,
+        <span class="s2">"database_username"</span>: <span class="s2">"xxxxxxxxxx"</span>,
+        <span class="s2">"rds_instance_address"</span>: <span class="s2">"cloud-platform-1111111111111111.cdwm328dlye6.eu-west-2.rds.amazonaws.com"</span>,
+        <span class="s2">"rds_instance_endpoint"</span>: <span class="s2">"cloud-platform-1111111111111111.cdwm328dlye6.eu-west-2.rds.amazonaws.com:3306"</span>,
+        <span class="s2">"secret_access_key"</span>: <span class="s2">"qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq"</span>,
+        <span class="s2">"url"</span>: <span class="s2">"postgres://xxxxxxxxxx:XXXXXXXXXXXXXXXX@cloud-platform-1111111111111111.cdwm328dlye6.eu-west-2.rds.amazonaws.com:5432/db2axxxxxxxxxxxxxx"</span>
+    <span class="o">}</span>,
+    <span class="s2">"kind"</span>: <span class="s2">"Secret"</span>,
+    <span class="s2">"metadata"</span>: <span class="o">{</span>
+        <span class="s2">"creationTimestamp"</span>: <span class="s2">"2020-06-19T13:43:31Z"</span>,
+        <span class="s2">"name"</span>: <span class="s2">"rds-instance-output"</span>,
+        <span class="s2">"namespace"</span>: <span class="s2">"dstest"</span>,
+        <span class="s2">"resourceVersion"</span>: <span class="s2">"276902169"</span>,
+        <span class="s2">"selfLink"</span>: <span class="s2">"/api/v1/namespaces/poornima-dev/secrets/rds-instance-output"</span>,
+        <span class="s2">"uid"</span>: <span class="s2">"1f4243d8-ee57-4756-af09-5a8084a89988"</span>
+    <span class="o">}</span>,
+    <span class="s2">"type"</span>: <span class="s2">"Opaque"</span>
+<span class="o">}</span>
+</code></pre></div>
 
               <div data-module='page-expiry' data-last-reviewed-on="2021-01-30">
     <div class='page-expiry--not-expired'>

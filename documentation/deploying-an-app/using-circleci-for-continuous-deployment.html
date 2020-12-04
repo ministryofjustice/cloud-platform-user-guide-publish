@@ -248,11 +248,9 @@ use the below as an example:</p>
 </code></pre></div><p>There will be a secret for the CircleCI service account. The secret contains the ca.crt and token which we will make available to the CircleCI image container as environment variables. This will allow it to authenticate against the cluster.
 Access to the cluster is scoped for the namespace the service account was created in.</p>
 <h3 id="retrieving-the-service-account-credentials">Retrieving the Service Account credentials</h3><p>Once the CircleCI service account is created above, you can grab the ca.crt as follows:</p>
-<div class="highlight"><pre class="highlight yaml"><code><span class="s">kubectl get secret &lt;NAME-OF-CIRCLECI-SERVICE-ACCOUNT-SECRET&gt; -o yaml -n &lt;YOUR-NAMESPACE&gt; | grep ca.crt</span>
+<div class="highlight"><pre class="highlight yaml"><code><span class="s">cloud-platform decode-secret -n &lt;YOUR-NAMESPACE&gt; -s &lt;NAME-OF-CIRCLECI-SERVICE-ACCOUNT-SECRET&gt; | grep ca.crt</span>
 </code></pre></div><p>Likewise grab the CircleCI service account token as follows:</p>
-<div class="highlight"><pre class="highlight yaml"><code><span class="s">kubectl get secret &lt;NAME-OF-CIRCLECI-SERVICE-ACCOUNT-SECRET&gt; -o yaml -n &lt;YOUR-NAMESPACE&gt; | grep token</span>
-</code></pre></div><p>The token will need to be decoded as follows:</p>
-<div class="highlight"><pre class="highlight yaml"><code><span class="s">echo &lt;ENCODED_TOKEN&gt; | base64 --decode</span>
+<div class="highlight"><pre class="highlight yaml"><code><span class="s">cloud-platform decode-secret -n &lt;YOUR-NAMESPACE&gt; -s &lt;NAME-OF-CIRCLECI-SERVICE-ACCOUNT-SECRET&gt; | grep token</span>
 </code></pre></div><p>Both the ca.crt and token will be added as environment variables by creating a context in the CircleCI console, that holds these values as shown below.</p>
 <h3 id="linking-repository-to-circleci">Linking Repository to CircleCI</h3><p>MoJ has as an account with CircleCI, please login to <a href="https://circleci.com">CircleCI</a> using GitHub credentials. Select project, and if config.yml is in the repo CircleCI will build and run tests.</p>
 <h3 id="add-variables-to-circleci">Add variables to CircleCI</h3><p>There is a number of environment variables that you will need to set on your CircleCI project in order to build a docker image, push it to the ECR and trigger a deployment in your environment. On the project page, click the cog icon in the left pane. Click on &lsquo;Contexts&rsquo;. Click &lsquo;Create Context&rsquo;.

@@ -339,10 +339,7 @@ going to use an ECR to store our updated docker image.</p>
 <h3 id="authenticating-to-your-docker-image-repository">Authenticating to your docker image repository</h3><p>Before you can push the image to your ECR, you need to authenticate to it.</p>
 <p>To authenticate to your ECR, you will need the <code>access_key_id</code> and <code>secret_access_key</code> which were created for you when you created your ECR. To retrieve these, see the <a href="/documentation/getting-started/ecr-setup.html#accessing-the-credentials">this section</a> of this guide.</p>
 <p><em>tl;dr</em> use this command:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>  kubectl -n [namespace_name] get secret [name of your secret] -o yaml
-</code></pre></div><p>Don&rsquo;t forget to base64 decode the <code>access_key_id</code> and <code>secret_access_key</code> values before using them.</p>
-<p>You can pipe the yaml through <a href="https://github.com/ministryofjustice/cloud-platform-environments/blob/master/bin/decode.rb">this script</a> in order to decode the values, or you can do the following:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>  echo 'your_access_key_id_value' | base64 --decode
+<div class="highlight"><pre class="highlight plaintext"><code>  cloud-platform decode-secret -n [namespace_name] -s [name of your secret]
 </code></pre></div><p>Once you have your <code>access_key_id</code> and <code>secret_access_key</code>, set up an AWS profile using the AWS cli tool.</p>
 <div class="highlight"><pre class="highlight plaintext"><code>  aws configure --profile [namespace name]
 </code></pre></div><p>You can call the profile anything you want.</p>

@@ -178,34 +178,35 @@
 <h4 id="use-the-aws-cli-to-get-your-existing-database-configuration">Use the AWS CLI to get your existing database configuration</h4><p>When your RDS instance is created, an IAM user is also created, and the AWS credentials are stored as kubernetes secrets in your namespace.</p>
 <p>We will use these credentials with the <a href="https://aws.amazon.com/cli/">AWS CLI tool</a> to describe and then modify your RDS instance.</p>
 <h5 id="get-your-rds-instance-identifier-and-iam-user-credentials">Get your RDS instance identifier and IAM user credentials</h5><div class="highlight"><pre class="highlight plaintext"><code>kubectl -n [your namespace] get secret
-</code></pre></div><p>This will give you a list of the secrets in your namespace. Identify the RDS instance secret via its name, and decode its contents:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>kubectl -n [your namespace] get secret [secret name] -o yaml | ./bin/decode.rb
-</code></pre></div>
-<blockquote>
-<p>The <code>bin/decode.rb</code> script is <a href="https://github.com/ministryofjustice/cloud-platform-environments">here</a></p>
-</blockquote>
-<p>Here is a redacted example:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>$ kubectl -n dstest get secret rds-instance-output -o yaml | ./bin/decode.rb
----
-apiVersion: v1
-data:
-  access_key_id: AKIAXXXXXXXXXXXXXXXX
-  database_name: db2axxxxxxxxxxxxxx
-  database_password: XXXXXXXXXXXXXXXX
-  database_username: xxxxxxxxxx
-  rds_instance_address: cloud-platform-1111111111111111.cdwm328dlye6.eu-west-2.rds.amazonaws.com
-  rds_instance_endpoint: cloud-platform-1111111111111111.cdwm328dlye6.eu-west-2.rds.amazonaws.com:5432
-  secret_access_key: qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq
-  url: postgres://xxxxxxxxxx:XXXXXXXXXXXXXXXX@cloud-platform-1111111111111111.cdwm328dlye6.eu-west-2.rds.amazonaws.com:5432/db2axxxxxxxxxxxxxx
-kind: Secret
-metadata:
-  creationTimestamp: '2020-10-27T11:37:02Z'
-  name: rds-instance-output
-  namespace: dstest
-  resourceVersion: '416006008'
-  selfLink: "/api/v1/namespaces/dstest/secrets/rds-instance-output"
-  uid: 31a0ea23-f10c-4494-86fb-fbeb844d7f21
-type: Opaque
+</code></pre></div><p>This will give you a list of the secrets in your namespace. Identify the RDS
+instance secret via its name, and decode its contents using the <a href="/documentation/getting-started/cloud-platform-cli.html">cloud platform cli</a>:</p>
+<div class="highlight"><pre class="highlight plaintext"><code>cloud-platform decode-secret -n [your namespace] -s [secret name]
+</code></pre></div><p>Here is a redacted example:</p>
+<div class="highlight"><pre class="highlight plaintext"><code>cloud-platform decode-secret -n dstest -s rds-instance-output
+
+{
+    "apiVersion": "v1",
+    "data": {
+        "access_key_id": "AKIAXXXXXXXXXXXXXXXX",
+        "database_name": "db2axxxxxxxxxxxxxx",
+        "database_password": "xxxxxxxxxxxxxxxx",
+        "database_username": "xxxxxxxxxx",
+        "rds_instance_address": "cloud-platform-1111111111111111.cdwm328dlye6.eu-west-2.rds.amazonaws.com",
+        "rds_instance_endpoint": "cloud-platform-1111111111111111.cdwm328dlye6.eu-west-2.rds.amazonaws.com:3306",
+        "secret_access_key": "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
+        "url": "postgres://xxxxxxxxxx:XXXXXXXXXXXXXXXX@cloud-platform-1111111111111111.cdwm328dlye6.eu-west-2.rds.amazonaws.com:5432/db2axxxxxxxxxxxxxx"
+    },
+    "kind": "Secret",
+    "metadata": {
+        "creationTimestamp": "2020-06-19T13:43:31Z",
+        "name": "rds-instance-output",
+        "namespace": "dstest",
+        "resourceVersion": "276902169",
+        "selfLink": "/api/v1/namespaces/poornima-dev/secrets/rds-instance-output",
+        "uid": "1f4243d8-ee57-4756-af09-5a8084a89988"
+    },
+    "type": "Opaque"
+}
 </code></pre></div><p>Use the values you see to set the following environment variables:</p>
 <div class="highlight"><pre class="highlight plaintext"><code>export db=db2axxxxxxxxxxxxxx
 export AWS_ACCESS_KEY_ID=AKIAXXXXXXXXXXXXXXXX
