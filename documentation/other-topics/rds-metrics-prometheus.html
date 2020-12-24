@@ -110,7 +110,7 @@
 <p>You can view any of these metrics as a graph using the <a href="https://prometheus.cloud-platform.service.justice.gov.uk/">Prometheus UI</a> by writing it as an expression like this:</p>
 <div class="highlight"><pre class="highlight plaintext"><code>aws_rds_free_storage_space_average{dbinstance_identifier="&lt;YOUR DATABASE IDENTIFIER&gt;"}
 </code></pre></div><p>Put your expression into the <code>Expression</code> text field, then click the <code>Execute</code> button and view the <code>Graph</code> tab.</p>
-<p>Your database identifier is available from the kubernetes secrets which were created with your RDS instance.
+<p>Your database identifier is available from the kubernetes secret or configmap, which was created with your RDS instance.
 The string you want is the hostname part of your RDS instance address. So, if your RDS instance address is:</p>
 <div class="highlight"><pre class="highlight plaintext"><code>cloud-platform-ab10ab10ab10ab10.cdwm11111111.eu-west-2.rds.amazonaws.com
 </code></pre></div><p>Then your database identifier for the Prometheus expression is:</p>
@@ -120,16 +120,16 @@ The string you want is the hostname part of your RDS instance address. So, if yo
 </code></pre></div><p>You can use the various graph controls to adjust the time period and resolution of your graph.</p>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2020-12-18">
+              <div data-module='page-expiry' data-last-reviewed-on="2021-03-23">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 18 September 2020.
+      This page was last reviewed on 23 December 2020.
 
-        It needs to be reviewed again on 18 December 2020
+        It needs to be reviewed again on 23 March 2021
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 18 December 2020.
+      This page was set to be reviewed before 23 March 2021.
       This might mean the content is out of date.
     </div>
   </div>
