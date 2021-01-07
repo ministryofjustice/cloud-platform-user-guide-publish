@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="en" class="govuk-template no-js">
+  <head>
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+      <meta name="robots" content="noindex">
+
+    <title>Continuous Deployment of an application using Github Actions - Cloud Platform User Guide</title>
+
+    <link href="/stylesheets/manifest.css" rel="stylesheet" />
+
+    <link rel="canonical" href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/deploying-an-app/github-actions-continuous-deployment.html">
+
+
+      <meta property="og:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
+      <meta property="og:site_name" content="Cloud Platform User Guide" />
+      <meta property="og:title" content="Continuous Deployment of an application using Github Actions" />
+      <meta property="og:type" content="object" />
+      <meta property="og:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/deploying-an-app/github-actions-continuous-deployment.html" />
+      <meta property="twitter:card" content="summary" />
+      <meta property="twitter:domain" content="user-guide.cloud-platform.service.justice.gov.uk" />
+      <meta property="twitter:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
+      <meta property="twitter:title" content="Continuous Deployment of an application using Github Actions - Cloud Platform User Guide" />
+      <meta property="twitter:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/deploying-an-app/github-actions-continuous-deployment.html" />
+
+    
+  </head>
+
+  <body class="govuk-template__body">
+    <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
+
+    <div class="app-pane">
+      <div class="app-pane__header toc-open-disabled">
+        <a href="#content" class="govuk-skip-link">Skip to main content</a>
+
+        <header class="govuk-header app-header" role="banner" data-module="govuk-header">
+  <div class="govuk-header__container govuk-header__container--full-width">
+    <div class="govuk-header__logo">
+      <a href="/" class="govuk-header__link govuk-header__link--homepage">
+        <span class="govuk-header__product-name">
+          Cloud Platform User Guide
+        </span>
+      </a>
+    </div>
+    <div class="govuk-header__content">
+      <button type="button" class="govuk-header__menu-button govuk-js-header-toggle" aria-controls="navigation" aria-label="Show or hide Top Level Navigation">Menu</button>
+      <nav>
+        <ul id="navigation" class="govuk-header__navigation govuk-header__navigation--end" aria-label="Top Level Navigation">
+            <li class="govuk-header__navigation-item">
+              <a class="govuk-header__link" href="mailto:platforms+user-guide@digital.justice.gov.uk?subject=User+guide+feedback">Feedback / Report a problem</a>
+            </li>
+            <li class="govuk-header__navigation-item">
+              <a class="govuk-header__link" href="/">Documentation</a>
+            </li>
+            <li class="govuk-header__navigation-item">
+              <a class="govuk-header__link" href="https://github.com/ministryofjustice/cloud-platform-user-guide">GitHub</a>
+            </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>
+
+      </div>
+
+        <div id="toc-heading" class="toc-show fixedsticky">
+          <a href="#toc" class="toc-show__label js-toc-show" aria-controls="toc">
+            Table of contents <span class="toc-show__icon"></span>
+          </a>
+        </div>
+
+      <div class="app-pane__body" data-module="in-page-navigation">
+          <div class="app-pane__toc">
+            <div class="toc" data-module="table-of-contents">
+              <div class="search" data-module="search">
+  <form action="https://www.google.co.uk/search" method="get" role="search">
+    <input type="hidden" name="as_sitesearch" value="https://user-guide.cloud-platform.service.justice.gov.uk"/>
+    <label class="govuk-label search__label" for="search">
+      Search (via Google)
+    </label>
+    <input class="govuk-input govuk-!-margin-bottom-4" id="search" name="q" type="text" aria-controls="search-results" placeholder="Search">
+  </form>
+  <div id="search-results" class="search-results" aria-hidden="true" role="dialog" aria-labelledby="search-results-title">
+    <div class="search-results__inner">
+      <button class="search-results__close">Close<span class="search-results__close-label"> search results</span></button>
+      <h2 id="search-results-title" class="search-results__title" aria-live="polite">Results</h2>
+      <div class="search-results__content"></div>
+    </div>
+  </div>
+</div>
+
+              <a href="#" class="toc__close js-toc-close" aria-controls="toc" aria-label="Hide table of contents"></a>
+              <nav id="toc" class="js-toc-list toc__list" aria-labelledby="toc-heading">
+                      <ul>
+  <li>
+    <a href="#continuous-deployment-of-an-application-using-github-actions"><span>Continuous Deployment of an application using Github Actions</span></a>
+    <ul>
+      <li>
+        <a href="#pre-requisites"><span>Pre-requisites</span></a>
+      </li>
+      <li>
+        <a href="#something-to-deploy"><span>Something to deploy</span></a>
+      </li>
+      <li>
+        <a href="#manual-deploy"><span>Manual deploy</span></a>
+        <ul>
+          <li>
+            <a href="#build-the-project"><span>Build the project</span></a>
+          </li>
+          <li>
+            <a href="#push-to-the-ecr"><span>Push to the ECR</span></a>
+          </li>
+          <li>
+            <a href="#deploy-to-kubernetes"><span>Deploy to kubernetes</span></a>
+          </li>
+          <li>
+            <a href="#deployment-summary"><span>Deployment summary</span></a>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <a href="#automating-the-deployment-process"><span>Automating the deployment process</span></a>
+        <ul>
+          <li>
+            <a href="#build-the-docker-image"><span>Build the docker image</span></a>
+          </li>
+          <li>
+            <a href="#push-to-ecr"><span>Push to ECR</span></a>
+          </li>
+          <li>
+            <a href="#update-the-manifest"><span>Update the manifest</span></a>
+          </li>
+          <li>
+            <a href="#creating-a-serviceaccount"><span>Creating a ServiceAccount</span></a>
+          </li>
+          <li>
+            <a href="#serviceaccount-credentials"><span>ServiceAccount Credentials</span></a>
+          </li>
+          <li>
+            <a href="#authenticate-to-the-cluster"><span>Authenticate to the cluster</span></a>
+          </li>
+          <li>
+            <a href="#deploying-the-latest-code"><span>Deploying the latest code</span></a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+
+              </nav>
+            </div>
+          </div>
+
+        <div class="app-pane__content toc-open-disabled">
+          <main id="content" class="technical-documentation" data-module="anchored-headings">
+              <h1 id="continuous-deployment-of-an-application-using-github-actions">Continuous Deployment of an application using Github Actions</h1><p>This tutorial will walk through setting up continuous deployment (CD) of a GitHub
+repository to a namespace on the cloud platform, using GitHub Actions.</p>
+<h2 id="pre-requisites">Pre-requisites</h2><p>This guide assumes you have already created:</p>
+
+<ul>
+<li>A <a href="/documentation/getting-started/env-create.html">namespace</a></li>
+<li>An <a href="/documentation/getting-started/ecr-setup.html">ECR</a> to store your docker images</li>
+</ul>
+<p>If you haven&rsquo;t done so already, please complete those steps and then resume
+this guide.</p>
+
+<blockquote>
+<p>You&rsquo;re going to need a <a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/">ServiceAccount</a> later, so you can save a bit of time by
+also <a href="#creating-a-serviceaccount">creating your serviceaccount</a> now.</p>
+</blockquote>
+<h2 id="something-to-deploy">Something to deploy</h2><p>To simulate a real project, we need to:</p>
+
+<ul>
+<li>build our own docker image, and</li>
+<li>deploy it from our ECR</li>
+</ul>
+<p>Once we have our CD system set up, we should be able to merge a PR in our
+GitHub repository and see the change in our deployed application.</p>
+<p>We&rsquo;re going to use a customised nginx image as our application.</p>
+<p>Create a new GitHub repository, and add these files:</p>
+
+<ul>
+<li><code>index.html</code></li>
+</ul>
+<div class="highlight"><pre class="highlight html"><code><span class="nt">&lt;h1&gt;</span>Hello, World!<span class="nt">&lt;/h1&gt;</span>
+</code></pre></div>
+<ul>
+<li><code>Dockerfile</code></li>
+</ul>
+<div class="highlight"><pre class="highlight plaintext"><code>FROM bitnami/nginx:1.19
+COPY index.html /app/index.html
+</code></pre></div><p>We can build and run this locally:</p>
+<div class="highlight"><pre class="highlight shell"><code>docker build <span class="nt">-t</span> foo <span class="nb">.</span>
+docker run <span class="nt">--rm</span> <span class="nt">-p</span> 8080:8080 foo
+</code></pre></div><p>Now visit <code>http://localhost:8080</code> and you should see &ldquo;Hello, World!&rdquo;</p>
+
+<blockquote>
+<p>We could achieve the same result using the base image and a <a href="https://kubernetes.io/docs/concepts/configuration/configmap/">ConfigMap</a>, but
+the point is to have a simple project which has the same kind of build
+requirements as a &ldquo;real&rdquo; project.</p>
+</blockquote>
+<h2 id="manual-deploy">Manual deploy</h2><p>Before we setup our CD system, we&rsquo;re going to go once through the
+deployment process manually.</p>
+<h3 id="build-the-project">Build the project</h3><div class="highlight"><pre class="highlight shell"><code>docker build <span class="nt">-t</span> foo <span class="nb">.</span>
+</code></pre></div><h3 id="push-to-the-ecr">Push to the ECR</h3><div class="highlight"><pre class="highlight shell"><code><span class="nb">export </span><span class="nv">AWS_ACCESS_KEY_ID</span><span class="o">=</span>xxxxxx
+<span class="nb">export </span><span class="nv">AWS_SECRET_ACCESS_KEY</span><span class="o">=</span>xxxxxx
+docker tag foo 754256621582.dkr.ecr.eu-west-2.amazonaws.com/webops/dstest-ecr:1.0
+docker push 754256621582.dkr.ecr.eu-west-2.amazonaws.com/webops/dstest-ecr:1.0
+</code></pre></div>
+<blockquote>
+<p>You will need to supply the AWS credentials, and change <code>webops/dstest-ecr</code> in the <code>docker tag</code> URL above, using the values for your own ECR</p>
+</blockquote>
+<h3 id="deploy-to-kubernetes">Deploy to kubernetes</h3><p>Now that you have a docker image in your ECR, you can launch it in the cluster.</p>
+<p>Add this <code>kubernetes-deploy.yaml</code> file to your GitHub repository, making the following changes:</p>
+
+<ul>
+<li>Replace the <code>image:</code> value with the one for your ECR</li>
+<li><p>Replace the <code>dstest</code> in <code>dstest.apps.live-1.cloud-platform.service.justice.gov.uk</code> with a hostname that is unique to your application (e.g. use your own name, or the namespace name)</p></li>
+<li><p><code>kubernetes-deploy.yaml</code></p></li>
+</ul>
+<div class="highlight"><pre class="highlight yaml"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">apps/v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Deployment</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">helloworld-nginx</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">replicas</span><span class="pi">:</span> <span class="m">1</span>
+  <span class="na">selector</span><span class="pi">:</span>
+    <span class="na">matchLabels</span><span class="pi">:</span>
+      <span class="na">app</span><span class="pi">:</span> <span class="s">webserver</span>
+  <span class="na">template</span><span class="pi">:</span>
+    <span class="na">metadata</span><span class="pi">:</span>
+      <span class="na">labels</span><span class="pi">:</span>
+        <span class="na">app</span><span class="pi">:</span> <span class="s">webserver</span>
+    <span class="na">spec</span><span class="pi">:</span>
+      <span class="na">containers</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">nginx</span>
+        <span class="na">image</span><span class="pi">:</span> <span class="s">754256621582.dkr.ecr.eu-west-2.amazonaws.com/webops/dstest-ecr:1.0</span>
+        <span class="na">ports</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">containerPort</span><span class="pi">:</span> <span class="m">8080</span>
+<span class="nn">---</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Service</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">nginx-service</span>
+  <span class="na">labels</span><span class="pi">:</span>
+    <span class="na">app</span><span class="pi">:</span> <span class="s">nginx-service</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">ports</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">port</span><span class="pi">:</span> <span class="m">8080</span>
+    <span class="na">name</span><span class="pi">:</span> <span class="s">http</span>
+    <span class="na">targetPort</span><span class="pi">:</span> <span class="m">8080</span>
+  <span class="na">selector</span><span class="pi">:</span>
+    <span class="na">app</span><span class="pi">:</span> <span class="s">webserver</span>
+<span class="nn">---</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">networking.k8s.io/v1beta1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Ingress</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">helloworld-nginx-ingress</span>
+  <span class="na">annotations</span><span class="pi">:</span>
+    <span class="s">kubernetes.io/ingress.class</span><span class="pi">:</span> <span class="s">nginx</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">tls</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">hosts</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">dstest.apps.live-1.cloud-platform.service.justice.gov.uk</span>
+  <span class="na">rules</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">host</span><span class="pi">:</span> <span class="s">dstest.apps.live-1.cloud-platform.service.justice.gov.uk</span>
+    <span class="na">http</span><span class="pi">:</span>
+      <span class="na">paths</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">path</span><span class="pi">:</span> <span class="s">/</span>
+        <span class="na">backend</span><span class="pi">:</span>
+          <span class="na">serviceName</span><span class="pi">:</span> <span class="s">nginx-service</span>
+          <span class="na">servicePort</span><span class="pi">:</span> <span class="m">8080</span>
+</code></pre></div><p>Deploy to the cluster like this:</p>
+<div class="highlight"><pre class="highlight shell"><code>kubectl <span class="nt">-n</span> &lt;your namespace&gt; apply <span class="nt">-f</span> kubernetes-deploy.yaml
+</code></pre></div><p>After a few seconds, you should be able to visit the ingress hostname and see &ldquo;Hello, World!&rdquo;</p>
+<h3 id="deployment-summary">Deployment summary</h3><p>To make a change to our project, we need to:</p>
+
+<ul>
+<li>update the source code (in this case, by editing <code>index.html</code>)</li>
+<li>rebuild the docker image</li>
+<li>push it to the ECR with a new tag</li>
+<li>update our kubernetes-deploy.yaml file with the new image tag</li>
+<li>repeat the <code>kubectl apply</code> command to update the cluster with our changes</li>
+</ul>
+<p>This is the process we&rsquo;re going to automate using GitHub Actions.</p>
+<p>If you&rsquo;re unclear on any of these steps, try going through the process manually
+before proceeding.</p>
+<h2 id="automating-the-deployment-process">Automating the deployment process</h2><h3 id="build-the-docker-image">Build the docker image</h3><p>We need a GitHub Action that will run whenever we merge a PR.</p>
+<p>There&rsquo;s no dedicated &ldquo;PR merge&rdquo; event in GitHub Actions (although you can
+detect &ldquo;PR closed&rdquo; and use an &ldquo;if&rdquo; statement to tell whether it was merged or
+not). Instead, we&rsquo;re going to trigger our action whenever there is a push to
+the <code>main</code> branch, which will happen whenever a PR is merged.</p>
+<p>Create this file in your repository (using your namespace name instead of
+<code>dstest</code>, and your ECR details instead of <code>webops/dstest-ecr</code>):</p>
+<p><code>.github/workflows/cd.yaml</code></p>
+<div class="highlight"><pre class="highlight yaml"><code><span class="na">name</span><span class="pi">:</span> <span class="s">Continuous Deployment</span>
+
+<span class="na">on</span><span class="pi">:</span>
+  <span class="na">workflow_dispatch</span><span class="pi">:</span>
+  <span class="na">push</span><span class="pi">:</span>
+    <span class="na">branches</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s1">'</span><span class="s">main'</span>
+
+<span class="na">env</span><span class="pi">:</span>
+  <span class="na">KUBE_CLUSTER</span><span class="pi">:</span> <span class="s">live-1.cloud-platform.service.justice.gov.uk</span>
+  <span class="na">NAMESPACE</span><span class="pi">:</span> <span class="s">dstest</span>
+  <span class="na">ECR</span><span class="pi">:</span> <span class="s">webops/dstest-ecr</span>
+
+<span class="na">jobs</span><span class="pi">:</span>
+  <span class="na">main</span><span class="pi">:</span>
+    <span class="na">runs-on</span><span class="pi">:</span> <span class="s">ubuntu-latest</span>
+    <span class="na">steps</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Checkout</span>
+        <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/checkout@v2</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Build</span>
+        <span class="na">run</span><span class="pi">:</span> <span class="s">docker build -t foo .</span>
+</code></pre></div>
+<blockquote>
+<p>The <code>workflow_dispatch:</code> line lets us trigger the action via the GitHub web
+UI, which makes things easier when you&rsquo;re developing an action.</p>
+</blockquote>
+<p>That takes us as far as building our docker image.</p>
+<h3 id="push-to-ecr">Push to ECR</h3><p>The GitHub Action needs to push to your ECR, so it&rsquo;s going to need the AWS
+credentials.</p>
+<p>Add these to your GitHub repository as <a href="https://docs.github.com/en/free-pro-team@latest/actions/reference/encrypted-secrets">GitHub Secrets</a> by going to the
+&ldquo;Settings&rdquo; page for your repository and clicking &ldquo;Secrets&rdquo; in the left-hand
+navigation.</p>
+<p>Create new secrets with the following names, and the values for your ECR:</p>
+
+<ul>
+<li>AWS_ACCESS_KEY_ID</li>
+<li>AWS_SECRET_ACCESS_KEY</li>
+</ul>
+<p>Now add this step to the end of your GitHub Action:</p>
+<div class="highlight"><pre class="highlight yaml"><code>      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Push to ECR</span>
+        <span class="na">id</span><span class="pi">:</span> <span class="s">ecr</span>
+        <span class="na">uses</span><span class="pi">:</span> <span class="s">jwalton/gh-ecr-push@v1</span>
+        <span class="na">with</span><span class="pi">:</span>
+          <span class="na">access-key-id</span><span class="pi">:</span> <span class="s">${{ secrets.AWS_ACCESS_KEY_ID }}</span>
+          <span class="na">secret-access-key</span><span class="pi">:</span> <span class="s">${{ secrets.AWS_SECRET_ACCESS_KEY }}</span>
+          <span class="na">region</span><span class="pi">:</span> <span class="s">eu-west-2</span>
+          <span class="na">local-image</span><span class="pi">:</span> <span class="s">foo</span>
+          <span class="na">image</span><span class="pi">:</span> <span class="s">${ECR}:${{ github.sha }}</span>
+
+</code></pre></div><p>That takes care of building the docker image and pushing it to the ECR - in
+this case, tagged with the SHA hash of the last commit to the GitHub
+repository.</p>
+<h3 id="update-the-manifest">Update the manifest</h3><p>We need to update the kubernetes manifest so that it deploys the appropriate tag version
+of the docker image.</p>
+<p>We can do this by turning our <code>kubernetes-deploy.yaml</code> file into a template,
+and interpolating the image tag at deployment time.</p>
+<p>We&rsquo;ll use
+<a href="https://manpages.ubuntu.com/manpages/trusty/man1/envsubst.1.html">envsubst</a>
+for this. Any other templating system will work, but envsubst is easiest to set
+up for this tutorial, because it&rsquo;s already installed on the GitHub actions
+<code>ubuntu-latest</code> VM.</p>
+
+<ul>
+<li><p>Rename the file from <code>kubernetes-deploy.yaml</code> to <code>kubernetes-deploy.tpl</code></p></li>
+<li><p>Change the <code>image:</code> line to this:</p></li>
+</ul>
+<div class="highlight"><pre class="highlight yaml"><code><span class="na">image</span><span class="pi">:</span> <span class="s">754256621582.dkr.ecr.eu-west-2.amazonaws.com/${ECR}:${IMAGE_TAG}</span>
+</code></pre></div><p>The <code>ECR</code> environment variable exists already, so we just need to supply
+<code>IMAGE_TAG</code>.</p>
+
+<ul>
+<li>Add this step to the end of the GitHub Action:</li>
+</ul>
+<div class="highlight"><pre class="highlight yaml"><code>      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Update image tag</span>
+        <span class="na">run</span><span class="pi">:</span> <span class="s">export IMAGE_TAG=${{ github.sha }} &amp;&amp; cat kubernetes-deploy.tpl | envsubst &gt; kubernetes-deploy.yaml</span>
+</code></pre></div><p>At this point, the updated docker image has been built and pushed to the ECR,
+and the kubernetes manifest has been update with the correct image tag. Now we
+need to apply the updated manifest to the kubernetes cluster.</p>
+<h3 id="creating-a-serviceaccount">Creating a ServiceAccount</h3><p>You applied the manifest to the cluster using <code>kubectl</code> earlier. This worked
+because you are already authenticated to the cluster, but the GitHub Action
+isn&rsquo;t, so we need to provide some credentials and get it to authenticate.</p>
+<p>We&rsquo;ll use a <a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/">ServiceAccount</a> for this.</p>
+<p>To create a serviceaccount for your namespace, you need to raise a PR against
+the <a href="https://github.com/ministryofjustice/cloud-platform-environments">environments repository</a>. You can do this with the <a href="/documentation/getting-started/cloud-platform-cli.html">cloud platform cli</a>.</p>
+<p>Change directories to your namespace folder in a checkout of the environments
+repository, e.g.</p>
+<div class="highlight"><pre class="highlight plaintext"><code>namespaces/live-1.cloud-platform.service.justice.gov.uk/dstest
+</code></pre></div><p>&hellip;and run this:</p>
+<div class="highlight"><pre class="highlight shell"><code>cloud-platform environment serviceaccount create
+</code></pre></div><p>This will create a file that defines a serviceaccount.</p>
+<p>Create a branch and raise a PR to add this file, and continue when it has been
+approved and you have merged it.</p>
+<h3 id="serviceaccount-credentials">ServiceAccount Credentials</h3><p>Once the serviceaccount is created, there will be another secret in your
+namespace, with a name like this:</p>
+<div class="highlight"><pre class="highlight plaintext"><code>cloud-platform-user-token-xxxxx
+</code></pre></div>
+<blockquote>
+<p><code>cloud-platform-user</code> is the default name of the serviceaccount created by the CLI</p>
+</blockquote>
+<p>Find the exact name of the secret using:</p>
+<div class="highlight"><pre class="highlight shell"><code>kubectl <span class="nt">-n</span> &lt;your namespace&gt; get secret
+</code></pre></div><p>Then decode it with:</p>
+<div class="highlight"><pre class="highlight shell"><code>cloud-platform decode-secret <span class="nt">-n</span> &lt;your namespace&gt; <span class="nt">-s</span> &lt;secret name&gt;
+</code></pre></div><p>This will output the secret as JSON. We need the value of two keys:</p>
+
+<ul>
+<li><code>token</code></li>
+<li><code>ca.crt</code></li>
+</ul>
+<p>Take the value of <code>token</code>, and create a GitHub Secret called <code>KUBE_TOKEN</code>.</p>
+
+<blockquote>
+<p>Do not include the enclosing <code>&quot;</code> characters in the secret value</p>
+</blockquote>
+<p>The <code>ca.crt</code> value needs a bit of extra care. In the secret, you&rsquo;ll see it
+looks something like this:</p>
+<div class="highlight"><pre class="highlight plaintext"><code>"data": {
+    "ca.crt": "-----BEGIN CERTIFICATE-----\nMIIC0zCCAbugAwIBAgIMFYjQf
+EQ8uyuCm6PoMA0GCSqGSIb3DQEBCwUAMBUxEzAR\n...\nBgNVBAMTCmt1YmVybmV0ZXM
+wHhcNMTkwMzAyMTcwODIzWhcNMjkwMzAxMTcwODIz\nSH9qfuabKA==\n-----END CER
+TIFICATE-----\n",
+    "namespace": ...
+</code></pre></div><p>The GitHub Secret that provides this to the GitHub Action needs to look like
+this:</p>
+<div class="highlight"><pre class="highlight plaintext"><code>-----BEGIN CERTIFICATE-----
+MIIC0zCCAbugAwIBAgIMFYjQfEQ8uyuCm6PoMA0GCSqGSIb3DQEBCwUAMBUxEzAR
+...
+BgNVBAMTCmt1YmVybmV0ZXMwHhcNMTkwMzAyMTcwODIzWhcNMjkwMzAxMTcwODIz
+SH9qfuabKA==
+-----END CERTIFICATE-----
+</code></pre></div><p>That is, you need to replace all the <code>\n</code> with actual newlines, and get rid of
+the surrounding <code>&quot;</code></p>
+<p>You can do that manually, or with this command:</p>
+<div class="highlight"><pre class="highlight shell"><code>cloud-platform decode-secret <span class="nt">-n</span> &lt;your namespace&gt; <span class="nt">-s</span> &lt;secret name&gt; <span class="se">\</span>
+  | <span class="nb">grep </span>ca.crt | <span class="nb">sed</span> <span class="s1">'s/\\n/\
+/g'</span> | <span class="nb">sed</span> <span class="s1">'s/.*"//'</span>
+</code></pre></div>
+<blockquote>
+<p>You might have trouble copy/pasting this command, because of the escaped
+newline.</p>
+</blockquote>
+<p>Create a GitHub Secret called <code>KUBE_CERT</code> containing the correctly-formatted
+<code>ca.crt</code> value.</p>
+<h3 id="authenticate-to-the-cluster">Authenticate to the cluster</h3><p>Add this step to the end of the GitHub Action to use the credentials to
+authenticate to the cluster:</p>
+<div class="highlight"><pre class="highlight yaml"><code>      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Authenticate to the cluster</span>
+        <span class="na">env</span><span class="pi">:</span>
+          <span class="na">KUBE_CERT</span><span class="pi">:</span> <span class="s">${{ secrets.KUBE_CERT }}</span>
+          <span class="na">KUBE_TOKEN</span><span class="pi">:</span> <span class="s">${{ secrets.KUBE_TOKEN }}</span>
+        <span class="na">run</span><span class="pi">:</span> <span class="pi">|</span>
+          <span class="s">echo "${KUBE_CERT}" &gt; ca.crt  # &lt;-- the quotes here are important</span>
+          <span class="s">kubectl config set-cluster ${KUBE_CLUSTER} --certificate-authority=./ca.crt --server=https://api.${KUBE_CLUSTER}</span>
+          <span class="s">kubectl config set-credentials deploy-user --token=${KUBE_TOKEN}</span>
+          <span class="s">kubectl config set-context ${KUBE_CLUSTER} --cluster=${KUBE_CLUSTER} --user=deploy-user --namespace=${NAMESPACE}</span>
+          <span class="s">kubectl config use-context ${KUBE_CLUSTER}</span>
+</code></pre></div><h3 id="deploying-the-latest-code">Deploying the latest code</h3><p>The final step in the GitHub Action is to apply the yaml file like this:</p>
+<div class="highlight"><pre class="highlight yaml"><code>      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Apply the updated manifest</span>
+        <span class="na">run</span><span class="pi">:</span> <span class="pi">|</span>
+          <span class="s">kubectl -n ${NAMESPACE} apply -f kubernetes-deploy.yaml</span>
+</code></pre></div><p>Now if you raise and merge a PR making a change to <code>index.html</code>, you should see
+your GitHub Action run and deploy your changes to the cluster.</p>
+<p>For reference, this is the full <a href="https://gist.github.com/862a8ad93de5f4b4838420437a97f3b2">GitHub Action</a>.</p>
+
+
+              <div data-module='page-expiry' data-last-reviewed-on="2021-04-04">
+    <div class='page-expiry--not-expired'>
+      This page was last reviewed on 4 January 2021.
+
+        It needs to be reviewed again on 4 April 2021
+.
+    </div>
+
+    <div class='page-expiry--expired'>
+      This page was set to be reviewed before 4 April 2021.
+      This might mean the content is out of date.
+    </div>
+  </div>
+
+          </main>
+
+          <aside>
+              <ul class="contribution-banner">
+                <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide/blob/main/source/documentation/deploying-an-app/github-actions-continuous-deployment.html.md.erb">View source</a></li>
+                <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide/issues/new?labels=bug&amp;title=Re:%20'Continuous%20Deployment%20of%20an%20application%20using%20Github%20Actions'&amp;body=Problem%20with%20'Continuous%20Deployment%20of%20an%20application%20using%20Github%20Actions'%20(https://user-guide.cloud-platform.service.justice.gov.uk/documentation/deploying-an-app/github-actions-continuous-deployment.html)">Report problem</a></li>
+                <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide">GitHub Repo</a></li>
+              </ul>
+          </aside>
+
+          <footer class="govuk-footer app-footer" role="contentinfo">
+  <div class="govuk-footer__meta">
+    <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
+
+
+      <svg
+        aria-hidden="true"
+        focusable="false"
+        class="govuk-footer__licence-logo"
+        xmlns="http://www.w3.org/2000/svg"
+        viewbox="0 0 483.2 195.7"
+        height="17"
+        width="41"
+      >
+        <path
+          fill="currentColor"
+          d="M421.5 142.8V.1l-50.7 32.3v161.1h112.4v-50.7zm-122.3-9.6A47.12 47.12 0 0 1 221 97.8c0-26 21.1-47.1 47.1-47.1 16.7 0 31.4 8.7 39.7 21.8l42.7-27.2A97.63 97.63 0 0 0 268.1 0c-36.5 0-68.3 20.1-85.1 49.7A98 98 0 0 0 97.8 0C43.9 0 0 43.9 0 97.8s43.9 97.8 97.8 97.8c36.5 0 68.3-20.1 85.1-49.7a97.76 97.76 0 0 0 149.6 25.4l19.4 22.2h3v-87.8h-80l24.3 27.5zM97.8 145c-26 0-47.1-21.1-47.1-47.1s21.1-47.1 47.1-47.1 47.2 21 47.2 47S123.8 145 97.8 145"
+        />
+      </svg>
+      <span class="govuk-footer__licence-description">
+        All content is available under the
+        <a
+          class="govuk-footer__link"
+          href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+          rel="license"
+        >Open Government Licence v3.0</a>, except where otherwise stated
+      </span>
+    </div>
+    <div class="govuk-footer__meta-item">
+      <a
+        class="govuk-footer__link govuk-footer__copyright-logo"
+        href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/"
+      >© Crown copyright</a>
+    </div>
+  </div>
+</footer>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <script src="/javascripts/application.js"></script>
+  </body>
+</html>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-138188246-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-138188246-1');
+</script>
+
+<script>
+  // Add the current window.location to the body of the
+  // feedback email message.
+  function sendFeedback(mailto, event) {
+    event.preventDefault();
+
+    var body = "Feedback/Problem on page: " + window.location + "\n";
+    var href = mailto + '&body=' + encodeURIComponent(body);
+
+    window.location = href;
+  }
+
+  $(document).ready(function() {
+    var feedbackLink = $('a[href^="mailto:"]:contains("Feedback")')[0];
+    var mailto = feedbackLink.href;
+    $(feedbackLink).on('click', function(event) { sendFeedback(mailto, event); });
+  });
+</script>
