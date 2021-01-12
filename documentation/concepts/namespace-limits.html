@@ -148,11 +148,9 @@
 <p><a href="/images/deployment-one-replica.png" target="_blank" rel="noopener noreferrer"><img src="/images/deployment-one-replica.png" alt="Deployment one replica" /></a></p>
 <p>The diagram above shows a namespace with a deployment consisting of four containers. If the service team wanted to run multiple replicas of this deployment, the scheduler would not allow it, because the namespace capacity limit (the pink square) is not enough to set aside the amount of resources that each of the containers say they want (the outer green square; i.e. you couldn&rsquo;t fit another green square of that size inside the pink square).</p>
 <h2 id="resources-requested-versus-resources-used">Resources Requested versus Resources Used</h2><p>So far, we&rsquo;ve only been talking about what resources we are <strong>requesting</strong>, and it&rsquo;s clear that we can quickly run out of capacity in the cluster if we request too many resources. But, how closely does what we request match what we use?</p>
-<p>We have created <a href="https://github.com/ministryofjustice/cloud-platform-environments/blob/master/bin/namespace-reporter.rb">this script</a> that you can run to see how your namespace is doing.</p>
+<p>We have created <a href="https://reports.cloud-platform.service.justice.gov.uk/namespace_usage_cpu">this report</a> that you can run to see how your namespace is doing (click on a namespace name to get more details. If yours is not visible, you can click on any namespace and replace the namespace name in the browser address bar to see yours).</p>
 <p>Here is the current result (25/07/19) from running the script against the <code>monitoring</code> namespace (where things like <a href="https://prometheus.io/">prometheus</a> and <a href="https://prometheus.io/docs/alerting/alertmanager/">alert-manager</a> run)</p>
-<div class="highlight"><pre class="highlight plaintext"><code>$ ./bin/namespace-reporter.rb monitoring
-
-Namespace: monitoring
+<div class="highlight"><pre class="highlight plaintext"><code>Namespace: monitoring
 
 Request limit:        CPU: 10000,     Memory: 24000
 Requested:            CPU: 2215,      Memory: 13115
