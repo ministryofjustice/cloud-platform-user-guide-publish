@@ -120,9 +120,10 @@
         <div class="app-pane__content toc-open-disabled">
           <main id="content" class="technical-documentation" data-module="anchored-headings">
               <h1 id="network-policies">Network Policies</h1><h1 id="overview">Overview</h1><p>Network Policies are used to regulate connectivity between Kubernetes namespaces.<br>
-Every namespace in the cluster has network policies only allowing inbound traffic from the <em>ingress controllers</em> namespace.</p>
+Every namespace in the cluster has network policies which only allow inbound traffic from the <em>ingress controllers</em> namespace (so that incoming requests can be routed to your web applications).</p>
 <p>A network policy allows connection based on <code>PodSelector</code> and/or <code>NamespaceSelector</code>.  The policy will then filter requests based on namespace or pod labels.</p>
-<h2 id="namespace-label">Namespace Label</h2><p>Any namespace label can be used in the network policy.<br>
+<h2 id="namespace-label">Namespace Label</h2><p>This example demonstrates using a <code>namespaceSelector</code> to route traffic based on a namespace label.</p>
+<p>Any namespace label can be used in the network policy.<br>
 For clarity, and to avoid overlap with other namespaces, let&rsquo;s make our label key:<br>
    <code>cloud-platform.justice.gov.uk/namespace</code></p>
 <div class="highlight"><pre class="highlight plaintext"><code># 00-namepace.yaml
@@ -140,8 +141,8 @@ metadata:
     cloud-platform.justice.gov.uk/application: "court-probation"
     cloud-platform.justice.gov.uk/owner: "andy.marke@digital.justice.gov.uk: andy.marke@digital.justice.gov.uk"
     cloud-platform.justice.gov.uk/source-code: "https://github.com/ministryofjustice/court-probation-service"
-</code></pre></div><h2 id="network-policy">Network Policy</h2><p>Once the relevant label has been added to the namespace, the policy can be created.<br>
-The policy below allows all traffic from <code>source-namespace</code> to <code>target-namespace</code></p>
+</code></pre></div><h2 id="network-policy">Network Policy</h2><p>Once the relevant label has been added to the namespace, the policy can be created.</p>
+<p>The policy below allows all traffic from namespaces which have a label called <code>cloud-platform.justice.gov.uk/namespace</code> with the the value <code>source-namespace</code> to route to the namespace called <code>target-namespace</code>.</p>
 <div class="highlight"><pre class="highlight plaintext"><code># 04-networkpolicy.yaml
 # allow-source-namespace.yaml
 ---
@@ -161,22 +162,20 @@ spec:
           cloud-platform.justice.gov.uk/namespace: "source-namespace'
 
 </code></pre></div><p>Note: For more complex use-cases, or if the policy is going to be specific to a Pod, see <a href="https://kubernetes.io/docs/concepts/services-networking/network-policies/#behavior-of-to-and-from-selectors">here</a></p>
-<h2 id="accessing-the-service">Accessing the service</h2><p>To access a service in the target namespace, we won&rsquo;t be able to simply use the service name anymore.</p>
-<p>We have to use <code>&lt;serviceName&gt;.&lt;namespaceName&gt;</code>.</p>
-<p>Example : 
-<code>curl myservice.target-namespace</code></p>
+<h2 id="accessing-the-service">Accessing the service</h2><p>To access a service in the target namespace <strong>from the source namespace</strong> we need to add the target namespace name to the domain name of the service, e.g:</p>
+<div class="highlight"><pre class="highlight plaintext"><code>curl myservice.target-namespace
+</code></pre></div>
 
-
-              <div data-module='page-expiry' data-last-reviewed-on="2021-01-09">
+              <div data-module='page-expiry' data-last-reviewed-on="2021-04-13">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 9 October 2020.
+      This page was last reviewed on 13 January 2021.
 
-        It needs to be reviewed again on 9 January 2021
+        It needs to be reviewed again on 13 April 2021
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 9 January 2021.
+      This page was set to be reviewed before 13 April 2021.
       This might mean the content is out of date.
     </div>
   </div>
