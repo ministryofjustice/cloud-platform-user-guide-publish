@@ -131,9 +131,12 @@ instead of defining a list of instructions to be carried out (e.g. &ldquo;instal
 these gems, then run this install script&rdquo;), you tell the cluster what
 state it should be in, and then leave it to the cluster to do whatever is
 necessary to get from the state it&rsquo;s in to the state you want it to be in.</p>
+
+<blockquote>
 <p>By &lsquo;state&rsquo; here, we usually mean something like <em>&ldquo;there should be 4 pods, each
 running an instance of this docker image, listening on port 3000, with a
 service called &lsquo;rails-app&rsquo; distributing inbound traffic to them.&rdquo;</em></p>
+</blockquote>
 <p>Much of the configuration of your service on the cloud platform will be done
 via kubernetes deployment objects. You can learn more about deployments, and
 see an example, <a href="https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#creating-a-deployment">here</a>.</p>
@@ -148,9 +151,12 @@ specific commit in the underlying software repo.</p>
 </code></pre></div><p>If you do this, you will get the <code>latest</code> version of the image (<code>latest</code> is the
 default tag value that all docker images have, assigned to the last version
 pushed to the image repository).</p>
+
+<blockquote>
 <p>We strongly advise against deploying the <code>latest</code> version of any images.
 Doing this makes it difficult or impossible to reproduce a known state, for
 example if you wanted to roll back a deployment to an earlier version.</p>
+</blockquote>
 <p><strong>Always specify specific tagged versions of your docker images.</strong></p>
 <h2 id="multiple-replicas">Multiple replicas</h2><p>Kubernetes makes it very easy to deploy your services in a
 high-availability configuration.  All you need to do is set the value of
@@ -248,16 +254,16 @@ Conditions:
 <p>Click <a href="https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough">here</a> for the official Kubernetes documentation on the horizontal pod autoscaler walkthrough.</p>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2021-01-09">
+              <div data-module='page-expiry' data-last-reviewed-on="2021-04-13">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 9 October 2020.
+      This page was last reviewed on 13 January 2021.
 
-        It needs to be reviewed again on 9 January 2021
+        It needs to be reviewed again on 13 April 2021
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 9 January 2021.
+      This page was set to be reviewed before 13 April 2021.
       This might mean the content is out of date.
     </div>
   </div>
