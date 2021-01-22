@@ -128,6 +128,9 @@
           <li>
             <a href="#base64-decode-a-kubernetes-secret"><span>Base64 decode a kubernetes secret</span></a>
           </li>
+          <li>
+            <a href="#export-aws-credentials"><span>Export AWS Credentials</span></a>
+          </li>
         </ul>
       </li>
     </ul>
@@ -322,6 +325,27 @@ above.</p>
     <span class="o">}</span>,
     <span class="s2">"type"</span>: <span class="s2">"Opaque"</span>
 <span class="o">}</span>
+</code></pre></div><h3 id="export-aws-credentials">Export AWS Credentials</h3><p>You can use the CLI to set AWS credentials as shell variables, to make it
+easier to access AWS resources from the command-line.</p>
+<p>For example, if you want to run a command like <code>aws rds describe-db-instances</code>
+on your RDS instance, you first have to set these environment variables:</p>
+
+<ul>
+<li>AWS_REGION - to &ldquo;eu-west-2&rdquo;</li>
+<li>ACCESS_KEY_ID - to the value for your RDS instance</li>
+<li>SECRET_ACCESS_KEY - to the value for your RDS instance</li>
+</ul>
+<p>To make this easier, if you run <code>decode-secret</code> with the
+<code>--export-aws-credentials</code> flag (or <code>-e</code> for short), you will get output like
+this:</p>
+<div class="highlight"><pre class="highlight plaintext"><code>$ cloud-platform decode-secret -n dstest -s rds-instance-output -e
+export AWS_REGION="eu-west-2"
+export AWS_ACCESS_KEY_ID="XXXXXXXXXXXXXXXXXXXX"
+export AWS_SECRET_ACCESS_KEY="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+</code></pre></div><p>If you wrap the command in <code>eval</code>, it will set the variables in your current
+shell, so you can do things like this:</p>
+<div class="highlight"><pre class="highlight plaintext"><code>$ eval(cloud-platform decode-secret -n dstest -s rds-instance-output -e)
+$ aws rds describe-db-instances --db-instance-identifier=cloud-platform-xxxxxxxxxxxxxxxx
 </code></pre></div>
 
               <div data-module='page-expiry' data-last-reviewed-on="2021-01-30">
