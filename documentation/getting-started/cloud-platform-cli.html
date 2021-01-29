@@ -265,13 +265,24 @@ generated file.</p>
 <li>Create a new branch</li>
 <li><code>cd</code> into your <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live-1.cloud-platform.service.justice.gov.uk">namespace folder</a></li>
 <li><p>Run <code>cloud-platform environment serviceaccount create</code></p>
-<p>This will create a <code>05-serviceaccount.yaml</code> file in your working copy.</p></li>
+<p>This will create a <code>resources/serviceaccount.tf</code> file in your working copy.</p></li>
 <li><p><code>git add</code> and <code>git commit</code> the new file, and raise a PR</p></li>
 </ul>
-<p>By default your service account name will be <code>cloud-platform-user</code>. If you&rsquo;d like to specify the name of your service account resource, you can use the <code>-n</code> or <code>--name</code> flag followed by the name of your choice.</p>
+<p>By default your service account name will be <code>cloud-platform-user</code>. If you&rsquo;d like to specify the name of your service account resource, you can define it in the <code>serviceaccount_name</code> terraform variable.</p>
+<p>See the <a href="https://github.com/ministryofjustice/cloud-platform-terraform-serviceaccount#kubernetes-serviceaccount-module">module documentation</a> for more information about the options available.</p>
 <p>After the cloud platform team have approved your PR, please merge it, and your
 service account resource will be created.</p>
 <p>You can query your new resource using the command <code>kubectl get serviceaccount -n &lt;namespace&gt;</code>.</p>
+<h4 id="github-actions-secrets">GitHub Actions Secrets</h4><p>If you are using <a href="https://docs.github.com/en/actions">GitHub Actions</a> for your deployment pipeline, the serviceaccount module can automatically manage <a href="https://docs.github.com/en/actions/reference/encrypted-secrets">GitHub Actions Secrets</a> containing the certificate and token required to authenticate to the cluster and issue commands for your namespace.</p>
+<p>In the <code>resources/serviceaccount.tf</code> file, you should see this section:</p>
+<div class="highlight"><pre class="highlight plaintext"><code>  # Uncomment and provide repository names to create github actions secrets
+  # containing the ca.crt and token for use in github actions CI/CD pipelines
+  # github_repositories = ["my-repo"]
+</code></pre></div><p>To use this feature, uncomment the last line, and set the list of repositories in which you want the GitHub Actions Secrets to be created.</p>
+<p>e.g. if you have two GitHub repositories in your project, called <code>ministryofjustice/frontend</code> and <code>ministryofjustice/backend</code>, you would change the last line to:</p>
+<div class="highlight"><pre class="highlight plaintext"><code>github_repositories = ["frontend", "backend"]
+</code></pre></div><p>Once your PR is merged, those repositories should have secrets named: <code>KUBE_CERT</code>, and <code>KUBE_TOKEN</code>. You can use these secrets in your GitHub Actions pipelines.</p>
+<p>See the <a href="https://github.com/ministryofjustice/cloud-platform-terraform-serviceaccount#kubernetes-serviceaccount-module">module documentation</a> for more information.</p>
 <h3 id="check-your-kubernetes-config-file">Check your kubernetes config file</h3><p>You can use the CLI tool to verify the github teams listed in your <code>id-token</code>
 in your <code>~/.kube/config</code> file. Missing github teams are sometimes a reason why
 people are unable to access objects in their namespaces.</p>
