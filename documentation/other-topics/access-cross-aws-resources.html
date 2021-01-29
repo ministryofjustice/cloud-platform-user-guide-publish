@@ -113,88 +113,81 @@
 
 <ol>
 <li><p><strong>Create the IAM role</strong></p>
-<p>Cloud Platform maintain these cross account roles in the <a href="https://github.com/ministryofjustice/cloud-platform-infrastructure/tree/main/terraform/cross-account-IAM">cloud-platform-infrastructure</a> repo.</p>
-<p>Create a file (<namespace>.tf), update the template below with the correct values and raise a PR.</p>
-<p><details><summary> Click here to see a template code block </summary>
-<p></p></li>
-</ol>
-<div class="highlight"><pre class="highlight plaintext"><code>    data "aws_iam_policy_document" "&lt;namespace&gt;-kiam-trust-chain" {
-      # KIAM trust chain to allow pods to assume roles defined below
-      statement {
-        principals {
-          type        = "AWS"
-          identifiers = [data.aws_iam_role.nodes.arn]
-        }
-        actions = ["sts:AssumeRole"]
+<p>Create a file (cross-iam-role.tf) inside your environment folder in the <a href="https://github.com/ministryofjustice/cloud-platform-environments">cloud-platform-environments</a> repo, 
+update the template below with the correct values and raise a PR.</p>
+<p><details>
+  <summary>Click here to see a template code block</summary>
+  <pre class="highlight plaintext"><code>
+  data &quot;aws_iam_policy_document&quot; &quot;<namespace>-kiam-trust-chain&quot; {
+    # KIAM trust chain to allow pods to assume roles defined below
+    statement {
+      principals {
+        type        = &quot;AWS&quot;
+        identifiers = [data.aws_iam_role.nodes.arn]
       }
+      actions = [&quot;sts:AssumeRole&quot;]
     }
-
-    variable "&lt;namespace&gt;-tags" {
-      type = map(string)
-      default = {
-        business-unit          = "&lt;Which part of the MoJ is responsible for this service? (e.g HMPPS, Legal Aid Agency)&gt;"
-        application            = "&lt;Application name&gt;"
-        is-production          = "&lt;true/false&gt;"
-        environment-name       = "&lt;dev/test/staging/prod&gt;"
-        owner                  = "&lt;team responsible for this application&gt;"
-        infrastructure-support = "&lt;Email address for contact/support&gt;"
-      }
+  }</p>
+<p>variable &quot;<namespace>-tags&quot; {
+    type = map(string)
+    default = {
+      business-unit          = &quot;<Which part of the MoJ is responsible for this service? (e.g HMPPS, Legal Aid Agency)>&quot;
+      application            = &quot;<Application name>&quot;
+      is-production          = &quot;<true/false>&quot;
+      environment-name       = &quot;<dev/test/staging/prod>&quot;
+      owner                  = &quot;<team responsible for this application>&quot;
+      infrastructure-support = &quot;<Email address for contact/support>&quot;
     }
+  }</p>
+<p>resource &quot;aws_iam_role&quot; &quot;<namespace>-<role-name>&quot; {
+    name               = &quot;<namespace>-<role-name>&quot;
+    description        = &quot;IAM role for XXXX&quot;
+    tags               = var.<namespace>-tags
+    assume_role_policy = data.aws_iam_policy_document.<namespace>-kiam-trust-chain.json
+  }</p>
+<p>resource &quot;kubernetes_secret&quot; &quot;<secret-name-in-your-namespace>&quot; {
+    metadata {
+      name      = &quot;<secret-name-in-your-namespace>&quot;
+      namespace = &quot;<namespace>&quot;
+    }</p>
+<div class="highlight"><pre class="highlight plaintext"><code>data = {
+  arn       = aws_iam_role.&lt;namespace&gt;-&lt;role-name&gt;.arn
+  name      = aws_iam_role.&lt;namespace&gt;-&lt;role-name&gt;.name
+  unique_id = aws_iam_role.&lt;namespace&gt;-&lt;role-name&gt;.unique_id
+}
+</code></pre></div><p>}</p>
+<p>data &ldquo;aws_iam_policy_document&rdquo; &ldquo;<namespace>-<role-name>&rdquo; {</p>
+<div class="highlight"><pre class="highlight plaintext"><code># allow pods to assume this role
+statement {
+  actions   = ["sts:AssumeRole"]
+  resources = [aws_iam_role.&lt;namespace&gt;-&lt;role-name&gt;.arn]
+}
 
-    resource "aws_iam_role" "&lt;namespace&gt;-&lt;role-name&gt;" {
-      name               = "&lt;namespace&gt;-&lt;role-name&gt;"
-      description        = "IAM role for XXXX"
-      tags               = var.&lt;namespace&gt;-tags
-      assume_role_policy = data.aws_iam_policy_document.&lt;namespace&gt;-kiam-trust-chain.json
-    }
+# Provide list of permissions and target AWS account resources to allow access from
+statement {
+  actions = [
+    "&lt;some action&gt;",
+  ]
+  resources = [
+    "&lt;ARN of resource in target AWS account&gt;/*",
+  ]
+}
+</code></pre></div><p>}</p>
+<p>resource &ldquo;aws_iam_policy&rdquo; &ldquo;<namespace>-<policy-name>&rdquo; {
+    name   = &ldquo;<namespace>-<policy-name>&rdquo;
+    policy = data.aws_iam_policy_document.<namespace>-<policy-name>.json
+  }</p>
+<p>resource &ldquo;aws_iam_role_policy_attachment&rdquo; &ldquo;<namespace>-<policy-name>&rdquo; {
+    role       = aws_iam_role.<namespace>-<role-name>.name
+    policy_arn = aws_iam_policy.<namespace>-<policy-name>.arn
+  }</p>
+<p></code>
+</pre>
+</details></p>
 
-    resource "kubernetes_secret" "&lt;secret-name-in-your-namespace&gt;" {
-      metadata {
-        name      = "&lt;secret-name-in-your-namespace&gt;"
-        namespace = "&lt;namespace&gt;"
-      }
-
-      data = {
-        arn       = aws_iam_role.&lt;namespace&gt;-&lt;role-name&gt;.arn
-        name      = aws_iam_role.&lt;namespace&gt;-&lt;role-name&gt;.name
-        unique_id = aws_iam_role.&lt;namespace&gt;-&lt;role-name&gt;.unique_id
-      }
-    }
-
-    data "aws_iam_policy_document" "&lt;namespace&gt;-&lt;role-name&gt;" {
-
-      # allow pods to assume this role
-      statement {
-        actions   = ["sts:AssumeRole"]
-        resources = [aws_iam_role.&lt;namespace&gt;-&lt;role-name&gt;.arn]
-      }
-
-      # Provide list of permissions and target AWS account resources to allow access from
-      statement {
-        actions = [
-          "&lt;some action&gt;",
-        ]
-        resources = [
-          "&lt;ARN of resource in target AWS account&gt;/*",
-        ]
-      }
-    }
-
-    resource "aws_iam_policy" "&lt;namespace&gt;-&lt;policy-name&gt;" {
-      name   = "&lt;namespace&gt;-&lt;policy-name&gt;"
-      policy = data.aws_iam_policy_document.&lt;namespace&gt;-&lt;policy-name&gt;.json
-    }
-
-    resource "aws_iam_role_policy_attachment" "&lt;namespace&gt;-&lt;policy-name&gt;" {
-      role       = aws_iam_role.&lt;namespace&gt;-&lt;role-name&gt;.name
-      policy_arn = aws_iam_policy.&lt;namespace&gt;-&lt;policy-name&gt;.arn
-    }
-</code></pre></div><div class="highlight"><pre class="highlight plaintext"><code>&lt;/p&gt;
-&lt;/details&gt;
-
-&lt;details&gt;&lt;summary&gt; Here is an example using the template above, with typical values provided&lt;/summary&gt;
-&lt;p&gt;
-</code></pre></div><div class="highlight"><pre class="highlight plaintext"><code>    data "aws_iam_policy_document" "my-namespace-kiam-trust-chain" {
+<details><summary> Here is an example using the template above, with typical values provided</summary>
+<pre class="highlight plaintext"><code>
+    data "aws_iam_policy_document" "my-namespace-kiam-trust-chain" {
     # KIAM trust chain to allow pods to assume roles defined below
     statement {
       principals {
@@ -265,144 +258,143 @@
     role       = aws_iam_role.my-namespace-app-iam-role.name
     policy_arn = aws_iam_policy.my-namespace-app-iam-policy.arn
     }
-</code></pre></div><div class="highlight"><pre class="highlight plaintext"><code>&lt;/p&gt;
-&lt;/details&gt;
-</code></pre></div>
-<ol>
+</code>
+</pre>
+</details></li>
 <li><p><strong>Annotate the pod with the IAM role</strong></p>
 <p>Once the PR in <strong>step 1</strong> is merged and applied, you will get the role ARN, name and ID as a kubernetes secret in your namespace.</p>
 <p>Decode the role ARN and annotate the pod to indicate which role will need access to the resource in the other AWS account.</p>
 <p>A deployment with the Pod template annotated would look like this (note the <code>&lt;role-arn&gt;</code>):</p>
-<div class="highlight"><pre class="highlight plaintext"><code>apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: wordpress
-  namespace: my-namespace
-  labels:
-    app: wordpress
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
+<div class="highlight"><pre class="highlight plaintext"><code>  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: wordpress
+    namespace: my-namespace
+    labels:
       app: wordpress
-      tier: frontend
-  strategy:
-    type: Recreate
-  template:
-    metadata:
-      labels:
+  spec:
+    replicas: 2
+    selector:
+      matchLabels:
         app: wordpress
         tier: frontend
-        annotations:
-          iam.amazonaws.com/role: &lt;role-arn&gt;
-    spec:
-      containers:
-      - image: wordpressdemo/wpapp:1.1
-        name: wordpress
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          app: wordpress
+          tier: frontend
+          annotations:
+            iam.amazonaws.com/role: &lt;role-arn&gt;
+      spec:
+        containers:
+        - image: wordpressdemo/wpapp:1.1
+          name: wordpress
 </code></pre></div><p>An example role arn annotated in the deployment would look like this:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: wordpress
-  namespace: my-namespace
-  labels:
-    app: wordpress
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
+<div class="highlight"><pre class="highlight plaintext"><code>  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: wordpress
+    namespace: my-namespace
+    labels:
       app: wordpress
-      tier: frontend
-  strategy:
-    type: Recreate
-  template:
-    metadata:
-      labels:
+  spec:
+    replicas: 2
+    selector:
+      matchLabels:
         app: wordpress
         tier: frontend
-        annotations:
-          iam.amazonaws.com/role: arn:aws:iam::11111111:role/my-namespace-app-iam-role
-    spec:
-      containers:
-      - image: wordpressdemo/wpapp:1.1
-        name: wordpress
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          app: wordpress
+          tier: frontend
+          annotations:
+            iam.amazonaws.com/role: arn:aws:iam::11111111:role/my-namespace-app-iam-role
+      spec:
+        containers:
+        - image: wordpressdemo/wpapp:1.1
+          name: wordpress
 </code></pre></div></li>
 <li><p><strong>Annotate the namespace to allow the &ldquo;AssumeRole&rdquo;</strong></p>
 <p>Next, annotate the namespace to indicate which roles are permitted to be assumed within the namespace.</p>
 <p>Update the <code>annotations</code> section in your <code>00-namespace.yaml</code> file with the code below, and raise a PR:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>apiVersion: v1
-kind: Namespace
-metadata:
-  name: my-namespace
-  labels:
-    cloud-platform.justice.gov.uk/is-production: "false"
-    cloud-platform.justice.gov.uk/environment-name: "dev"
-  annotations:
-    cloud-platform.justice.gov.uk/business-unit: "Cloud Platform"
-    cloud-platform.justice.gov.uk/application: "my-test-application"
-    cloud-platform.justice.gov.uk/owner: "Cloud Platform: platforms@digital.justice.gov.uk"
-    cloud-platform.justice.gov.uk/source-code: "https://github.com/ministryofjustice/cloud-platform-mywpapp"
-    iam.amazonaws.com/permitted: "&lt;role-name&gt;"
+<div class="highlight"><pre class="highlight plaintext"><code>  apiVersion: v1
+  kind: Namespace
+  metadata:
+    name: my-namespace
+    labels:
+      cloud-platform.justice.gov.uk/is-production: "false"
+      cloud-platform.justice.gov.uk/environment-name: "dev"
+    annotations:
+      cloud-platform.justice.gov.uk/business-unit: "Cloud Platform"
+      cloud-platform.justice.gov.uk/application: "my-test-application"
+      cloud-platform.justice.gov.uk/owner: "Cloud Platform: platforms@digital.justice.gov.uk"
+      cloud-platform.justice.gov.uk/source-code: "https://github.com/ministryofjustice/cloud-platform-mywpapp"
+      iam.amazonaws.com/permitted: "&lt;role-name&gt;"
 
 </code></pre></div><p>An example would look like this:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>apiVersion: v1
-kind: Namespace
-metadata:
-  name: my-namespace
-  labels:
-    cloud-platform.justice.gov.uk/is-production: "false"
-    cloud-platform.justice.gov.uk/environment-name: "dev"
-  annotations:
-    cloud-platform.justice.gov.uk/business-unit: "Cloud Platform"
-    cloud-platform.justice.gov.uk/application: "my-test-application"
-    cloud-platform.justice.gov.uk/owner: "Cloud Platform: platforms@digital.justice.gov.uk"
-    cloud-platform.justice.gov.uk/source-code: "https://github.com/ministryofjustice/cloud-platform-mywpapp"
-    iam.amazonaws.com/permitted: "my-namespace-app-iam-role"
+<div class="highlight"><pre class="highlight plaintext"><code>  apiVersion: v1
+  kind: Namespace
+  metadata:
+    name: my-namespace
+    labels:
+      cloud-platform.justice.gov.uk/is-production: "false"
+      cloud-platform.justice.gov.uk/environment-name: "dev"
+    annotations:
+      cloud-platform.justice.gov.uk/business-unit: "Cloud Platform"
+      cloud-platform.justice.gov.uk/application: "my-test-application"
+      cloud-platform.justice.gov.uk/owner: "Cloud Platform: platforms@digital.justice.gov.uk"
+      cloud-platform.justice.gov.uk/source-code: "https://github.com/ministryofjustice/cloud-platform-mywpapp"
+      iam.amazonaws.com/permitted: "my-namespace-app-iam-role"
 </code></pre></div></li>
 <li><p><strong>Use the IAM role in your application</strong></p>
 <p>There are several ways you can use the role created to access the resource in the other AWS account.</p>
 <p>For example, to call the AWS SDK for Ruby and get temporary AWS credentials, you could do this:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>role_credentials = Aws::AssumeRoleCredentials.new(
-  role_arn: role_arn,
-  role_session_name: "myapp_session"
-)
+<div class="highlight"><pre class="highlight plaintext"><code>  role_credentials = Aws::AssumeRoleCredentials.new(
+    role_arn: role_arn,
+    role_session_name: "myapp_session"
+  )
 </code></pre></div><p>This will result in <code>role_credentials</code> being a hash consisting of an access key ID, a secret access key, and a security token.</p>
 <p>For more details on using <code>assumeRole</code> check the AWS documentation for <a href="https://docs.aws.amazon.com/cli/latest/reference/sts/assume-role.html">AWS assume-role CLI</a>
 and <a href="https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/AssumeRoleCredentials.html">AW::AssumeRoleCredentials SDK</a></p></li>
 <li><p><strong>Allow the IAM role to permit access in the target AWS account</strong></p>
 <p>You also need to update the AWS resource policy of the target AWS account to allow the IAM role to perform actions.</p>
 <p>Here is an example s3 bucket policy to allow an IAM role to perform specific actions:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>{
-"Version": "2012-10-17",
-"Statement": [
-  {
-    "Sid": "Cross IAM permissions",
-    "Effect": "Allow",
-    "Principal": {
-      "AWS": "arn:aws:iam::11111111:role/my-namespace-app-iam-role"
-    },
-    "Action": [
-      "s3:PutObject",
-      "s3:GetObject",
-    ],
-    "Resource": "arn:aws:s3:::target-s3-bucket/*"
-  }
-]
+<div class="highlight"><pre class="highlight plaintext"><code>  {
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "Cross IAM permissions",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::11111111:role/my-namespace-app-iam-role"
+      },
+      "Action": [
+        "s3:PutObject",
+        "s3:GetObject",
+      ],
+      "Resource": "arn:aws:s3:::target-s3-bucket/*"
+    }
+  ]
 }
 </code></pre></div></li>
 </ol>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2021-01-19">
+              <div data-module='page-expiry' data-last-reviewed-on="2021-04-28">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 19 October 2020.
+      This page was last reviewed on 28 January 2021.
 
-        It needs to be reviewed again on 19 January 2021
+        It needs to be reviewed again on 28 April 2021
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 19 January 2021.
+      This page was set to be reviewed before 28 April 2021.
       This might mean the content is out of date.
     </div>
   </div>
