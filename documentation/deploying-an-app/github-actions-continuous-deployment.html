@@ -294,10 +294,6 @@ the <code>main</code> branch, which will happen whenever a PR is merged.</p>
     <span class="na">branches</span><span class="pi">:</span>
       <span class="pi">-</span> <span class="s1">'</span><span class="s">main'</span>
 
-<span class="na">env</span><span class="pi">:</span>
-  <span class="na">KUBE_CLUSTER</span><span class="pi">:</span> <span class="s">live-1.cloud-platform.service.justice.gov.uk</span>
-  <span class="na">NAMESPACE</span><span class="pi">:</span> <span class="s">dstest</span>
-
 <span class="na">jobs</span><span class="pi">:</span>
   <span class="na">main</span><span class="pi">:</span>
     <span class="na">runs-on</span><span class="pi">:</span> <span class="s">ubuntu-latest</span>
@@ -306,11 +302,10 @@ the <code>main</code> branch, which will happen whenever a PR is merged.</p>
         <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/checkout@v2</span>
       <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Build</span>
         <span class="na">run</span><span class="pi">:</span> <span class="s">docker build -t foo .</span>
-</code></pre></div>
-<blockquote>
-<p>The <code>workflow_dispatch:</code> line lets us trigger the action via the GitHub web
+</code></pre></div><p>The <code>workflow_dispatch:</code> line lets us trigger the action via the GitHub web
 UI, which makes things easier when you&rsquo;re developing an action.</p>
-</blockquote>
+<p>The <code>KUBE_CLUSTER</code> and <code>KUBE_NAMESPACE</code> Github Actions Secrets are created by 
+the <a href="https://github.com/ministryofjustice/cloud-platform-terraform-serviceaccount#kubernetes-serviceaccount-module">serviceaccount module</a>.</p>
 <p>That takes us as far as building our docker image.</p>
 <h3 id="push-to-ecr">Push to ECR</h3><p>The GitHub Action needs to push to your ECR, so it&rsquo;s going to need the ECR name and AWS
 credentials.</p>
@@ -327,10 +322,8 @@ credentials.</p>
 <li>ECR_AWS_ACCESS_KEY_ID</li>
 <li>ECR_AWS_SECRET_ACCESS_KEY</li>
 </ul>
-<p>To use these in your pipeline, add the ECR_NAME to the <code>env:</code> section near the top, so it becomes:</p>
+<p>To use these in your pipeline, add an <code>env</code> section above the <code>jobs</code> section in your <code>cd.yaml</code> file, like this:</p>
 <div class="highlight"><pre class="highlight yaml"><code><span class="na">env</span><span class="pi">:</span>
-  <span class="na">KUBE_CLUSTER</span><span class="pi">:</span> <span class="s">live-1.cloud-platform.service.justice.gov.uk</span>
-  <span class="na">NAMESPACE</span><span class="pi">:</span> <span class="s">dstest</span>  <span class="c1"># &lt;-- your namespace name, not `dstest`</span>
   <span class="na">ECR_NAME</span><span class="pi">:</span> <span class="s">${{ secrets.ECR_NAME }}</span>
 </code></pre></div><p>Now add this step to the end of your GitHub Action:</p>
 <div class="highlight"><pre class="highlight yaml"><code>      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Push to ECR</span>
@@ -342,7 +335,11 @@ credentials.</p>
           <span class="na">region</span><span class="pi">:</span> <span class="s">eu-west-2</span>
           <span class="na">local-image</span><span class="pi">:</span> <span class="s">foo</span>
           <span class="na">image</span><span class="pi">:</span> <span class="s">${ECR_NAME}:${{ github.sha }}</span>
-</code></pre></div><p>That takes care of building the docker image and pushing it to the ECR - in
+</code></pre></div>
+<blockquote>
+<p>We use <code>ECR_NAME</code> in multiple steps, so it goes in the top-level <code>env</code> section</p>
+</blockquote>
+<p>That takes care of building the docker image and pushing it to the ECR - in
 this case, tagged with the SHA hash of the last commit to the GitHub
 repository.</p>
 <h3 id="update-the-manifest">Update the manifest</h3><p>We need to update the kubernetes manifest so that it deploys the appropriate tag version
@@ -377,34 +374,43 @@ isn&rsquo;t, so we need to provide some credentials and get it to authenticate.<
 <p>The serviceaccount has permissions to deploy to your namespace, so we will use
 its <code>ca.crt</code> and <code>token</code> in the pipeline.</p>
 <p>Similar to the <a href="https://github.com/ministryofjustice/cloud-platform-terraform-ecr-credentials#aws-ecr-terraform-module">ECR module</a>, the cloud platform <a href="https://github.com/ministryofjustice/cloud-platform-terraform-serviceaccount#kubernetes-serviceaccount-module">serviceaccount module</a> will
-create these as GitHub Actions Secrets in your repository.</p>
+create these as GitHub Actions Secrets in your repository, along with the 
+cluster and namespace names.</p>
 <p>Back in your namespace folder in the environments repository, make the same
 change to <code>resources/serviceaccount.tf</code> that you made to the <code>resources/ecr.tf</code>
 file, i.e. uncomment the <code>github_repositories = ...</code> line, and supply your
 repository name as a one-element list.</p>
-<p>Once your change has been merged, you should see two more GitHub Actions
+<p>Once your change has been merged, you should see four more GitHub Actions
 Secrets in your repository:</p>
 
 <ul>
 <li>KUBE_CERT</li>
 <li>KUBE_TOKEN</li>
+<li>KUBE_CLUSTER</li>
+<li>KUBE_NAMESPACE</li>
 </ul>
-<p>Add this step to the end of the GitHub Action to use the credentials to
+<p>We need the cluster and namespace name in multiple workflow steps, so add them to the top-level <code>env</code> section of the file:</p>
+<div class="highlight"><pre class="highlight yaml"><code><span class="na">env</span><span class="pi">:</span>
+  <span class="na">ECR_NAME</span><span class="pi">:</span> <span class="s">${{ secrets.ECR_NAME }}</span>
+  <span class="na">KUBE_CLUSTER</span><span class="pi">:</span> <span class="s">${{ secrets.KUBE_CLUSTER }}</span>
+  <span class="na">KUBE_NAMESPACE</span><span class="pi">:</span> <span class="s">${{ secrets.KUBE_NAMESPACE }}</span>
+</code></pre></div><p>Add this step to the end of the GitHub Action to use the credentials to
 authenticate to the cluster:</p>
 <div class="highlight"><pre class="highlight yaml"><code>      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Authenticate to the cluster</span>
         <span class="na">env</span><span class="pi">:</span>
           <span class="na">KUBE_CERT</span><span class="pi">:</span> <span class="s">${{ secrets.KUBE_CERT }}</span>
           <span class="na">KUBE_TOKEN</span><span class="pi">:</span> <span class="s">${{ secrets.KUBE_TOKEN }}</span>
+
         <span class="na">run</span><span class="pi">:</span> <span class="pi">|</span>
           <span class="s">echo "${KUBE_CERT}" &gt; ca.crt  # &lt;-- the quotes here are important</span>
           <span class="s">kubectl config set-cluster ${KUBE_CLUSTER} --certificate-authority=./ca.crt --server=https://api.${KUBE_CLUSTER}</span>
           <span class="s">kubectl config set-credentials deploy-user --token=${KUBE_TOKEN}</span>
-          <span class="s">kubectl config set-context ${KUBE_CLUSTER} --cluster=${KUBE_CLUSTER} --user=deploy-user --namespace=${NAMESPACE}</span>
+          <span class="s">kubectl config set-context ${KUBE_CLUSTER} --cluster=${KUBE_CLUSTER} --user=deploy-user --namespace=${KUBE_NAMESPACE}</span>
           <span class="s">kubectl config use-context ${KUBE_CLUSTER}</span>
 </code></pre></div><h3 id="deploying-the-latest-code">Deploying the latest code</h3><p>The final step in the GitHub Action is to apply the yaml file like this:</p>
 <div class="highlight"><pre class="highlight yaml"><code>      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Apply the updated manifest</span>
         <span class="na">run</span><span class="pi">:</span> <span class="pi">|</span>
-          <span class="s">kubectl -n ${NAMESPACE} apply -f kubernetes-deploy.yaml</span>
+          <span class="s">kubectl -n ${KUBE_NAMESPACE} apply -f kubernetes-deploy.yaml</span>
 </code></pre></div><p>Now if you raise and merge a PR making a change to <code>index.html</code>, you should see
 your GitHub Action run and deploy your changes to the cluster.</p>
 <p>For reference, this is the full <a href="https://gist.github.com/862a8ad93de5f4b4838420437a97f3b2">GitHub Action</a>.</p>
