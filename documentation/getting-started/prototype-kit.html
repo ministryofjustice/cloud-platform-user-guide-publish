@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en" class="govuk-template no-js">
+  <head>
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+      <meta name="robots" content="noindex">
+
+    <title>Create a Gov.UK Prototype Kit site - Cloud Platform User Guide</title>
+
+    <link href="/stylesheets/manifest.css" rel="stylesheet" />
+
+    <link rel="canonical" href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/prototype-kit.html">
+
+
+      <meta property="og:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
+      <meta property="og:site_name" content="Cloud Platform User Guide" />
+      <meta property="og:title" content="Create a Gov.UK Prototype Kit site" />
+      <meta property="og:type" content="object" />
+      <meta property="og:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/prototype-kit.html" />
+      <meta property="twitter:card" content="summary" />
+      <meta property="twitter:domain" content="user-guide.cloud-platform.service.justice.gov.uk" />
+      <meta property="twitter:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
+      <meta property="twitter:title" content="Create a Gov.UK Prototype Kit site - Cloud Platform User Guide" />
+      <meta property="twitter:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/prototype-kit.html" />
+
+    
+  </head>
+
+  <body class="govuk-template__body">
+    <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
+
+    <div class="app-pane">
+      <div class="app-pane__header toc-open-disabled">
+        <a href="#content" class="govuk-skip-link">Skip to main content</a>
+
+        <header class="govuk-header app-header" role="banner" data-module="govuk-header">
+  <div class="govuk-header__container govuk-header__container--full-width">
+    <div class="govuk-header__logo">
+      <a href="/" class="govuk-header__link govuk-header__link--homepage">
+        <span class="govuk-header__product-name">
+          Cloud Platform User Guide
+        </span>
+      </a>
+    </div>
+    <div class="govuk-header__content">
+      <button type="button" class="govuk-header__menu-button govuk-js-header-toggle" aria-controls="navigation" aria-label="Show or hide Top Level Navigation">Menu</button>
+      <nav>
+        <ul id="navigation" class="govuk-header__navigation govuk-header__navigation--end" aria-label="Top Level Navigation">
+            <li class="govuk-header__navigation-item">
+              <a class="govuk-header__link" href="mailto:platforms+user-guide@digital.justice.gov.uk?subject=User+guide+feedback">Feedback / Report a problem</a>
+            </li>
+            <li class="govuk-header__navigation-item">
+              <a class="govuk-header__link" href="/">Documentation</a>
+            </li>
+            <li class="govuk-header__navigation-item">
+              <a class="govuk-header__link" href="https://github.com/ministryofjustice/cloud-platform-user-guide">GitHub</a>
+            </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>
+
+      </div>
+
+        <div id="toc-heading" class="toc-show fixedsticky">
+          <a href="#toc" class="toc-show__label js-toc-show" aria-controls="toc">
+            Table of contents <span class="toc-show__icon"></span>
+          </a>
+        </div>
+
+      <div class="app-pane__body" data-module="in-page-navigation">
+          <div class="app-pane__toc">
+            <div class="toc" data-module="table-of-contents">
+              <div class="search" data-module="search">
+  <form action="https://www.google.co.uk/search" method="get" role="search">
+    <input type="hidden" name="as_sitesearch" value="https://user-guide.cloud-platform.service.justice.gov.uk"/>
+    <label class="govuk-label search__label" for="search">
+      Search (via Google)
+    </label>
+    <input class="govuk-input govuk-!-margin-bottom-4" id="search" name="q" type="text" aria-controls="search-results" placeholder="Search">
+  </form>
+  <div id="search-results" class="search-results" aria-hidden="true" role="dialog" aria-labelledby="search-results-title">
+    <div class="search-results__inner">
+      <button class="search-results__close">Close<span class="search-results__close-label"> search results</span></button>
+      <h2 id="search-results-title" class="search-results__title" aria-live="polite">Results</h2>
+      <div class="search-results__content"></div>
+    </div>
+  </div>
+</div>
+
+              <a href="#" class="toc__close js-toc-close" aria-controls="toc" aria-label="Hide table of contents"></a>
+              <nav id="toc" class="js-toc-list toc__list" aria-labelledby="toc-heading">
+                      <ul>
+  <li>
+    <a href="#create-a-gov-uk-prototype-kit-site"><span>Create a Gov.UK Prototype Kit site</span></a>
+    <ul>
+      <li>
+        <a href="#pre-requisites"><span>Pre-requisites</span></a>
+      </li>
+      <li>
+        <a href="#1-clone-the-environments-repository"><span>1. Clone the environments repository</span></a>
+      </li>
+      <li>
+        <a href="#2-create-your-prototype-kit-site"><span>2. Create your prototype kit site</span></a>
+      </li>
+      <li>
+        <a href="#3-raise-a-pr"><span>3. Raise a PR</span></a>
+      </li>
+      <li>
+        <a href="#caveats"><span>Caveats</span></a>
+      </li>
+      <li>
+        <a href="#deleting-your-prototype-kit-site"><span>Deleting your Prototype Kit site</span></a>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+
+              </nav>
+            </div>
+          </div>
+
+        <div class="app-pane__content toc-open-disabled">
+          <main id="content" class="technical-documentation" data-module="anchored-headings">
+              <h1 id="create-a-gov-uk-prototype-kit-site">Create a Gov.UK Prototype Kit site</h1><p>The cloud platform makes it easy to set up and host a <a href="https://govuk-prototype-kit.herokuapp.com/docs">Gov.UK Prototype Kit</a>
+website.</p>
+<p>This guide will walk you through the process.</p>
+<h2 id="pre-requisites">Pre-requisites</h2><p>To complete the steps in this guide, you will need:</p>
+
+<ul>
+<li>To be a member of at least one GitHub team in the <a href="https://github.com/ministryofjustice/">MoJ GitHub Organisation</a></li>
+<li>The <a href="/documentation/getting-started/cloud-platform-cli.html">Cloud Platform CLI</a> installed</li>
+<li>A local development environment including a terminal and a git client</li>
+</ul>
+<h2 id="1-clone-the-environments-repository">1. Clone the <code>environments</code> repository</h2><p>To create resources on the Cloud Platform, you need to raise a pull request
+against the <a href="https://github.com/ministryofjustice/cloud-platform-environments">cloud-platform-environments</a> repository.</p>
+<p>Start by checking out a copy of the repository:</p>
+<div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span>git clone git@github.com:ministryofjustice/cloud-platform-environments.git
+<span class="nv">$ </span><span class="nb">cd </span>cloud-platform-environments
+</code></pre></div><h2 id="2-create-your-prototype-kit-site">2. Create your prototype kit site</h2><p>To create your prototype kit site, run:</p>
+<div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span>cloud-platform environment prototype create
+</code></pre></div><p>You will be asked several questions, the most important of which is the name of
+your prototype kit project.</p>
+<p>This name will be used as:</p>
+
+<ul>
+<li>The name of the <a href="/documentation/getting-started/env-create.html">namespace</a> which will be created on the cloud platform</li>
+<li>The name of the GitHub repository which will be created, and which will
+contain your prototype kit source code</li>
+<li>The hostname of your prototype kit website</li>
+</ul>
+
+<blockquote>
+<p>You must ensure that there is not already a namespace or github repository
+with this name</p>
+</blockquote>
+<p>For example, if you choose <code>my-prototype</code> as the name, you will create:</p>
+
+<ul>
+<li>A namespace on the Cloud Platform called <code>my-prototype</code></li>
+<li>The github repository <code>https://github.com/ministryofjustice/my-prototype</code></li>
+</ul>
+<p>&hellip;and your prototype kit website will be available at the URL:</p>
+<div class="highlight"><pre class="highlight plaintext"><code>https://my-prototype.apps.live-1.cloud-platform.service.justice.gov.uk
+</code></pre></div><h2 id="3-raise-a-pr">3. Raise a PR</h2><p>After you have answered all the questions, the cloud-platform CLI will create
+several files in a folder called:</p>
+<div class="highlight"><pre class="highlight plaintext"><code>namespaces/live-1.cloud-platform.service.justice.gov.uk/[name you chose]
+</code></pre></div><p>Create a new branch, <code>git add</code> the new folder and the raise a pull request.</p>
+<p>Once a member of the Cloud Platform team has approved your PR, merge it.</p>
+<p>When you merge the PR, the Cloud Platform CI/CD pipeline will create your
+namespace and github repository. The github repository has a <a href="https://github.com/features/actions">GitHub Actions</a>
+workflow which will continuously deploy any changes made to the <code>main</code> branch
+of the repository.</p>
+<h2 id="caveats">Caveats</h2><p>There are a few things to be aware of, concerning your prototype kit site:</p>
+
+<ul>
+<li>The continuous deployment workflow usually takes around 5 minutes to run</li>
+<li>The very first run of the deployment workflow often fails. We&rsquo;re not sure why
+this happens, but it&rsquo;s probably due to a <a href="https://www.techopedia.com/definition/10313/race-condition">race condition</a> when trying to use
+github actions secrets immediately after creating them. If this happens, you
+can use the &ldquo;re-run&rdquo; button in the GitHub web interface, and the action should
+succeed.</li>
+</ul>
+<p><a href="/images/github-actions-rerun-button.png" target="_blank" rel="noopener noreferrer"><img src="/images/github-actions-rerun-button.png" alt="GitHub Actions re-run button" /></a></p>
+
+<ul>
+<li>The GitHub repository is created with <a href="https://docs.github.com/en/github/administering-a-repository/about-protected-branches">branch protection</a> applied to the
+default <code>main</code> branch. If you don&rsquo;t want this, edit the <code>github-repo.tf</code> file
+in your namespace folder in the environments repository, and remove this
+stanza:</li>
+</ul>
+<div class="highlight"><pre class="highlight hcl"><code><span class="nx">resource</span> <span class="s2">"github_branch_protection"</span> <span class="s2">"default"</span> <span class="p">{</span>
+  <span class="nx">repository_id</span>          <span class="p">=</span> <span class="nx">github_repository</span><span class="err">.</span><span class="nx">prototype</span><span class="err">.</span><span class="nx">id</span>
+  <span class="nx">pattern</span>                <span class="p">=</span> <span class="s2">"main"</span>
+  <span class="nx">enforce_admins</span>         <span class="p">=</span> <span class="kc">true</span>
+  <span class="nx">require_signed_commits</span> <span class="p">=</span> <span class="kc">true</span>
+<span class="p">}</span>
+</code></pre></div>
+<blockquote>
+<p>If you use the GitHub UI to disable branch protection, the Cloud Platform
+deployment pipeline will re-enable it shortly afterwards.</p>
+<p>The only way to permanently disable it is to remove it from the terraform
+source code.</p>
+</blockquote>
+<h2 id="deleting-your-prototype-kit-site">Deleting your Prototype Kit site</h2><p>When you no longer need your prototype kit site, you can delete it as follows:</p>
+
+<ol>
+<li><p>Raise a PR removing your namespace folder from the
+<code>cloud-platform-environments</code> repository, and wait for it to be approved by a
+member of the Cloud Platform team</p></li>
+<li><p><strong>Immediately before you merge the PR</strong> use the GitHub web interface to
+delete your repository</p></li>
+<li><p>Merge the PR</p></li>
+</ol>
+
+<blockquote>
+<p>The Cloud Platform deployment pipeline has the GitHub privileges required to
+<strong>create</strong> repositories, but not to <strong>delete</strong> them. This is a deliberate
+safety feature.</p>
+</blockquote>
+<p>Shortly after you merge the PR, your namespace will be removed from the Cloud
+Platform.</p>
+
+
+              <div data-module='page-expiry' data-last-reviewed-on="2021-05-04">
+    <div class='page-expiry--not-expired'>
+      This page was last reviewed on 4 February 2021.
+
+        It needs to be reviewed again on 4 May 2021
+.
+    </div>
+
+    <div class='page-expiry--expired'>
+      This page was set to be reviewed before 4 May 2021.
+      This might mean the content is out of date.
+    </div>
+  </div>
+
+          </main>
+
+          <aside>
+              <ul class="contribution-banner">
+                <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide/blob/main/source/documentation/getting-started/prototype-kit.html.md.erb">View source</a></li>
+                <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide/issues/new?labels=bug&amp;title=Re:%20'Create%20a%20Gov.UK%20Prototype%20Kit%20site'&amp;body=Problem%20with%20'Create%20a%20Gov.UK%20Prototype%20Kit%20site'%20(https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/prototype-kit.html)">Report problem</a></li>
+                <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide">GitHub Repo</a></li>
+              </ul>
+          </aside>
+
+          <footer class="govuk-footer app-footer" role="contentinfo">
+  <div class="govuk-footer__meta">
+    <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
+
+
+      <svg
+        aria-hidden="true"
+        focusable="false"
+        class="govuk-footer__licence-logo"
+        xmlns="http://www.w3.org/2000/svg"
+        viewbox="0 0 483.2 195.7"
+        height="17"
+        width="41"
+      >
+        <path
+          fill="currentColor"
+          d="M421.5 142.8V.1l-50.7 32.3v161.1h112.4v-50.7zm-122.3-9.6A47.12 47.12 0 0 1 221 97.8c0-26 21.1-47.1 47.1-47.1 16.7 0 31.4 8.7 39.7 21.8l42.7-27.2A97.63 97.63 0 0 0 268.1 0c-36.5 0-68.3 20.1-85.1 49.7A98 98 0 0 0 97.8 0C43.9 0 0 43.9 0 97.8s43.9 97.8 97.8 97.8c36.5 0 68.3-20.1 85.1-49.7a97.76 97.76 0 0 0 149.6 25.4l19.4 22.2h3v-87.8h-80l24.3 27.5zM97.8 145c-26 0-47.1-21.1-47.1-47.1s21.1-47.1 47.1-47.1 47.2 21 47.2 47S123.8 145 97.8 145"
+        />
+      </svg>
+      <span class="govuk-footer__licence-description">
+        All content is available under the
+        <a
+          class="govuk-footer__link"
+          href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+          rel="license"
+        >Open Government Licence v3.0</a>, except where otherwise stated
+      </span>
+    </div>
+    <div class="govuk-footer__meta-item">
+      <a
+        class="govuk-footer__link govuk-footer__copyright-logo"
+        href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/"
+      >© Crown copyright</a>
+    </div>
+  </div>
+</footer>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <script src="/javascripts/application.js"></script>
+  </body>
+</html>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-138188246-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-138188246-1');
+</script>
+
+<script>
+  // Add the current window.location to the body of the
+  // feedback email message.
+  function sendFeedback(mailto, event) {
+    event.preventDefault();
+
+    var body = "Feedback/Problem on page: " + window.location + "\n";
+    var href = mailto + '&body=' + encodeURIComponent(body);
+
+    window.location = href;
+  }
+
+  $(document).ready(function() {
+    var feedbackLink = $('a[href^="mailto:"]:contains("Feedback")')[0];
+    var mailto = feedbackLink.href;
+    $(feedbackLink).on('click', function(event) { sendFeedback(mailto, event); });
+  });
+</script>
