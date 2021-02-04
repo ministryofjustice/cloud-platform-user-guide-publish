@@ -177,14 +177,19 @@ of the repository.</p>
 <h2 id="caveats">Caveats</h2><p>There are a few things to be aware of, concerning your prototype kit site:</p>
 
 <ul>
-<li>The continuous deployment workflow usually takes around 5 minutes to run</li>
-<li>The very first run of the deployment workflow often fails. We&rsquo;re not sure why
-this happens, but it&rsquo;s probably due to a <a href="https://www.techopedia.com/definition/10313/race-condition">race condition</a> when trying to use
-github actions secrets immediately after creating them. If this happens, you
-can use the &ldquo;re-run&rdquo; button in the GitHub web interface, and the action should
-succeed.</li>
+<li><p>The continuous deployment workflow usually takes around 5 minutes to run</p></li>
+<li><p>The very first run of the deployment workflow will fail. This is because the
+github repository (and its deployment workflow) has to be created before some
+of the resources the workflow depends on.  You can use the &ldquo;re-run&rdquo; button in
+the GitHub web interface, and the action should succeed.</p></li>
 </ul>
 <p><a href="/images/github-actions-rerun-button.png" target="_blank" rel="noopener noreferrer"><img src="/images/github-actions-rerun-button.png" alt="GitHub Actions re-run button" /></a></p>
+
+<blockquote>
+<p>You don&rsquo;t have to do this - when you push changes to the repository, they
+will be deployed successfully - but you may want to confirm that your site
+works before making any changes.</p>
+</blockquote>
 
 <ul>
 <li>The GitHub repository is created with <a href="https://docs.github.com/en/github/administering-a-repository/about-protected-branches">branch protection</a> applied to the
