@@ -156,10 +156,10 @@
 <h2 id="2-upgrade-your-existing-rds-instance">2. Upgrade your existing RDS instance</h2><p>The upgrade process involves these steps:</p>
 
 <ul>
-<li>Ask the Cloud Platform team to pause the &ldquo;apply&rdquo; pipeline (so that subsequent changes aren&rsquo;t automatically reverted before your upgrade is complete)</li>
+<li>Raise and merge a PR to <a href="/documentation/other-topics/long-running-env-operations.html">tell the apply pipeline to skip your namespace</a></li>
 <li>Alter your RDS instance to use the default <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithParamGroups.html">parameter group</a> for your <strong>current</strong> PostgreSQL version</li>
 <li>Raise and merge a PR to change your PostgreSQL version to the one you want - the pipeline will handle the upgrade for you</li>
-<li>Tell the Cloud Platform team to unpause the apply pipeline</li>
+<li>Raise another PR to <a href="/documentation/other-topics/long-running-env-operations.html">remove the &ldquo;skip file&rdquo;</a> from your namespace</li>
 </ul>
 <h3 id="2-upgrade-your-existing-rds-instance-advantages">Advantages</h3>
 <ul>
