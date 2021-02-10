@@ -137,24 +137,17 @@
 <h3 id="creating-the-registry">Creating the registry</h3><p>You need to have the <a href="/documentation/getting-started/cloud-platform-cli.html">Cloud Platform CLI</a> tool installed.</p>
 
 <ol>
-<li>Clone the environments repo and create a new branch</li>
-</ol>
+<li><p>Clone the environments repo and create a new branch</p>
 <div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span>git clone git@github.com:ministryofjustice/cloud-platform-environments.git
 <span class="nv">$ </span><span class="nb">cd </span>cloud-platform-environments
 <span class="nv">$ </span>git checkout <span class="nt">-b</span> add_ecr
-</code></pre></div>
-<ol>
-<li>Navigate to your namespace directory</li>
-</ol>
+</code></pre></div></li>
+<li><p>Navigate to your namespace directory</p>
 <div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span><span class="nb">cd </span>namespaces/live-1.cloud-platform.service.justice.gov.uk/<span class="nv">$your_service</span>
-</code></pre></div>
-<ol>
-<li>Use the CLI tool to create your ECR</li>
-</ol>
+</code></pre></div></li>
+<li><p>Use the CLI tool to create your ECR</p>
 <div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span>cloud-platform environment ecr create
-</code></pre></div><p>This will create a <code>resources/ecr.tf</code> file in your namespace folder.</p>
-
-<ol>
+</code></pre></div><p>This will create a <code>resources/ecr.tf</code> file in your namespace folder.</p></li>
 <li><p>git add, commit and push to your branch</p></li>
 <li><p>Raise a PR to have your change approved</p></li>
 </ol>
