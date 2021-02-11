@@ -117,146 +117,153 @@
 update the template below with the correct values and raise a PR.</p>
 <p><details>
   <summary>Click here to see a template code block</summary>
-  <pre class="highlight plaintext"><code>
-  data &quot;aws_iam_policy_document&quot; &quot;<namespace>-kiam-trust-chain&quot; {
-    # KIAM trust chain to allow pods to assume roles defined below
-    statement {
-      principals {
-        type        = &quot;AWS&quot;
-        identifiers = [data.aws_iam_role.nodes.arn]
-      }
-      actions = [&quot;sts:AssumeRole&quot;]
+  <pre><code></p>
+<div class="highlight"><pre class="highlight plaintext"><code>data "aws_iam_policy_document" "&lt;namespace&gt;-kiam-trust-chain" {
+  # KIAM trust chain to allow pods to assume roles defined below
+  statement {
+    principals {
+      type        = "AWS"
+      identifiers = [data.aws_iam_role.nodes.arn]
     }
-  }</p>
-<p>variable &quot;<namespace>-tags&quot; {
-    type = map(string)
-    default = {
-      business-unit          = &quot;<Which part of the MoJ is responsible for this service? (e.g HMPPS, Legal Aid Agency)>&quot;
-      application            = &quot;<Application name>&quot;
-      is-production          = &quot;<true/false>&quot;
-      environment-name       = &quot;<dev/test/staging/prod>&quot;
-      owner                  = &quot;<team responsible for this application>&quot;
-      infrastructure-support = &quot;<Email address for contact/support>&quot;
-    }
-  }</p>
-<p>resource &quot;aws_iam_role&quot; &quot;<namespace>-<role-name>&quot; {
-    name               = &quot;<namespace>-<role-name>&quot;
-    description        = &quot;IAM role for XXXX&quot;
-    tags               = var.<namespace>-tags
-    assume_role_policy = data.aws_iam_policy_document.<namespace>-kiam-trust-chain.json
-  }</p>
-<p>resource &quot;kubernetes_secret&quot; &quot;<secret-name-in-your-namespace>&quot; {
-    metadata {
-      name      = &quot;<secret-name-in-your-namespace>&quot;
-      namespace = &quot;<namespace>&quot;
-    }</p>
-<div class="highlight"><pre class="highlight plaintext"><code>data = {
-  arn       = aws_iam_role.&lt;namespace&gt;-&lt;role-name&gt;.arn
-  name      = aws_iam_role.&lt;namespace&gt;-&lt;role-name&gt;.name
-  unique_id = aws_iam_role.&lt;namespace&gt;-&lt;role-name&gt;.unique_id
+    actions = ["sts:AssumeRole"]
+  }
 }
-</code></pre></div><p>}</p>
-<p>data &ldquo;aws_iam_policy_document&rdquo; &ldquo;<namespace>-<role-name>&rdquo; {</p>
-<div class="highlight"><pre class="highlight plaintext"><code># allow pods to assume this role
-statement {
-  actions   = ["sts:AssumeRole"]
-  resources = [aws_iam_role.&lt;namespace&gt;-&lt;role-name&gt;.arn]
+variable "&lt;namespace&gt;-tags" {
+  type = map(string)
+  default = {
+    business-unit          = "&lt;Which part of the MoJ is responsible for this service? (e.g HMPPS, Legal Aid Agency)&gt;"
+    application            = "&lt;Application name&gt;"
+    is-production          = "&lt;true/false&gt;"
+    environment-name       = "&lt;dev/test/staging/prod&gt;"
+    owner                  = "&lt;team responsible for this application&gt;"
+    infrastructure-support = "&lt;Email address for contact/support&gt;"
+  }
 }
 
-# Provide list of permissions and target AWS account resources to allow access from
-statement {
-  actions = [
-    "&lt;some action&gt;",
-  ]
-  resources = [
-    "&lt;ARN of resource in target AWS account&gt;/*",
-  ]
+resource "aws_iam_role" "&lt;namespace&gt;-&lt;role-name&gt;" {
+  name               = "&lt;namespace&gt;-&lt;role-name&gt;"
+  description        = "IAM role for XXXX"
+  tags               = var.&lt;namespace&gt;-tags
+  assume_role_policy = data.aws_iam_policy_document.&lt;namespace&gt;-kiam-trust-chain.json
 }
-</code></pre></div><p>}</p>
-<p>resource &ldquo;aws_iam_policy&rdquo; &ldquo;<namespace>-<policy-name>&rdquo; {
-    name   = &ldquo;<namespace>-<policy-name>&rdquo;
-    policy = data.aws_iam_policy_document.<namespace>-<policy-name>.json
-  }</p>
-<p>resource &ldquo;aws_iam_role_policy_attachment&rdquo; &ldquo;<namespace>-<policy-name>&rdquo; {
-    role       = aws_iam_role.<namespace>-<role-name>.name
-    policy_arn = aws_iam_policy.<namespace>-<policy-name>.arn
-  }</p>
-<p></code>
+
+resource "kubernetes_secret" "&lt;secret-name-in-your-namespace&gt;" {
+  metadata {
+    name      = "&lt;secret-name-in-your-namespace&gt;"
+    namespace = "&lt;namespace&gt;"
+  }
+
+  data = {
+    arn       = aws_iam_role.&lt;namespace&gt;-&lt;role-name&gt;.arn
+    name      = aws_iam_role.&lt;namespace&gt;-&lt;role-name&gt;.name
+    unique_id = aws_iam_role.&lt;namespace&gt;-&lt;role-name&gt;.unique_id
+  }
+}
+
+data "aws_iam_policy_document" "&lt;namespace&gt;-&lt;role-name&gt;" {
+
+  # allow pods to assume this role
+  statement {
+    actions   = ["sts:AssumeRole"]
+    resources = [aws_iam_role.&lt;namespace&gt;-&lt;role-name&gt;.arn]
+  }
+
+  # Provide list of permissions and target AWS account resources to allow access from
+  statement {
+    actions = [
+      "&lt;some action&gt;",
+    ]
+    resources = [
+      "&lt;ARN of resource in target AWS account&gt;/*",
+    ]
+  }
+}
+
+resource "aws_iam_policy" "&lt;namespace&gt;-&lt;policy-name&gt;" {
+  name   = "&lt;namespace&gt;-&lt;policy-name&gt;"
+  policy = data.aws_iam_policy_document.&lt;namespace&gt;-&lt;policy-name&gt;.json
+}
+
+resource "aws_iam_role_policy_attachment" "&lt;namespace&gt;-&lt;policy-name&gt;" {
+  role       = aws_iam_role.&lt;namespace&gt;-&lt;role-name&gt;.name
+  policy_arn = aws_iam_policy.&lt;namespace&gt;-&lt;policy-name&gt;.arn
+}
+</code></pre></div><p></code>
 </pre>
 </details></p>
 
 <details><summary> Here is an example using the template above, with typical values provided</summary>
-<pre class="highlight plaintext"><code>
+<pre><code>
     data "aws_iam_policy_document" "my-namespace-kiam-trust-chain" {
     # KIAM trust chain to allow pods to assume roles defined below
-    statement {
-      principals {
-        type        = "AWS"
-        identifiers = [data.aws_iam_role.nodes.arn]
+      statement {
+        principals {
+          type        = "AWS"
+          identifiers = [data.aws_iam_role.nodes.arn]
+        }
+        actions = ["sts:AssumeRole"]
       }
-      actions = ["sts:AssumeRole"]
-    }
     }
 
     variable "my-namespace-tags" {
-    type = map(string)
-    default = {
-      business-unit          = "Cloud Platform"
-      application            = "My Application"
-      is-production          = "false"
-      environment-name       = "Development"
-      owner                  = "cloud-platform"
-      infrastructure-support = "platforms@digital.justice.gov.uk"
-    }
+      type = map(string)
+      default = {
+        business-unit          = "Cloud Platform"
+        application            = "My Application"
+        is-production          = "false"
+        environment-name       = "Development"
+        owner                  = "cloud-platform"
+        infrastructure-support = "platforms@digital.justice.gov.uk"
+      }
     }
 
     resource "aws_iam_role" "my-namespace-app-iam-role" {
-    name               = "my-namespace-app-iam-role"
-    description        = "IAM role for My app to access s3 bucket - AAA in 11111 AWS account"
-    tags               = var.my-namespace-tags
-    assume_role_policy = data.aws_iam_policy_document.my-namespace-kiam-trust-chain.json
+      name               = "my-namespace-app-iam-role"
+      description        = "IAM role for My app to access s3 bucket - AAA in 11111 AWS account"
+      tags               = var.my-namespace-tags
+      assume_role_policy = data.aws_iam_policy_document.my-namespace-kiam-trust-chain.json
     }
 
     resource "kubernetes_secret" "iam-role-creds-my-app" {
-    metadata {
-      name      = "iam-role-creds-my-app"
-      namespace = "my-namespace"
-    }
+      metadata {
+        name      = "iam-role-creds-my-app"
+        namespace = "my-namespace"
+      }
 
-    data = {
-      arn       = aws_iam_role.my-namespace-app-iam-role.arn
-      name      = aws_iam_role.my-namespace-app-iam-role.name
-      unique_id = aws_iam_role.my-namespace-app-iam-role.unique_id
-    }
+      data = {
+        arn       = aws_iam_role.my-namespace-app-iam-role.arn
+        name      = aws_iam_role.my-namespace-app-iam-role.name
+        unique_id = aws_iam_role.my-namespace-app-iam-role.unique_id
+      }
     }
 
     data "aws_iam_policy_document" "my-namespace-app-iam-role" {
 
-    # allow pods to assume this role
-    statement {
-      actions   = ["sts:AssumeRole"]
-      resources = [aws_iam_role.my-namespace-app-iam-role.arn]
-    }
+      # allow pods to assume this role
+      statement {
+        actions   = ["sts:AssumeRole"]
+        resources = [aws_iam_role.my-namespace-app-iam-role.arn]
+      }
 
-    # Provide list of permissions and target AWS account resources to allow access from
-    statement {
-      actions = [
-        "s3.PutObject",
-      ]
-      resources = [
-        "arn:aws:s3:::AAAAAAAA/AA-bucket/folder/*",
-      ]
-    }
+      # Provide list of permissions and target AWS account resources to allow access from
+      statement {
+        actions = [
+          "s3.PutObject",
+        ]
+        resources = [
+          "arn:aws:s3:::AAAAAAAA/AA-bucket/folder/*",
+        ]
+      }
     }
 
     resource "aws_iam_policy" "my-namespace-app-iam-policy" {
-    name   = "my-namespace-app-iam-policy"
-    policy = data.aws_iam_policy_document.my-namespace-app-iam-policy.json
+      name   = "my-namespace-app-iam-policy"
+      policy = data.aws_iam_policy_document.my-namespace-app-iam-policy.json
     }
 
     resource "aws_iam_role_policy_attachment" "my-namespace-app-iam-policy" {
-    role       = aws_iam_role.my-namespace-app-iam-role.name
-    policy_arn = aws_iam_policy.my-namespace-app-iam-policy.arn
+      role       = aws_iam_role.my-namespace-app-iam-role.name
+      policy_arn = aws_iam_policy.my-namespace-app-iam-policy.arn
     }
 </code>
 </pre>
@@ -264,7 +271,7 @@ statement {
 <li><p><strong>Annotate the pod with the IAM role</strong></p>
 <p>Once the PR in <strong>step 1</strong> is merged and applied, you will get the role ARN, name and ID as a kubernetes secret in your namespace.</p>
 <p>Decode the role ARN and annotate the pod to indicate which role will need access to the resource in the other AWS account.</p>
-<p>A deployment with the Pod template annotated would look like this (note the <code>&lt;role-arn&gt;</code>):</p>
+<p>A deployment with the Pod template annotated would look like this (note the <code>&lt;role-name&gt;</code>):</p>
 <div class="highlight"><pre class="highlight plaintext"><code>  apiVersion: apps/v1
   kind: Deployment
   metadata:
@@ -286,7 +293,7 @@ statement {
           app: wordpress
           tier: frontend
           annotations:
-            iam.amazonaws.com/role: &lt;role-arn&gt;
+            iam.amazonaws.com/role: &lt;role-name&gt;
       spec:
         containers:
         - image: wordpressdemo/wpapp:1.1
@@ -313,7 +320,7 @@ statement {
           app: wordpress
           tier: frontend
           annotations:
-            iam.amazonaws.com/role: arn:aws:iam::11111111:role/my-namespace-app-iam-role
+            iam.amazonaws.com/role: my-namespace-app-iam-role
       spec:
         containers:
         - image: wordpressdemo/wpapp:1.1
