@@ -198,10 +198,10 @@ Error from server (BadRequest): a container name must be specified for pod hello
 <div class="highlight"><pre class="highlight plaintext"><code>$ kubectl -n dstest exec -it helloworld-rubyapp-8795b9c56-58fbc -c rubyapp sh
 /app $
 </code></pre></div><h2 id="launching-a-new-container">Launching a new container</h2><p>You might want to make network calls from within your namespace, to test different components of your service. If your deployed containers don&rsquo;t have the tools you need (e.g. <code>wget</code>, <code>curl</code>), you can launch a new pod into your namespace like this:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>kubectl -n dstest run --generator=run-pod/v1 shell --rm -i --tty --image ministryofjustice/cloud-platform-tools -- bash
-</code></pre></div><p>You could subtitute another image such as <code>busybox</code> or <code>alpine</code> instead of <code>ministryofjustice/cloud-platform-tools</code> if you prefer.</p>
+<div class="highlight"><pre class="highlight plaintext"><code>kubectl -n dstest run shell --rm -i --tty --image ministryofjustice/cloud-platform-shell -- sh
+</code></pre></div><p>You could subtitute another image instead of <code>ministryofjustice/cloud-platform-shell</code> if you prefer, <strong>provided it does not try to run as <code>root</code></strong></p>
 <p>Once we have a shell on our new container, we can access the services running in our namespace like this:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>bash-4.4# curl rubyapp-service:4567
+<div class="highlight"><pre class="highlight plaintext"><code>$ wget -q -O - rubyapp-service:4567
 &lt;h1&gt;Hello, World!&lt;/h1&gt;
 </code></pre></div><p>You can get the names and ports of the services running in your namespace, from <strong>outside</strong> the new container, like this:</p>
 <div class="highlight"><pre class="highlight plaintext"><code>$ kubectl -n dstest get service
@@ -298,16 +298,16 @@ cannot list resource "pods" in API group "" in the namespace "&lt;namespace&gt;"
 </ul>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2021-02-09">
+              <div data-module='page-expiry' data-last-reviewed-on="2021-05-19">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 9 November 2020.
+      This page was last reviewed on 19 February 2021.
 
-        It needs to be reviewed again on 9 February 2021
+        It needs to be reviewed again on 19 May 2021
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 9 February 2021.
+      This page was set to be reviewed before 19 May 2021.
       This might mean the content is out of date.
     </div>
   </div>
