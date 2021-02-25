@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="en" class="govuk-template no-js">
+  <head>
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+      <meta name="robots" content="noindex">
+
+    <title>Migrating an Elasticsearch service - Cloud Platform User Guide</title>
+
+    <link href="/stylesheets/manifest.css" rel="stylesheet" />
+
+    <link rel="canonical" href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/aws-es-encryption-migration.html">
+
+
+      <meta property="og:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
+      <meta property="og:site_name" content="Cloud Platform User Guide" />
+      <meta property="og:title" content="Migrating an Elasticsearch service" />
+      <meta property="og:type" content="object" />
+      <meta property="og:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/aws-es-encryption-migration.html" />
+      <meta property="twitter:card" content="summary" />
+      <meta property="twitter:domain" content="user-guide.cloud-platform.service.justice.gov.uk" />
+      <meta property="twitter:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
+      <meta property="twitter:title" content="Migrating an Elasticsearch service - Cloud Platform User Guide" />
+      <meta property="twitter:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/aws-es-encryption-migration.html" />
+
+    
+  </head>
+
+  <body class="govuk-template__body">
+    <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
+
+    <div class="app-pane">
+      <div class="app-pane__header toc-open-disabled">
+        <a href="#content" class="govuk-skip-link">Skip to main content</a>
+
+        <header class="govuk-header app-header" role="banner" data-module="govuk-header">
+  <div class="govuk-header__container govuk-header__container--full-width">
+    <div class="govuk-header__logo">
+      <a href="/" class="govuk-header__link govuk-header__link--homepage">
+        <span class="govuk-header__product-name">
+          Cloud Platform User Guide
+        </span>
+      </a>
+    </div>
+    <div class="govuk-header__content">
+      <button type="button" class="govuk-header__menu-button govuk-js-header-toggle" aria-controls="navigation" aria-label="Show or hide Top Level Navigation">Menu</button>
+      <nav>
+        <ul id="navigation" class="govuk-header__navigation govuk-header__navigation--end" aria-label="Top Level Navigation">
+            <li class="govuk-header__navigation-item">
+              <a class="govuk-header__link" href="mailto:platforms+user-guide@digital.justice.gov.uk?subject=User+guide+feedback">Feedback / Report a problem</a>
+            </li>
+            <li class="govuk-header__navigation-item">
+              <a class="govuk-header__link" href="/">Documentation</a>
+            </li>
+            <li class="govuk-header__navigation-item">
+              <a class="govuk-header__link" href="https://github.com/ministryofjustice/cloud-platform-user-guide">GitHub</a>
+            </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>
+
+      </div>
+
+        <div id="toc-heading" class="toc-show fixedsticky">
+          <a href="#toc" class="toc-show__label js-toc-show" aria-controls="toc">
+            Table of contents <span class="toc-show__icon"></span>
+          </a>
+        </div>
+
+      <div class="app-pane__body" data-module="in-page-navigation">
+          <div class="app-pane__toc">
+            <div class="toc" data-module="table-of-contents">
+              <div class="search" data-module="search">
+  <form action="https://www.google.co.uk/search" method="get" role="search">
+    <input type="hidden" name="as_sitesearch" value="https://user-guide.cloud-platform.service.justice.gov.uk"/>
+    <label class="govuk-label search__label" for="search">
+      Search (via Google)
+    </label>
+    <input class="govuk-input govuk-!-margin-bottom-4" id="search" name="q" type="text" aria-controls="search-results" placeholder="Search">
+  </form>
+  <div id="search-results" class="search-results" aria-hidden="true" role="dialog" aria-labelledby="search-results-title">
+    <div class="search-results__inner">
+      <button class="search-results__close">Close<span class="search-results__close-label"> search results</span></button>
+      <h2 id="search-results-title" class="search-results__title" aria-live="polite">Results</h2>
+      <div class="search-results__content"></div>
+    </div>
+  </div>
+</div>
+
+              <a href="#" class="toc__close js-toc-close" aria-controls="toc" aria-label="Hide table of contents"></a>
+              <nav id="toc" class="js-toc-list toc__list" aria-labelledby="toc-heading">
+                      <ul>
+  <li>
+    <a href="#migrating-an-elasticsearch-service"><span>Migrating an Elasticsearch service</span></a>
+    <ul>
+      <li>
+        <ul>
+          <li>
+            <a href="#step-1-configure-s3-snapshot-repository-for-backup-and-restore"><span>Step 1 - Configure s3 snapshot repository for backup and restore</span></a>
+          </li>
+          <li>
+            <a href="#step-2-spin-up-a-new-es-domain-with-encrypt-at-rest-enabled"><span>Step 2 - Spin up a new ES domain with “encrypt at rest” enabled.</span></a>
+          </li>
+          <li>
+            <a href="#step-3-stop-all-apps-connected-to-the-elasticsearch-domain"><span>Step 3: Stop all apps connected to the Elasticsearch domain</span></a>
+          </li>
+          <li>
+            <a href="#step-4-register-both-elasticsearch-domains"><span>Step 4: Register both Elasticsearch domains</span></a>
+          </li>
+          <li>
+            <a href="#step-5-backup-and-restore-snapshots"><span>Step 5: Backup and Restore snapshots</span></a>
+          </li>
+          <li>
+            <a href="#step-6-connect-apps-to-new-es"><span>Step 6: Connect apps to new ES</span></a>
+          </li>
+          <li>
+            <a href="#step-7-clean-up"><span>Step 7: Clean up</span></a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+
+              </nav>
+            </div>
+          </div>
+
+        <div class="app-pane__content toc-open-disabled">
+          <main id="content" class="technical-documentation" data-module="anchored-headings">
+              <h1 id="migrating-an-elasticsearch-service">Migrating an Elasticsearch service</h1><p>This guide covers one way of migrating an elasticsearch domain to another. The steps listed here are specific to
+migrating an elasticsearch domain to enable encryption of data at rest.</p>
+<h3 id="step-1-configure-s3-snapshot-repository-for-backup-and-restore">Step 1 - Configure s3 snapshot repository for backup and restore</h3><p>Adding a s3 snapshot repository to the elasticsearch is a 2 step process.</p>
+
+<ul>
+<li>Create a s3 bucket </li>
+</ul>
+<p>Use the below code block and update the values appropriately for your namespace. Raise a PR against the <a href="https://github.com/ministryofjustice/cloud-platform-environments">environments</a> repository.</p>
+<div class="highlight"><pre class="highlight hcl"><code>
+<span class="nx">module</span> <span class="s2">"es_snapshots_s3_bucket"</span> <span class="p">{</span>
+  <span class="nx">source</span>                 <span class="p">=</span> <span class="s2">"github.com/ministryofjustice/cloud-platform-terraform-s3-bucket?ref=4.5"</span>
+  <span class="nx">team_name</span>              <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">team_name</span>
+  <span class="nx">acl</span>                    <span class="p">=</span> <span class="s2">"private"</span>
+  <span class="nx">versioning</span>             <span class="p">=</span> <span class="kc">false</span>
+  <span class="nx">business</span><span class="err">-</span><span class="nx">unit</span>          <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">business</span><span class="err">-</span><span class="nx">unit</span>
+  <span class="nx">application</span>            <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">application</span>
+  <span class="nx">is</span><span class="err">-</span><span class="nx">production</span>          <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">is</span><span class="err">-</span><span class="nx">production</span>
+  <span class="nx">environment</span><span class="err">-</span><span class="nx">name</span>       <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">environment</span><span class="err">-</span><span class="nx">name</span>
+  <span class="nx">infrastructure</span><span class="err">-</span><span class="nx">support</span> <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">infrastructure</span><span class="err">-</span><span class="nx">support</span>
+  <span class="nx">namespace</span>              <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">namespace</span>
+
+  <span class="nx">providers</span> <span class="p">=</span> <span class="p">{</span>
+    <span class="nx">aws</span> <span class="p">=</span> <span class="nx">aws</span><span class="err">.</span><span class="nx">london</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">resource</span> <span class="s2">"kubernetes_secret"</span> <span class="s2">"es_snapshots"</span> <span class="p">{</span>
+  <span class="nx">metadata</span> <span class="p">{</span>
+    <span class="nx">name</span>      <span class="p">=</span> <span class="s2">"es-snapshot-bucket"</span>
+    <span class="nx">namespace</span> <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">namespace</span>
+  <span class="p">}</span>
+
+  <span class="nx">data</span> <span class="p">=</span> <span class="p">{</span>
+    <span class="nx">bucket_arn</span>  <span class="p">=</span> <span class="nx">module</span><span class="err">.</span><span class="nx">es_snapshots_s3_bucket</span><span class="err">.</span><span class="nx">bucket_arn</span>
+    <span class="nx">bucket_name</span> <span class="p">=</span> <span class="nx">module</span><span class="err">.</span><span class="nx">es_snapshots_s3_bucket</span><span class="err">.</span><span class="nx">bucket_name</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+
+</code></pre></div>
+<ul>
+<li>Add s3 bucket arn to the source elasticsearch module as below</li>
+</ul>
+<div class="highlight"><pre class="highlight hcl"><code><span class="nx">module</span> <span class="s2">"source_es"</span> <span class="p">{</span>
+  <span class="nx">source</span>                        <span class="p">=</span> <span class="s2">"github.com/ministryofjustice/cloud-platform-terraform-elasticsearch?ref=3.8.0"</span>
+  <span class="nx">cluster_name</span>                  <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">cluster_name</span>
+  <span class="nx">cluster_state_bucket</span>          <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">cluster_state_bucket</span>
+  <span class="nx">application</span>                   <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">application</span>
+  <span class="nx">business</span><span class="err">-</span><span class="nx">unit</span>                 <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">business</span><span class="err">-</span><span class="nx">unit</span>
+  <span class="nx">environment</span><span class="err">-</span><span class="nx">name</span>              <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">environment</span><span class="err">-</span><span class="nx">name</span>
+  <span class="nx">infrastructure</span><span class="err">-</span><span class="nx">support</span>        <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">infrastructure</span><span class="err">-</span><span class="nx">support</span>
+  <span class="nx">is</span><span class="err">-</span><span class="nx">production</span>                 <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">is</span><span class="err">-</span><span class="nx">production</span>
+  <span class="nx">team_name</span>                     <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">team_name</span>
+  <span class="nx">elasticsearch</span><span class="err">-</span><span class="nx">domain</span>          <span class="p">=</span> <span class="s2">"source-example-es"</span>
+  <span class="nx">namespace</span>                     <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">namespace</span>
+  <span class="nx">elasticsearch_version</span>         <span class="p">=</span> <span class="s2">"7.9"</span>
+  <span class="nx">aws</span><span class="err">-</span><span class="nx">es</span><span class="err">-</span><span class="nx">proxy</span><span class="err">-</span><span class="nx">replica</span><span class="err">-</span><span class="nx">count</span>    <span class="p">=</span> <span class="mi">2</span>
+  <span class="nx">instance_type</span>                 <span class="p">=</span> <span class="s2">"t2.medium.elasticsearch"</span>
+  <span class="nx">s3_manual_snapshot_repository</span> <span class="p">=</span> <span class="nx">module</span><span class="err">.</span><span class="nx">es_snapshots_s3_bucket</span><span class="err">.</span><span class="nx">bucket_arn</span>
+<span class="p">}</span>
+
+<span class="nx">module</span> <span class="s2">"ns_annotation"</span> <span class="p">{</span>
+  <span class="nx">source</span>              <span class="p">=</span> <span class="s2">"github.com/ministryofjustice/cloud-platform-terraform-ns-annotation?ref=0.0.2"</span>
+  <span class="nx">ns_annotation_roles</span> <span class="p">=</span> <span class="p">[</span><span class="nx">module</span><span class="err">.</span><span class="nx">source_es</span><span class="err">.</span><span class="nx">aws_iam_role_name</span><span class="p">]</span>
+  <span class="nx">namespace</span>           <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">namespace</span>
+<span class="p">}</span>
+
+</code></pre></div><p>This output <code>es_snapshot_role</code> will have permissions to enable creation of manual snapshot repo in s3 bucket</p>
+<div class="highlight"><pre class="highlight hcl"><code><span class="nx">resource</span> <span class="s2">"kubernetes_secret"</span> <span class="s2">"es_snapshots_role"</span> <span class="p">{</span>
+  <span class="nx">metadata</span> <span class="p">{</span>
+    <span class="nx">name</span>      <span class="p">=</span> <span class="s2">"es-snapshot-role"</span>
+    <span class="nx">namespace</span> <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">namespace</span>
+  <span class="p">}</span>
+
+  <span class="nx">data</span> <span class="p">=</span> <span class="p">{</span>
+    <span class="nx">snapshot_role_arn</span> <span class="p">=</span> <span class="nx">module</span><span class="err">.</span><span class="nx">example_es</span><span class="err">.</span><span class="nx">snapshot_role_arn</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+</code></pre></div><h3 id="step-2-spin-up-a-new-es-domain-with-encrypt-at-rest-enabled">Step 2 - Spin up a new ES domain with “encrypt at rest” enabled.</h3>
+<ul>
+<li>Register the same snapshot repository on the source domain and the new domain</li>
+<li>Add the <code>aws_iam_role_name</code> of source ES domain and new encrypted ES domain to the <code>ns_annotation</code> module.</li>
+<li>Provide a different name to <code>aws-es-proxy-service</code> so it doesnot overwrite with existing source proxy.</li>
+</ul>
+<div class="highlight"><pre class="highlight hcl"><code><span class="nx">module</span> <span class="s2">"encrypted_es"</span> <span class="p">{</span>
+  <span class="nx">source</span>                          <span class="p">=</span> <span class="s2">"github.com/ministryofjustice/cloud-platform-terraform-elasticsearch?ref=3.8.0"</span>
+  <span class="nx">cluster_name</span>                    <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">cluster_name</span>
+  <span class="nx">cluster_state_bucket</span>            <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">cluster_state_bucket</span>
+  <span class="nx">application</span>                     <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">application</span>
+  <span class="nx">business</span><span class="err">-</span><span class="nx">unit</span>                   <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">business</span><span class="err">-</span><span class="nx">unit</span>
+  <span class="nx">environment</span><span class="err">-</span><span class="nx">name</span>                <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">environment</span><span class="err">-</span><span class="nx">name</span>
+  <span class="nx">infrastructure</span><span class="err">-</span><span class="nx">support</span>          <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">infrastructure</span><span class="err">-</span><span class="nx">support</span>
+  <span class="nx">is</span><span class="err">-</span><span class="nx">production</span>                   <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">is</span><span class="err">-</span><span class="nx">production</span>
+  <span class="nx">team_name</span>                       <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">team_name</span>
+  <span class="nx">elasticsearch</span><span class="err">-</span><span class="nx">domain</span>            <span class="p">=</span> <span class="s2">"encrypted-example-es"</span>
+  <span class="nx">encryption_at_rest</span>              <span class="p">=</span> <span class="kc">true</span>
+  <span class="nx">node_to_node_encryption_enabled</span> <span class="p">=</span> <span class="kc">true</span>
+  <span class="nx">namespace</span>                       <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">namespace</span>
+  <span class="nx">elasticsearch_version</span>           <span class="p">=</span> <span class="s2">"7.9"</span>
+  <span class="nx">aws</span><span class="err">-</span><span class="nx">es</span><span class="err">-</span><span class="nx">proxy</span><span class="err">-</span><span class="nx">service</span>            <span class="p">=</span> <span class="s2">"aws-es-proxy-service-encrypted"</span>
+  <span class="nx">aws</span><span class="err">-</span><span class="nx">es</span><span class="err">-</span><span class="nx">proxy</span><span class="err">-</span><span class="nx">replica</span><span class="err">-</span><span class="nx">count</span>      <span class="p">=</span> <span class="mi">2</span>
+  <span class="nx">instance_type</span>                   <span class="p">=</span> <span class="s2">"t3.medium.elasticsearch"</span>
+  <span class="nx">s3_manual_snapshot_repository</span>   <span class="p">=</span> <span class="nx">module</span><span class="err">.</span><span class="nx">es_snapshots_s3_bucket</span><span class="err">.</span><span class="nx">bucket_arn</span>
+<span class="p">}</span>
+
+<span class="nx">module</span> <span class="s2">"ns_annotation"</span> <span class="p">{</span>
+  <span class="nx">source</span>              <span class="p">=</span> <span class="s2">"github.com/ministryofjustice/cloud-platform-terraform-ns-annotation?ref=0.0.2"</span>
+  <span class="nx">ns_annotation_roles</span> <span class="p">=</span> <span class="p">[</span><span class="nx">module</span><span class="err">.</span><span class="nx">source_es</span><span class="err">.</span><span class="nx">aws_iam_role_name</span><span class="p">,</span> <span class="nx">module</span><span class="err">.</span><span class="nx">encrypted_es</span><span class="err">.</span><span class="nx">aws_iam_role_name</span><span class="p">]</span>
+  <span class="nx">namespace</span>           <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">namespace</span>
+<span class="p">}</span>
+
+
+</code></pre></div><h3 id="step-3-stop-all-apps-connected-to-the-elasticsearch-domain">Step 3: Stop all apps connected to the Elasticsearch domain</h3><h3 id="step-4-register-both-elasticsearch-domains">Step 4: Register both Elasticsearch domains</h3>
+<ul>
+<li>Port forward the source ES domain using the proxy <code>aws-es-proxy-service</code> </li>
+</ul>
+<div class="highlight"><pre class="highlight plaintext"><code>  kubectl \
+    -n [your namespace] \
+    port-forward \
+    svc/aws-es-proxy-service 9200:9200
+</code></pre></div>
+<ul>
+<li><p>Register the snapshot repository with new encrypted Elasticsearch domain</p>
+<p>A sample template is given below:</p></li>
+</ul>
+<div class="highlight"><pre class="highlight plaintext"><code>    PUT http://localhost:9200/_snapshot/&lt;repo name for snapshot&gt;
+  {
+    "type": "s3",
+    "settings": {
+      "bucket": "&lt;s3 bucket for snapshots&gt;",
+      "region": "eu-west-2",
+      "role_arn": "&lt;role arn from es_snapshots_role secret&gt;"
+    }
+  }
+</code></pre></div>
+<ul>
+<li>Port forward the encrypted ES domain using the proxy <code>aws-es-proxy-service-encrypted</code> </li>
+</ul>
+<div class="highlight"><pre class="highlight plaintext"><code>  kubectl \
+    -n [your namespace] \
+    port-forward \
+    svc/aws-es-proxy-service-encrypted 9200:9200
+</code></pre></div>
+<ul>
+<li><p>Register the snapshot repository with encrypted Elasticsearch domain</p>
+<p>A sample template is given below:</p></li>
+</ul>
+<div class="highlight"><pre class="highlight plaintext"><code>    PUT http://localhost:9200/_snapshot/&lt;repo-name-for-snapshot&gt;
+  {
+    "type": "s3",
+    "settings": {
+      "bucket": "&lt;s3-bucket for snapshots&gt;",
+      "region": "eu-west-2",
+      "role_arn": "&lt;role arn from es_snapshots_role secret&gt;"
+    }
+  }
+</code></pre></div><p>For more details on Elasticsearch REST APIs see <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/rest-apis.html">ES API</a>.</p>
+<h3 id="step-5-backup-and-restore-snapshots">Step 5: Backup and Restore snapshots</h3>
+<ul>
+<li>Port forward the source ES domain using the proxy <code>aws-es-proxy-service</code> </li>
+</ul>
+<div class="highlight"><pre class="highlight plaintext"><code>  kubectl \
+    -n [your namespace] \
+    port-forward \
+    svc/aws-es-proxy-service 9200:9200
+</code></pre></div>
+<ul>
+<li>Create a snapshot </li>
+</ul>
+<div class="highlight"><pre class="highlight plaintext"><code>  PUT http://localhost:9200/_snapshot/&lt;repo-name-for-snapshot&gt;/&lt;snapshot-to-restore&gt;
+</code></pre></div>
+<ul>
+<li>Port forward the encrypted Elasticsearch domain</li>
+</ul>
+<div class="highlight"><pre class="highlight plaintext"><code>  kubectl \
+    -n [your namespace] \
+    port-forward \
+    svc/aws-es-proxy-service-encrypted 9200:9200
+</code></pre></div>
+<ul>
+<li>Restore snapshot</li>
+</ul>
+<p>NOTE: <code>&quot;include_global_state&quot;:true</code> will restore all the key data</p>
+<div class="highlight"><pre class="highlight plaintext"><code>  POST http://localhost:9200/_snapshot/&lt;repo-name-for-snapshot&gt;/&lt;snapshot-to-restore&gt;/_restore
+  {
+    "include_global_state": true
+  }
+</code></pre></div><h3 id="step-6-connect-apps-to-new-es">Step 6: Connect apps to new ES</h3><p>Update the application to use the new encrypted es_proxy service.</p>
+<h3 id="step-7-clean-up">Step 7: Clean up</h3><p>Cleanup the portforward pods and the unwanted elasticsearch service</p>
+<p>For more details on backup snapshots and restore, see <a href="https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-managedomains-snapshots.html">aws documentation</a></p>
+
+
+              <div data-module='page-expiry' data-last-reviewed-on="2021-05-24">
+    <div class='page-expiry--not-expired'>
+      This page was last reviewed on 24 February 2021.
+
+        It needs to be reviewed again on 24 May 2021
+.
+    </div>
+
+    <div class='page-expiry--expired'>
+      This page was set to be reviewed before 24 May 2021.
+      This might mean the content is out of date.
+    </div>
+  </div>
+
+          </main>
+
+          <aside>
+              <ul class="contribution-banner">
+                <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide/blob/main/source/documentation/other-topics/aws-es-encryption-migration.html.md.erb">View source</a></li>
+                <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide/issues/new?labels=bug&amp;title=Re:%20'Migrating%20an%20Elasticsearch%20service'&amp;body=Problem%20with%20'Migrating%20an%20Elasticsearch%20service'%20(https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/aws-es-encryption-migration.html)">Report problem</a></li>
+                <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide">GitHub Repo</a></li>
+              </ul>
+          </aside>
+
+          <footer class="govuk-footer app-footer" role="contentinfo">
+  <div class="govuk-footer__meta">
+    <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
+
+
+      <svg
+        aria-hidden="true"
+        focusable="false"
+        class="govuk-footer__licence-logo"
+        xmlns="http://www.w3.org/2000/svg"
+        viewbox="0 0 483.2 195.7"
+        height="17"
+        width="41"
+      >
+        <path
+          fill="currentColor"
+          d="M421.5 142.8V.1l-50.7 32.3v161.1h112.4v-50.7zm-122.3-9.6A47.12 47.12 0 0 1 221 97.8c0-26 21.1-47.1 47.1-47.1 16.7 0 31.4 8.7 39.7 21.8l42.7-27.2A97.63 97.63 0 0 0 268.1 0c-36.5 0-68.3 20.1-85.1 49.7A98 98 0 0 0 97.8 0C43.9 0 0 43.9 0 97.8s43.9 97.8 97.8 97.8c36.5 0 68.3-20.1 85.1-49.7a97.76 97.76 0 0 0 149.6 25.4l19.4 22.2h3v-87.8h-80l24.3 27.5zM97.8 145c-26 0-47.1-21.1-47.1-47.1s21.1-47.1 47.1-47.1 47.2 21 47.2 47S123.8 145 97.8 145"
+        />
+      </svg>
+      <span class="govuk-footer__licence-description">
+        All content is available under the
+        <a
+          class="govuk-footer__link"
+          href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+          rel="license"
+        >Open Government Licence v3.0</a>, except where otherwise stated
+      </span>
+    </div>
+    <div class="govuk-footer__meta-item">
+      <a
+        class="govuk-footer__link govuk-footer__copyright-logo"
+        href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/"
+      >© Crown copyright</a>
+    </div>
+  </div>
+</footer>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <script src="/javascripts/application.js"></script>
+  </body>
+</html>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-138188246-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-138188246-1');
+</script>
+
+<script>
+  // Add the current window.location to the body of the
+  // feedback email message.
+  function sendFeedback(mailto, event) {
+    event.preventDefault();
+
+    var body = "Feedback/Problem on page: " + window.location + "\n";
+    var href = mailto + '&body=' + encodeURIComponent(body);
+
+    window.location = href;
+  }
+
+  $(document).ready(function() {
+    var feedbackLink = $('a[href^="mailto:"]:contains("Feedback")')[0];
+    var mailto = feedbackLink.href;
+    $(feedbackLink).on('click', function(event) { sendFeedback(mailto, event); });
+  });
+</script>
