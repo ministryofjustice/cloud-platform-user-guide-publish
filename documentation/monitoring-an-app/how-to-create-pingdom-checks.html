@@ -128,31 +128,60 @@
 <li>You have <a href="/documentation/getting-started/env-create.html#creating-a-cloud-platform-environment">created a namespace for your application</a></li>
 <li>You have a slack channel to send alerts to</li>
 </ul>
-<h2 id="create-a-pingdom-check">Create a Pingdom check</h2><p>To create a Pingdom check simply add a <code>pingdom.tf</code> file in the resources directory of your namespace in your <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live-1.cloud-platform.service.justice.gov.uk">cloud-platform-environments</a> repository. You can define the conditions of your check using the resources outlined in the <a href="https://github.com/russellcardullo/terraform-provider-pingdom">Terraform community provider</a>. Here&rsquo;s a working example of a <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live-1.cloud-platform.service.justice.gov.uk/monitoring/resources">basic check</a>.</p>
-<div class="highlight"><pre class="highlight yaml"><code><span class="s">provider "pingdom" {</span>
-<span class="err">}</span>
+<h2 id="create-a-pingdom-check">Create a Pingdom check</h2><p>Add the below 2 files in in the resources directory of your namespace in your <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live-1.cloud-platform.service.justice.gov.uk">cloud-platform-environments</a> repository. You can define the conditions of your check using the resources outlined in the <a href="https://github.com/russellcardullo/terraform-provider-pingdom">Terraform community provider</a>. Here&rsquo;s a working example of a <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live-1.cloud-platform.service.justice.gov.uk/monitoring/resources">basic check</a>.</p>
 
-<span class="s">resource "pingdom_check" "claim-criminal-injuries-compensation-uat" {</span>
-  <span class="s">type                     = "http"</span>
-  <span class="s">name                     = "cica - uat - cloud-platform - claim"</span>
-  <span class="s">host                     = "uat.claim-criminal-injuries-compensation.service.justice.gov.uk"</span>
-  <span class="s">resolution               = </span><span class="m">1</span>
-  <span class="s">notifywhenbackup         = </span><span class="no">true</span>
-  <span class="s">sendnotificationwhendown = </span><span class="m">6</span>
-  <span class="s">notifyagainevery         = </span><span class="m">0</span>
-  <span class="s">url                      = "/"</span>
-  <span class="s">encryption               = </span><span class="no">true</span>
-  <span class="s">port                     = </span><span class="m">443</span>
-  <span class="s">tags                     = "businessunit_platforms,application_prometheus,component_healthcheck,isproduction_true,environment_uat,infrastructuresupport_platforms"</span>
-  <span class="s">probefilters             = "region:EU"</span>
-  <span class="s">publicreport             = "true"</span>
-<span class="err">}</span>
+<ol>
+<li><p>Add the below code to the <code>required_providers</code> block in <code>versions.tf</code></p>
+<div class="highlight"><pre class="highlight hcl"><code>    <span class="nx">pingdom</span> <span class="err">=</span> <span class="p">{</span>
+      <span class="nx">source</span>  <span class="p">=</span> <span class="s2">"russellcardullo/pingdom"</span>
+      <span class="nx">version</span> <span class="p">=</span> <span class="s2">"1.1.3"</span>
+    <span class="p">}</span>
+</code></pre></div><p>A working example of <code>versions.tf</code> with pingdom included will look like this.</p>
+<div class="highlight"><pre class="highlight hcl"><code><span class="nx">terraform</span> <span class="p">{</span>
+  <span class="nx">required_version</span> <span class="p">=</span> <span class="s2">"&gt;= 0.13"</span>
+  <span class="nx">required_providers</span> <span class="p">{</span>
+    <span class="nx">aws</span> <span class="p">=</span> <span class="p">{</span>
+      <span class="nx">source</span> <span class="p">=</span> <span class="s2">"hashicorp/aws"</span>
+    <span class="p">}</span>
+    <span class="nx">kubernetes</span> <span class="p">=</span> <span class="p">{</span>
+      <span class="nx">source</span> <span class="p">=</span> <span class="s2">"hashicorp/kubernetes"</span>
+    <span class="p">}</span>
+    <span class="nx">pingdom</span> <span class="p">=</span> <span class="p">{</span>
+      <span class="nx">source</span>  <span class="p">=</span> <span class="s2">"russellcardullo/pingdom"</span>
+      <span class="nx">version</span> <span class="p">=</span> <span class="s2">"1.1.3"</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></li>
+<li><p>Add a <code>pingdom.tf</code> file</p>
+<div class="highlight"><pre class="highlight hcl"><code><span class="nx">provider</span> <span class="s2">"pingdom"</span> <span class="p">{</span>
+<span class="p">}</span>
 
-</code></pre></div><p><strong>Note</strong>: You&rsquo;ll need to include the <code>provider &quot;pingdom&quot;</code> and <code>terraform</code> blocks either in this file or in a <code>main.tf</code> file.</p>
-<p>This basic check simply checks that the host/url (in this case; uat.claim-criminal-injuries-compensation.service.justice.gov.uk) returns a 200 every minute (resolution = 1 minute). When six (sendnotificationwhendown = 6) consecutive checks fail it triggers an alarm. As publicreport is set to true, you can view the status of your check by visiting the public status page - <a href="http://pingdom.service.dsd.io">http://pingdom.service.dsd.io</a>, where this check would appear with the name &ldquo;cica - uat - cloud-platform - claim&rdquo;.</p>
+<span class="nx">resource</span> <span class="s2">"pingdom_check"</span> <span class="s2">"claim-criminal-injuries-compensation-uat"</span> <span class="p">{</span>
+  <span class="nx">type</span>                     <span class="p">=</span> <span class="s2">"http"</span>
+  <span class="nx">name</span>                     <span class="p">=</span> <span class="s2">"cica - uat - cloud-platform - claim"</span>
+  <span class="nx">host</span>                     <span class="p">=</span> <span class="s2">"uat.claim-criminal-injuries-compensation.service.justice.gov.uk"</span>
+  <span class="nx">resolution</span>               <span class="p">=</span> <span class="mi">1</span>
+  <span class="nx">notifywhenbackup</span>         <span class="p">=</span> <span class="kc">true</span>
+  <span class="nx">sendnotificationwhendown</span> <span class="p">=</span> <span class="mi">6</span>
+  <span class="nx">notifyagainevery</span>         <span class="p">=</span> <span class="mi">0</span>
+  <span class="nx">url</span>                      <span class="p">=</span> <span class="s2">"/"</span>
+  <span class="nx">encryption</span>               <span class="p">=</span> <span class="kc">true</span>
+  <span class="nx">port</span>                     <span class="p">=</span> <span class="mi">443</span>
+  <span class="nx">tags</span>                     <span class="p">=</span> <span class="s2">"businessunit_platforms,application_prometheus,component_healthcheck,isproduction_true,environment_uat,infrastructuresupport_platforms"</span>
+  <span class="nx">probefilters</span>             <span class="p">=</span> <span class="s2">"region:EU"</span>
+<span class="p">}</span>
+
+</code></pre></div></li>
+</ol>
+<p><strong>Note</strong>: You&rsquo;ll need to include the <code>provider &quot;pingdom&quot;</code> and <code>terraform</code> blocks either in this file or in a <code>main.tf</code> file.</p>
+<p>You can define the conditions of your check using the resources outlined in the <a href="https://github.com/russellcardullo/terraform-provider-pingdom">Terraform community provider</a>.</p>
+<p>Here&rsquo;s a working example of a <a href="https://github.com/ministryofjustice/cloud-platform-environments/blob/main/namespaces/live-1.cloud-platform.service.justice.gov.uk/claim-criminal-injuries-compensation-uat/resources/pingdom.tf">basic check</a>.</p>
+<p>This basic check simply checks that the host/url (in this case; uat.claim-criminal-injuries-compensation.service.justice.gov.uk) returns a 200 every minute (resolution = 1 minute). 
+  When six (sendnotificationwhendown = 6) consecutive checks fail it triggers an alarm.</p>
 <p><a href="https://github.com/russellcardullo/terraform-provider-pingdom#pingdom-check">This</a> page explains all the attributes used in the check.</p>
 <p>All resources, including Pingdom checks <strong>must</strong> be tagged and adhere to the technical guidance outlined <a href="https://ministryofjustice.github.io/technical-guidance/documentation/standards/documenting-infrastructure-owners.html">here</a>. Ensure your check has appropriate tags before submitting a pull request.</p>
-<p>Once reviewed and merged to master, the pipeline will create your check in the MoJ Pingdom account.</p>
+<p>Once reviewed and merged to main, the pipeline will create your check in the MoJ Pingdom account.</p>
 <h3 id="adding-slack-notification">Adding Slack notification</h3><p>You can enable the option to send a failing alert to Slack via a webhook by simply adding Pingdom integration id. You need administrator permissions to manage the mojdt <a href="https://slack.com/apps/A0F814AV7-pingdom?next_id=0">Pingdom Slack</a> webhook and then <a href="https://my.pingdom.com">Pingdom</a> to create the integration id.</p>
 <p>The Cloud Platform team can do this on your behalf. Create a ticket requesting a Pingdom integration id with the following information:</p>
 
@@ -163,37 +192,36 @@
 </ul>
 <p>The team will provide you with an integration id, following the steps outlined <a href="https://github.com/ministryofjustice/cloud-platform-environments/blob/master/docs/creating-pingdom-webhook.md">here</a>.</p>
 <p>You can now add <code>integrationids</code> to your <code>pingdom.tf</code>. Appending the example above, your check will now appear as follows (assuming you were given 1000 as the integration id):</p>
-<div class="highlight"><pre class="highlight yaml"><code><span class="s">provider "pingdom" {</span>
-<span class="err">}</span>
+<div class="highlight"><pre class="highlight hcl"><code><span class="nx">provider</span> <span class="s2">"pingdom"</span> <span class="p">{</span>
+<span class="p">}</span>
 
-<span class="s">resource "pingdom_check" "claim-criminal-injuries-compensation-uat" {</span>
-  <span class="s">type                     = "http"</span>
-  <span class="s">name                     = "cica - uat - cloud-platform - claim"</span>
-  <span class="s">host                     = "uat.claim-criminal-injuries-compensation.service.justice.gov.uk"</span>
-  <span class="s">resolution               = </span><span class="m">1</span>
-  <span class="s">notifywhenbackup         = </span><span class="no">true</span>
-  <span class="s">sendnotificationwhendown = </span><span class="m">6</span>
-  <span class="s">notifyagainevery         = </span><span class="m">0</span>
-  <span class="s">url                      = "/"</span>
-  <span class="s">encryption               = </span><span class="no">true</span>
-  <span class="s">port                     = </span><span class="m">443</span>
-  <span class="s">tags                     = "businessunit_platforms,application_prometheus,component_healthcheck,isproduction_true,environment_uat,infrastructuresupport_platforms"</span>
-  <span class="s">probefilters             = "region:EU"</span>
-  <span class="s">publicreport             = "true"</span>
-  <span class="s">integrationids           = [1000]</span>
-<span class="err">}</span>
+<span class="nx">resource</span> <span class="s2">"pingdom_check"</span> <span class="s2">"claim-criminal-injuries-compensation-uat"</span> <span class="p">{</span>
+  <span class="nx">type</span>                     <span class="p">=</span> <span class="s2">"http"</span>
+  <span class="nx">name</span>                     <span class="p">=</span> <span class="s2">"cica - uat - cloud-platform - claim"</span>
+  <span class="nx">host</span>                     <span class="p">=</span> <span class="s2">"uat.claim-criminal-injuries-compensation.service.justice.gov.uk"</span>
+  <span class="nx">resolution</span>               <span class="p">=</span> <span class="mi">1</span>
+  <span class="nx">notifywhenbackup</span>         <span class="p">=</span> <span class="kc">true</span>
+  <span class="nx">sendnotificationwhendown</span> <span class="p">=</span> <span class="mi">6</span>
+  <span class="nx">notifyagainevery</span>         <span class="p">=</span> <span class="mi">0</span>
+  <span class="nx">url</span>                      <span class="p">=</span> <span class="s2">"/"</span>
+  <span class="nx">encryption</span>               <span class="p">=</span> <span class="kc">true</span>
+  <span class="nx">port</span>                     <span class="p">=</span> <span class="mi">443</span>
+  <span class="nx">tags</span>                     <span class="p">=</span> <span class="s2">"businessunit_platforms,application_prometheus,component_healthcheck,isproduction_true,environment_uat,infrastructuresupport_platforms"</span>
+  <span class="nx">probefilters</span>             <span class="p">=</span> <span class="s2">"region:EU"</span>
+  <span class="nx">integrationids</span>           <span class="p">=</span> <span class="p">[</span><span class="mi">1000</span><span class="p">]</span>
+<span class="p">}</span>
 </code></pre></div>
 
-              <div data-module='page-expiry' data-last-reviewed-on="2021-05-25">
+              <div data-module='page-expiry' data-last-reviewed-on="2021-06-04">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 25 February 2021.
+      This page was last reviewed on 4 March 2021.
 
-        It needs to be reviewed again on 25 May 2021
+        It needs to be reviewed again on 4 June 2021
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 25 May 2021.
+      This page was set to be reviewed before 4 June 2021.
       This might mean the content is out of date.
     </div>
   </div>
