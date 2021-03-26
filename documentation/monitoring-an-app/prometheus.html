@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
       <meta name="robots" content="noindex">
 
-    <title>Using the Cloud Platform Prometheus, AlertManager and Grafana - Cloud Platform User Guide</title>
+    <title>Using the Cloud Platform Monitoring and Alerting stack - Cloud Platform User Guide</title>
 
     <link href="/stylesheets/manifest.css" rel="stylesheet" />
 
@@ -15,13 +15,13 @@
 
       <meta property="og:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
       <meta property="og:site_name" content="Cloud Platform User Guide" />
-      <meta property="og:title" content="Using the Cloud Platform Prometheus, AlertManager and Grafana" />
+      <meta property="og:title" content="Using the Cloud Platform Monitoring and Alerting stack" />
       <meta property="og:type" content="object" />
       <meta property="og:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/monitoring-an-app/prometheus.html" />
       <meta property="twitter:card" content="summary" />
       <meta property="twitter:domain" content="user-guide.cloud-platform.service.justice.gov.uk" />
       <meta property="twitter:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
-      <meta property="twitter:title" content="Using the Cloud Platform Prometheus, AlertManager and Grafana - Cloud Platform User Guide" />
+      <meta property="twitter:title" content="Using the Cloud Platform Monitoring and Alerting stack - Cloud Platform User Guide" />
       <meta property="twitter:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/monitoring-an-app/prometheus.html" />
 
     
@@ -94,7 +94,7 @@
               <nav id="toc" class="js-toc-list toc__list" aria-labelledby="toc-heading">
                       <ul>
   <li>
-    <a href="#using-the-cloud-platform-prometheus-alertmanager-and-grafana"><span>Using the Cloud Platform Prometheus, AlertManager and Grafana</span></a>
+    <a href="#using-the-cloud-platform-monitoring-and-alerting-stack"><span>Using the Cloud Platform Monitoring and Alerting stack</span></a>
     <ul>
       <li>
         <ul>
@@ -102,13 +102,19 @@
             <a href="#introduction"><span>Introduction</span></a>
           </li>
           <li>
-            <a href="#what-is-prometheus"><span>What is Prometheus?</span></a>
+            <a href="#prometheus"><span>Prometheus</span></a>
           </li>
           <li>
-            <a href="#what-is-alertmanager"><span>What is AlertManager</span></a>
+            <a href="#alertmanager"><span>AlertManager</span></a>
           </li>
           <li>
-            <a href="#what-is-grafana"><span>What is Grafana</span></a>
+            <a href="#thanos"><span>Thanos</span></a>
+          </li>
+          <li>
+            <a href="#grafana"><span>Grafana</span></a>
+          </li>
+          <li>
+            <a href="#pushgateway"><span>Pushgateway</span></a>
           </li>
           <li>
             <a href="#how-to-access-monitoring-tools"><span>How to access monitoring tools</span></a>
@@ -129,18 +135,48 @@
 
         <div class="app-pane__content toc-open-disabled">
           <main id="content" class="technical-documentation" data-module="anchored-headings">
-              <h1 id="using-the-cloud-platform-prometheus-alertmanager-and-grafana">Using the Cloud Platform Prometheus, AlertManager and Grafana</h1><h3 id="introduction">Introduction</h3><p>This is a brief introduction to the Cloud Platform monitoring stack: Prometheus, AlertManager and Grafana.</p>
-<h3 id="what-is-prometheus">What is Prometheus?</h3><p>Prometheus is an open-source systems monitoring and alerting toolkit originally built at SoundCloud. The Cloud Platform uses <a href="https://github.com/coreos/prometheus-operator">Prometheus Operator from CoreOS</a> which allows a number of Prometheus instances to be installed on a cluster (although we currently use a single Prometheus instance for the whole cluster).</p>
-<p>Prometheus scrapes metrics from instrumented jobs, either directly or via an intermediary push gateway for short-lived jobs. It stores all scraped samples locally and runs rules over this data to either aggregate and record new time series from existing data, or to generate alerts. Grafana or other API consumers can be used to visualize the collected data.</p>
-<h3 id="what-is-alertmanager">What is AlertManager</h3><p>[AlertManager] handles alerts sent by client applications such as the Prometheus server. It takes care of deduplicating, grouping, and routing them to the correct receiver integration such as PagerDuty. It also takes care of the silencing and inhibition of alerts.</p>
-<h3 id="what-is-grafana">What is Grafana</h3><p><a href="https://grafana.com/">Grafana</a> allows you to query, visualize, alert on and understand your metrics no matter where they are stored. Create, explore, and share dashboards with your team and foster a data driven culture.</p>
-<h4 id="creating-dashboards">Creating dashboards</h4><p>Grafana is set up as a stateless app, managed entirely through code. This helps achieve better availability, but it means that dashboards you create will not automatically persist in its database.</p>
+              <h1 id="using-the-cloud-platform-monitoring-and-alerting-stack">Using the Cloud Platform Monitoring and Alerting stack</h1><h3 id="introduction">Introduction</h3><p>This is a brief introduction to the Cloud Platform Monitoring and Alerting stack: Prometheus, AlertManager, Grafana, Thanos and Pushgateway.</p>
+<p>Below is a high-level overview</p>
+<p><a href="/images/monitoring-stack.png" target="_blank" rel="noopener noreferrer"><img src="/images/monitoring-stack.png" alt="Monitoring stack" /></a></p>
+<h3 id="prometheus">Prometheus</h3><p>Prometheus is an open-source systems monitoring and alerting toolkit originally built at SoundCloud. 
+The Cloud Platform uses <a href="https://github.com/coreos/prometheus-operator">Prometheus Operator from CoreOS</a> which allows a number of 
+Prometheus instances to be installed on a cluster (although we currently use a single Prometheus instance for the whole cluster).</p>
+<p>Prometheus scrapes metrics from instrumented jobs, either directly or via an intermediary push gateway for short-lived jobs. 
+It stores all scraped samples locally and runs rules over this data to either aggregate and record new time series from existing data, 
+or to generate alerts. Grafana or other API consumers can be used to visualize the collected data.</p>
+<p>To export metrics from your application into the <a href="https://prometheus.cloud-platform.service.justice.gov.uk/">Cloud Platform Prometheus</a>,
+see: <a href="/documentation/monitoring-an-app/application-metrics.html">Getting application metrics into Prometheus</a></p>
+<h3 id="alertmanager">AlertManager</h3><p><a href="https://prometheus.io/docs/alerting/alertmanager">AlertManager</a> handles alerts sent by client applications such as the Prometheus server. It takes care of deduplicating, grouping, 
+and routing them to the correct receiver integration such as PagerDuty. It also takes care of the silencing and inhibition of alerts.</p>
+<p>To create and send application-specific alerts to a Slack channel see: <a href="/documentation/monitoring-an-app/how-to-create-alarms.html">Creating your own custom alerts
+</a></p>
+<h3 id="thanos">Thanos</h3><p><a href="https://github.com/thanos-io/thanos">Thanos</a> is an open source project that is capable of integrating with a Prometheus deployment, enabling a long-term, scalable storage. 
+By adding Thanos sidecar to Prometheus, it uploads the data every two hours to storage(an S3 bucket in our case). 
+It also serves real-time metrics that are not uploaded in bucket.</p>
+<p>Thanos Components including Thanos querier, Store and Compactor has been installed in Cloud Platform monitoring stack.</p>
+<p>Thanos Querier which is similar to Prometheus is able to query a Prometheus instance(through sidecar) and a Thanos Store at the same time.
+It allows you to query several months worth of Prometheus metrics and create Grafana dashboards based on that.</p>
+<p>Thanos Compactor applies the compaction procedure to Prometheus block data stored in an S3 bucket. 
+Thanos also downsampling data that are stored in  the s3 bucket. For each resolutions available, here is the retention period</p>
+
+<blockquote>
+<p>raw - 30 days</p>
+<p>5m(five minutes) resolution - 6 months</p>
+<p>1h(one hour) resolution - 1 year</p>
+</blockquote>
+<p>Because of the downsampling of data blocks, using Grafana dashboards is <b>not suitable</b> for monitoring the uptime of the application for monthly/quarterly/yearly basis.</p>
+<h3 id="grafana">Grafana</h3><p><a href="https://grafana.com/">Grafana</a> allows you to query, visualize, alert on and understand your metrics no matter where they are stored. Create, explore, 
+and share dashboards with your team and foster a data driven culture.</p>
+<h4 id="creating-dashboards">Creating dashboards</h4><p>Grafana is set up as a stateless app, managed entirely through code. This helps achieve better availability, 
+but it means that dashboards you create will not automatically persist in its database.</p>
 <p>To create a dashboard:</p>
 
 <ol>
-<li><p>Login to Grafana (see the links below) with your GitHub account. All users are able to edit dashboards but cannot save the changes. Find the dashboard titled &lsquo;Blank Dashboard&rsquo; and modify it as you see fit.</p></li>
-<li><p>When you are happy with your dashboard, click the share icon on the top right corner, select the <code>Export</code> tab, check the <code>Export for sharing externally</code> box and click on <code>View JSON</code>. Copy the resulting JSON string into a <code>ConfigMap</code> in your namespace.</p></li>
-</ol>
+<li><p>Login to Grafana (see the links below) with your GitHub account. All users are able to edit dashboards but cannot save the changes. 
+Find the dashboard titled &lsquo;Blank Dashboard&rsquo; and modify it as you see fit. Select &ldquo;Prometheus&rdquo; as datasource for querying metrics past 24 hours.
+If you want to query long-term metrics, select the &ldquo;Thanos&rdquo; as datasource.</p></li>
+<li><p>When you are happy with your dashboard, click the share icon on the top right corner, select the <code>Export</code> tab, check 
+the <code>Export for sharing externally</code> box and click on <code>View JSON</code>. Copy the resulting JSON string into a <code>ConfigMap</code> in your namespace.</p>
 <p>To do this, create a YAML file like this:</p>
 <div class="highlight"><pre class="highlight plaintext"><code>---
 apiVersion: v1
@@ -155,30 +191,35 @@ data:
     {
       [ ...your JSON document goes here, minus the outermost braces... ]
     }
-</code></pre></div><p>Make sure that the JSON string is properly indented. Also, name of the key in the <code>ConfigMap</code> must end in <code>-dashboard.json</code> (as in <code>my-dashboard.json</code> above). Please note that you can have multiple dashboards exported in a single <code>ConfigMap</code> as well.</p>
-
-<ol>
-<li>Use <code>kubectl</code> to apply the <code>ConfigMap</code> above, and your dashboard should be visible in Grafana shortly.</li>
+</code></pre></div><p>Make sure that the JSON string is properly indented. Also, name of the key in the <code>ConfigMap</code> must end in <code>-dashboard.json</code> (as in <code>my-dashboard.json</code> above). Please note that you can have multiple dashboards exported in a single <code>ConfigMap</code> as well.</p></li>
+<li><p>Use <code>kubectl</code> to apply the <code>ConfigMap</code> above, and your dashboard should be visible in Grafana shortly.</p></li>
 </ol>
+
+<blockquote>
+<p>To build dashboards for your Cloudwatch metrics, see: <a href="/documentation/monitoring-an-app/how-to-use-cloudwatch-datasource.html">Using the CloudWatch data source in Grafana</a></p>
+<p>To build dashboards for long-term metrics, select the &ldquo;Thanos&rdquo; as datasource.</p>
+</blockquote>
+<h3 id="pushgateway">Pushgateway</h3><p><a href="https://github.com/prometheus/pushgateway">Pushgateway</a> allow ephemeral and batch jobs to expose their metrics to Prometheus. Since these kinds of jobs may not exist long enough to be scraped, they can instead push their metrics to a Pushgateway. 
+The Pushgateway then exposes these metrics to Prometheus.</p>
+<p>You can install pushgateway into your namespace by adding the <a href="https://github.com/ministryofjustice/cloud-platform-terraform-pushgateway">module</a> to your resources folder of 
+<a href="https://github.com/ministryofjustice/cloud-platform-environments">cloud-platform-environments</a> repo.</p>
 <h3 id="how-to-access-monitoring-tools">How to access monitoring tools</h3><p>All links provided below require you to authenticate with your Github account.</p>
 <p>Prometheus: <a href="https://prometheus.cloud-platform.service.justice.gov.uk">https://prometheus.cloud-platform.service.justice.gov.uk</a></p>
 <p>AlertManager: <a href="https://alertmanager.cloud-platform.service.justice.gov.uk/">https://alertmanager.cloud-platform.service.justice.gov.uk</a></p>
 <p>Grafana: <a href="https://grafana.cloud-platform.service.justice.gov.uk">https://grafana.cloud-platform.service.justice.gov.uk</a></p>
 <h3 id="further-documentation">Further documentation</h3><p><a href="https://prometheus.io/docs/prometheus/latest/querying/basics">Prometheus querying</a></p>
-<p><a href="https://prometheus.io/docs/alerting/alertmanager">AlertManager</a></p>
-<p><a href="https://prometheus.io/docs/introduction/overview/###architecture">Architecture</a></p>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2021-05-24">
+              <div data-module='page-expiry' data-last-reviewed-on="2021-06-23">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 24 February 2021.
+      This page was last reviewed on 23 March 2021.
 
-        It needs to be reviewed again on 24 May 2021
+        It needs to be reviewed again on 23 June 2021
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 24 May 2021.
+      This page was set to be reviewed before 23 June 2021.
       This might mean the content is out of date.
     </div>
   </div>
@@ -188,7 +229,7 @@ data:
           <aside>
               <ul class="contribution-banner">
                 <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide/blob/main/source/documentation/monitoring-an-app/prometheus.html.md.erb">View source</a></li>
-                <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide/issues/new?labels=bug&amp;title=Re:%20'Using%20the%20Cloud%20Platform%20Prometheus,%20AlertManager%20and%20Grafana'&amp;body=Problem%20with%20'Using%20the%20Cloud%20Platform%20Prometheus,%20AlertManager%20and%20Grafana'%20(https://user-guide.cloud-platform.service.justice.gov.uk/documentation/monitoring-an-app/prometheus.html)">Report problem</a></li>
+                <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide/issues/new?labels=bug&amp;title=Re:%20'Using%20the%20Cloud%20Platform%20Monitoring%20and%20Alerting%20stack'&amp;body=Problem%20with%20'Using%20the%20Cloud%20Platform%20Monitoring%20and%20Alerting%20stack'%20(https://user-guide.cloud-platform.service.justice.gov.uk/documentation/monitoring-an-app/prometheus.html)">Report problem</a></li>
                 <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide">GitHub Repo</a></li>
               </ul>
           </aside>
