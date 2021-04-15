@@ -205,6 +205,7 @@ downtime deployments in <a href="/documentation/other-topics/zero-downtime-deplo
 <h2 id="horizontal-pod-autoscaling">Horizontal Pod Autoscaling</h2><p>The Horizontal Pod Autoscaler is a built-in Kubernetes feature that allows you to horizontally scale applications based on one or more monitored metrics such as cpu or memory usage.</p>
 <p>The metrics you specify in the <code>HorizontalPodAutoscaler</code> manifest will determine the minimum and maximum number of pods needed, and set the thresholds at which pods should be created or removed.</p>
 <p>The Horizontal Pod Autoscaler can ensure that critical applications are elastic and can scale out to meet increasing demand as well scale down to ensure optimal resource usage, it is also a great tool in saving money by auto-scaling down non-production work loads when not in use, such as overnight or at the weekend.</p>
+<p>The HPA calculates the number of replicas by calculating the ratio between desired metric value and current metric value. Details on how the algorithm works is explained <a href="https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/">here</a></p>
 <h4 id="important-aspects-of-the-horizontalpodautoscaler-to-be-aware-of">Important aspects of the HorizontalPodAutoscaler to be aware of:</h4>
 <ul>
 <li>Resource Limits - You need to set resource limits otherwise HPA will not work, as it will not have a value to quantify from.</li>
@@ -225,8 +226,20 @@ spec:
     name: my-app-name
   minReplicas: 1
   maxReplicas: 5
-  targetCPUUtilizationPercentage: 50
-</code></pre></div><p>The above manifest will ensure a minimum of 1 replica is available for the deployment called my-app-name, but will increase replicas up to 5 when the CPU utilization is above 50%.</p>
+  targetCPUUtilizationPercentage: 95
+</code></pre></div><p>The above manifest will ensure a minimum of 1 replica is available for the deployment called my-app-name, but will increase replicas up to 5 when the CPU utilization is above 95%.</p>
+<p>To configure what value to set for <code>targetCPUUtilizationPercentage</code> depends on resource limits set up in your namespace and how much the actual pods consume.
+This <a href="https://github.com/ministryofjustice/cloud-platform-environments/blob/main/namespace-resources-cli-template/02-limitrange.yaml">limitrange file</a> defines the defaults we assign to new namespaces.</p>
+
+<ul>
+<li><p>Check how much defaults is set for your namespace</p></li>
+<li><p>Check how much the pods actually consume by running
+<code>
+kubectl top pods -n &lt;namespace&gt;
+</code>
+If your namespace <code>defaultRequest.cpu : 10m</code> and you pods consumes <code>8m</code> wihtout any traffic, then the usual CPUUtilizationPercentage is 80%. 
+The pods doesnot need scaling until it reaches 95% of the <code>defaultRequest.cpu</code> which is already reserved for each of the containers. Hence the <code>targetCPUUtilizationPercentage</code> can be set as 95%.</p></li>
+</ul>
 <p>Run the following command to apply:</p>
 <div class="highlight"><pre class="highlight plaintext"><code>$ kubectl apply -f hpa-myapp.yaml -n my-namespace
 horizontalpodautoscaler.autoscaling/hpa-myapp autoscaled
@@ -254,16 +267,16 @@ Conditions:
 <p>Click <a href="https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough">here</a> for the official Kubernetes documentation on the horizontal pod autoscaler walkthrough.</p>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2021-04-13">
+              <div data-module='page-expiry' data-last-reviewed-on="2021-07-14">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 13 January 2021.
+      This page was last reviewed on 14 April 2021.
 
-        It needs to be reviewed again on 13 April 2021
+        It needs to be reviewed again on 14 July 2021
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 13 April 2021.
+      This page was set to be reviewed before 14 July 2021.
       This might mean the content is out of date.
     </div>
   </div>
