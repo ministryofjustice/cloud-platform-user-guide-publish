@@ -4,7 +4,6 @@
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-      <meta name="robots" content="noindex">
 
     <title>Setting up GitHub Actions CD with Helm - Cloud Platform User Guide</title>
 
@@ -12,17 +11,18 @@
 
     <link rel="canonical" href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/deploying-an-app/helm-cd-github-actions.html">
 
+      <meta name="robots" content="noindex" />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:domain" content="user-guide.cloud-platform.service.justice.gov.uk" />
+      <meta name="twitter:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
+      <meta name="twitter:title" content="Setting up GitHub Actions CD with Helm - Cloud Platform User Guide" />
+      <meta name="twitter:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/deploying-an-app/helm-cd-github-actions.html" />
 
       <meta property="og:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
       <meta property="og:site_name" content="Cloud Platform User Guide" />
       <meta property="og:title" content="Setting up GitHub Actions CD with Helm" />
       <meta property="og:type" content="object" />
       <meta property="og:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/deploying-an-app/helm-cd-github-actions.html" />
-      <meta property="twitter:card" content="summary" />
-      <meta property="twitter:domain" content="user-guide.cloud-platform.service.justice.gov.uk" />
-      <meta property="twitter:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
-      <meta property="twitter:title" content="Setting up GitHub Actions CD with Helm - Cloud Platform User Guide" />
-      <meta property="twitter:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/deploying-an-app/helm-cd-github-actions.html" />
 
     
   </head>
@@ -65,32 +65,38 @@
       </div>
 
         <div id="toc-heading" class="toc-show fixedsticky">
-          <a href="#toc" class="toc-show__label js-toc-show" aria-controls="toc">
+          <button type="button" class="toc-show__label js-toc-show" aria-controls="toc">
             Table of contents <span class="toc-show__icon"></span>
-          </a>
+          </button>
         </div>
 
       <div class="app-pane__body" data-module="in-page-navigation">
           <div class="app-pane__toc">
-            <div class="toc" data-module="table-of-contents">
+            <div class="toc" data-module="table-of-contents" tabindex="-1" aria-label="Table of contents" role="dialog">
               <div class="search" data-module="search">
-  <form action="https://www.google.co.uk/search" method="get" role="search">
+  <form action="https://www.google.co.uk/search" method="get" role="search" class="search__form govuk-!-margin-bottom-4">
     <input type="hidden" name="as_sitesearch" value="https://user-guide.cloud-platform.service.justice.gov.uk"/>
-    <label class="govuk-label search__label" for="search">
+    <label class="govuk-label search__label" for="search" aria-hidden="true">
       Search (via Google)
     </label>
-    <input class="govuk-input govuk-!-margin-bottom-4" id="search" name="q" type="text" aria-controls="search-results" placeholder="Search">
+    <input
+      type="text"
+      id="search" name="q"
+      class="govuk-input govuk-!-margin-bottom-0 search__input"
+      aria-controls="search-results"
+      placeholder="Search">
+    <button type="submit" class="search__button">Search</button>
   </form>
   <div id="search-results" class="search-results" aria-hidden="true" role="dialog" aria-labelledby="search-results-title">
     <div class="search-results__inner">
       <button class="search-results__close">Close<span class="search-results__close-label"> search results</span></button>
-      <h2 id="search-results-title" class="search-results__title" aria-live="polite">Results</h2>
+      <h2 id="search-results-title" class="search-results__title" aria-live="assertive" role="alert">Results</h2>
       <div class="search-results__content"></div>
     </div>
   </div>
 </div>
 
-              <a href="#" class="toc__close js-toc-close" aria-controls="toc" aria-label="Hide table of contents"></a>
+              <button type="button" class="toc__close js-toc-close" aria-controls="toc" aria-label="Hide table of contents"></button>
               <nav id="toc" class="js-toc-list toc__list" aria-labelledby="toc-heading">
                       <ul>
   <li>
@@ -184,7 +190,7 @@ code.</p>
 <p>Github doesn&rsquo;t let you easily create a <a href="https://guides.github.com/activities/forking/">fork</a> of a repository within the same
 Github organisation</p>
 </blockquote>
-<h3 id="clone-the-current-repository-into-a-differently-named-folder">Clone the current repository into a differently-named folder</h3><div class="highlight"><pre class="highlight plaintext"><code>git clone --depth 1 \
+<h3 id="clone-the-current-repository-into-a-differently-named-folder">Clone the current repository into a differently-named folder</h3><div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>git clone --depth 1 \
   git@github.com:ministryofjustice/cloud-platform-multi-container-demo-app \
   helm-cd-tutorial
 </code></pre></div>
@@ -193,11 +199,11 @@ Github organisation</p>
 name for your copy, and use your repo name wherever you see <code>helm-cd-tutorial</code>
 in the examples.</p>
 </blockquote>
-<h3 id="remove-the-connection-to-the-original-repository">Remove the connection to the original repository</h3><div class="highlight"><pre class="highlight plaintext"><code>cd helm-cd-tutorial
+<h3 id="remove-the-connection-to-the-original-repository">Remove the connection to the original repository</h3><div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>cd helm-cd-tutorial
 rm -rf .git
 </code></pre></div><h3 id="create-a-new-github-repository">Create a new GitHub repository</h3><p>I&rsquo;m using the <a href="https://github.com/cli/cli">gh</a> GitHub command line tool. If you don&rsquo;t have it, you can do
 this step via the GitHub web interface.</p>
-<div class="highlight"><pre class="highlight plaintext"><code>git init
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>git init
 git add *
 git add .gitignore
 git commit -m "Initial commit"
@@ -216,37 +222,37 @@ HTTPS</p>
 </ul>
 <p>Edit both files to tell the modules to create <a href="https://docs.github.com/en/actions/reference/encrypted-secrets">GitHub Actions Secrets</a> in your
 new repository:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>  github_repositories = ["helm-cd-tutorial"]
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>  github_repositories = ["helm-cd-tutorial"]
 </code></pre></div><p>Merge the PR as soon as it has been approved.</p>
 <h2 id="manual-helm-deployment">Manual Helm Deployment</h2><p>Before we automate the process, we&rsquo;ll go through it once manually.</p>
 <p>The multi-container demo app. has a Helm chart already, but we need to change a
 couple of things:</p>
 <h3 id="remove-postgres-container">Remove postgres container</h3><p>We&rsquo;re using an RDS database instance for storage, so we don&rsquo;t need to deploy a
 postgres container.</p>
-<div class="highlight"><pre class="highlight plaintext"><code>rm helm_deploy/multi-container-app/charts/postgresql-9.1.1.tgz
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>rm helm_deploy/multi-container-app/charts/postgresql-9.1.1.tgz
 rm helm_deploy/multi-container-app/requirements.*
 rm helm_deploy/multi-container-app/container-postgres-secrets.yaml
 </code></pre></div><h3 id="supply-missing-values">Supply missing values</h3><p>Edit <code>helm_deploy/multi-container-app/values.yaml</code>, and change this line:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>databaseUrlSecretName: &lt;DATABASE-URL-SECRET-NAME&gt;
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>databaseUrlSecretName: &lt;DATABASE-URL-SECRET-NAME&gt;
 </code></pre></div><p>Replace <code>&lt;DATABASE-URL-SECRET-NAME&gt;</code> with the name of the secret in your
 namespace that contains the <code>url</code> for your RDS instance.</p>
 <p>By default this is <code>rds-instance-output</code> so this line should be:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>databaseUrlSecretName: rds-instance-output
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>databaseUrlSecretName: rds-instance-output
 </code></pre></div><p>A little further down in the same file, you should see these lines:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>  hosts:
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>  hosts:
     - host: &lt;DNS-PREFIX&gt;.apps.live-1.cloud-platform.service.justice.gov.uk
 </code></pre></div><p>We need to replace <code>&lt;DNS-PREFIX&gt;</code> with a unique hostname for your instance of
 this application.</p>
 <p>I&rsquo;m going to use <code>helm-cd</code> for this, but you should pick a different value.</p>
-<div class="highlight"><pre class="highlight plaintext"><code>  hosts:
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>  hosts:
     - host: helm-cd.apps.live-1.cloud-platform.service.justice.gov.uk
 </code></pre></div><p>Commit and push your changes.</p>
 <h3 id="manual-helm-deploy">Manual Helm Deploy</h3><p>At this point you should be able to deploy the application like this:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>cd helm_deploy/multi-container-app/
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>cd helm_deploy/multi-container-app/
 helm install myapplication . --values values.yaml --namespace &lt;namespace-name&gt;
 </code></pre></div><p>Where <code>&lt;namespace-name&gt;</code> is the name of your cloud platform namespace.</p>
 <p>You should see output like this:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>NAME: myapplication
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>NAME: myapplication
 LAST DEPLOYED: Fri Feb 12 16:16:05 2021
 NAMESPACE: helm-cd-tutorial
 STATUS: deployed
@@ -254,7 +260,7 @@ REVISION: 1
 ...
 </code></pre></div><p>To confirm that the app. is working, visit the URL corresponding to the
 hostname you chose:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>https://helm-cd.apps.live-1.cloud-platform.service.justice.gov.uk
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>https://helm-cd.apps.live-1.cloud-platform.service.justice.gov.uk
 </code></pre></div><h2 id="automating-deployment">Automating deployment</h2><p>The steps we need our continuous deployment (CD) workflow to carry out are very
 similar to those in the <a href="/documentation/deploying-an-app/github-actions-continuous-deployment.html">github actions CD</a> tutorial. Whenever a change
 is pushed to the <code>main</code> branch:</p>
@@ -277,7 +283,7 @@ part of the code is updated. This means we can use the same git SHA throughout
 our Helm chart, for all of our images. I&rsquo;m also going to push all three images
 to the same ECR.</p>
 <p>Create a <code>.github/workflows/cd.yaml</code> file like this:</p>
-<div class="highlight"><pre class="highlight yaml"><code><span class="na">name</span><span class="pi">:</span> <span class="s">Continuous Deployment</span>
+<div class="highlight"><pre class="highlight yaml" tabindex="0"><code><span class="na">name</span><span class="pi">:</span> <span class="s">Continuous Deployment</span>
 
 <span class="na">on</span><span class="pi">:</span>
   <span class="na">push</span><span class="pi">:</span>
@@ -346,33 +352,33 @@ image details at deployment time.</p>
 <code>values.yaml</code> file. We&rsquo;ll turn that into a template, and supply the docker
 image tag values via environment variables.</p>
 <p>Rename the file;</p>
-<div class="highlight"><pre class="highlight plaintext"><code>mv helm_deploy/multi-container-app/values.yaml \
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>mv helm_deploy/multi-container-app/values.yaml \
   helm_deploy/multi-container-app/values.tpl
 </code></pre></div><p>Now, edit the file to replace the repository and image tag values. We need to change this:</p>
-<div class="highlight"><pre class="highlight yaml"><code><span class="na">contentapi</span><span class="pi">:</span>
+<div class="highlight"><pre class="highlight yaml" tabindex="0"><code><span class="na">contentapi</span><span class="pi">:</span>
   <span class="na">replicaCount</span><span class="pi">:</span> <span class="m">1</span>
   <span class="na">image</span><span class="pi">:</span>
     <span class="na">repository</span><span class="pi">:</span> <span class="s">ministryofjustice/cloud-platform-multi-container-demo-app</span>
     <span class="na">tag</span><span class="pi">:</span> <span class="s">content-api-1.6</span>
 </code></pre></div><p>&hellip;to this:</p>
-<div class="highlight"><pre class="highlight yaml"><code><span class="na">contentapi</span><span class="pi">:</span>
+<div class="highlight"><pre class="highlight yaml" tabindex="0"><code><span class="na">contentapi</span><span class="pi">:</span>
   <span class="na">replicaCount</span><span class="pi">:</span> <span class="m">1</span>
   <span class="na">image</span><span class="pi">:</span>
     <span class="na">repository</span><span class="pi">:</span> <span class="s">${ECR_URL}</span>
     <span class="na">tag</span><span class="pi">:</span> <span class="s">content-api-${GITHUB_SHA}</span>
 </code></pre></div><p>Make the corresponding change for <code>railsapp</code> and <code>worker</code>:</p>
-<div class="highlight"><pre class="highlight yaml"><code><span class="na">railsapp</span><span class="pi">:</span>
+<div class="highlight"><pre class="highlight yaml" tabindex="0"><code><span class="na">railsapp</span><span class="pi">:</span>
   <span class="na">replicaCount</span><span class="pi">:</span> <span class="m">1</span>
   <span class="na">image</span><span class="pi">:</span>
     <span class="na">repository</span><span class="pi">:</span> <span class="s">${ECR_URL}</span>
     <span class="na">tag</span><span class="pi">:</span> <span class="s">rails-app-${GITHUB_SHA}</span>
-</code></pre></div><div class="highlight"><pre class="highlight yaml"><code><span class="na">worker</span><span class="pi">:</span>
+</code></pre></div><div class="highlight"><pre class="highlight yaml" tabindex="0"><code><span class="na">worker</span><span class="pi">:</span>
   <span class="na">replicaCount</span><span class="pi">:</span> <span class="m">1</span>
   <span class="na">image</span><span class="pi">:</span>
     <span class="na">repository</span><span class="pi">:</span> <span class="s">${ECR_URL}</span>
     <span class="na">tag</span><span class="pi">:</span> <span class="s">worker-${GITHUB_SHA}</span>
 </code></pre></div><p>Now, add a step to the end of <code>.github/workflows/cd.yaml</code>:</p>
-<div class="highlight"><pre class="highlight yaml"><code><span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Update `values.yaml`</span>
+<div class="highlight"><pre class="highlight yaml" tabindex="0"><code><span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Update `values.yaml`</span>
   <span class="na">run</span><span class="pi">:</span> <span class="pi">|</span>
     <span class="s">export GITHUB_SHA=${{ github.sha }}</span>
     <span class="s">export ECR_URL=${{ secrets.ECR_URL }}</span>
@@ -382,7 +388,7 @@ image tag values via environment variables.</p>
 cluster using the serviceaccount credentials.</p>
 <p>This is identical to <a href="/documentation/deploying-an-app/github-actions-continuous-deployment.html#using-your-serviceaccount">this workflow step</a> in the basic
 <a href="/documentation/deploying-an-app/github-actions-continuous-deployment.html">GitHub Actions CD</a> tutorial.</p>
-<div class="highlight"><pre class="highlight yaml"><code><span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Authenticate to the cluster</span>
+<div class="highlight"><pre class="highlight yaml" tabindex="0"><code><span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Authenticate to the cluster</span>
   <span class="na">env</span><span class="pi">:</span>
     <span class="na">KUBE_CLUSTER</span><span class="pi">:</span> <span class="s">${{ secrets.KUBE_CLUSTER }}</span>
   <span class="na">run</span><span class="pi">:</span> <span class="pi">|</span>
@@ -392,7 +398,7 @@ cluster using the serviceaccount credentials.</p>
     <span class="s">kubectl config set-context ${KUBE_CLUSTER} --cluster=${KUBE_CLUSTER} --user=deploy-user --namespace=${{ secrets.KUBE_NAMESPACE }}</span>
     <span class="s">kubectl config use-context ${KUBE_CLUSTER}</span>
 </code></pre></div><h2 id="helm-upgrade">Helm Upgrade</h2><p>Finally, add this step to perform the <code>helm upgrade</code>:</p>
-<div class="highlight"><pre class="highlight yaml"><code><span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Upgrade the Helm chart</span>
+<div class="highlight"><pre class="highlight yaml" tabindex="0"><code><span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Upgrade the Helm chart</span>
   <span class="na">run</span><span class="pi">:</span> <span class="pi">|</span>
     <span class="s">cd helm_deploy/multi-container-app/</span>
     <span class="s">helm upgrade myapplication . \</span>

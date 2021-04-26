@@ -4,7 +4,6 @@
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-      <meta name="robots" content="noindex">
 
     <title>Migrating an Elasticsearch service - Cloud Platform User Guide</title>
 
@@ -12,17 +11,18 @@
 
     <link rel="canonical" href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/aws-es-encryption-migration.html">
 
+      <meta name="robots" content="noindex" />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:domain" content="user-guide.cloud-platform.service.justice.gov.uk" />
+      <meta name="twitter:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
+      <meta name="twitter:title" content="Migrating an Elasticsearch service - Cloud Platform User Guide" />
+      <meta name="twitter:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/aws-es-encryption-migration.html" />
 
       <meta property="og:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
       <meta property="og:site_name" content="Cloud Platform User Guide" />
       <meta property="og:title" content="Migrating an Elasticsearch service" />
       <meta property="og:type" content="object" />
       <meta property="og:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/aws-es-encryption-migration.html" />
-      <meta property="twitter:card" content="summary" />
-      <meta property="twitter:domain" content="user-guide.cloud-platform.service.justice.gov.uk" />
-      <meta property="twitter:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
-      <meta property="twitter:title" content="Migrating an Elasticsearch service - Cloud Platform User Guide" />
-      <meta property="twitter:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/aws-es-encryption-migration.html" />
 
     
   </head>
@@ -65,32 +65,38 @@
       </div>
 
         <div id="toc-heading" class="toc-show fixedsticky">
-          <a href="#toc" class="toc-show__label js-toc-show" aria-controls="toc">
+          <button type="button" class="toc-show__label js-toc-show" aria-controls="toc">
             Table of contents <span class="toc-show__icon"></span>
-          </a>
+          </button>
         </div>
 
       <div class="app-pane__body" data-module="in-page-navigation">
           <div class="app-pane__toc">
-            <div class="toc" data-module="table-of-contents">
+            <div class="toc" data-module="table-of-contents" tabindex="-1" aria-label="Table of contents" role="dialog">
               <div class="search" data-module="search">
-  <form action="https://www.google.co.uk/search" method="get" role="search">
+  <form action="https://www.google.co.uk/search" method="get" role="search" class="search__form govuk-!-margin-bottom-4">
     <input type="hidden" name="as_sitesearch" value="https://user-guide.cloud-platform.service.justice.gov.uk"/>
-    <label class="govuk-label search__label" for="search">
+    <label class="govuk-label search__label" for="search" aria-hidden="true">
       Search (via Google)
     </label>
-    <input class="govuk-input govuk-!-margin-bottom-4" id="search" name="q" type="text" aria-controls="search-results" placeholder="Search">
+    <input
+      type="text"
+      id="search" name="q"
+      class="govuk-input govuk-!-margin-bottom-0 search__input"
+      aria-controls="search-results"
+      placeholder="Search">
+    <button type="submit" class="search__button">Search</button>
   </form>
   <div id="search-results" class="search-results" aria-hidden="true" role="dialog" aria-labelledby="search-results-title">
     <div class="search-results__inner">
       <button class="search-results__close">Close<span class="search-results__close-label"> search results</span></button>
-      <h2 id="search-results-title" class="search-results__title" aria-live="polite">Results</h2>
+      <h2 id="search-results-title" class="search-results__title" aria-live="assertive" role="alert">Results</h2>
       <div class="search-results__content"></div>
     </div>
   </div>
 </div>
 
-              <a href="#" class="toc__close js-toc-close" aria-controls="toc" aria-label="Hide table of contents"></a>
+              <button type="button" class="toc__close js-toc-close" aria-controls="toc" aria-label="Hide table of contents"></button>
               <nav id="toc" class="js-toc-list toc__list" aria-labelledby="toc-heading">
                       <ul>
   <li>
@@ -140,7 +146,7 @@ migrating an elasticsearch domain to enable encryption of data at rest.</p>
 <li>Create a s3 bucket </li>
 </ul>
 <p>Use the below code block and update the values appropriately for your namespace. Raise a PR against the <a href="https://github.com/ministryofjustice/cloud-platform-environments">environments</a> repository.</p>
-<div class="highlight"><pre class="highlight hcl"><code>
+<div class="highlight"><pre class="highlight hcl" tabindex="0"><code>
 <span class="nx">module</span> <span class="s2">"es_snapshots_s3_bucket"</span> <span class="p">{</span>
   <span class="nx">source</span>                 <span class="p">=</span> <span class="s2">"github.com/ministryofjustice/cloud-platform-terraform-s3-bucket?ref=4.5"</span>
   <span class="nx">team_name</span>              <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">team_name</span>
@@ -175,7 +181,7 @@ migrating an elasticsearch domain to enable encryption of data at rest.</p>
 <ul>
 <li>Add s3 bucket arn to the source elasticsearch module as below</li>
 </ul>
-<div class="highlight"><pre class="highlight hcl"><code><span class="nx">module</span> <span class="s2">"source_es"</span> <span class="p">{</span>
+<div class="highlight"><pre class="highlight hcl" tabindex="0"><code><span class="nx">module</span> <span class="s2">"source_es"</span> <span class="p">{</span>
   <span class="nx">source</span>                        <span class="p">=</span> <span class="s2">"github.com/ministryofjustice/cloud-platform-terraform-elasticsearch?ref=3.8.0"</span>
   <span class="nx">cluster_name</span>                  <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">cluster_name</span>
   <span class="nx">cluster_state_bucket</span>          <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">cluster_state_bucket</span>
@@ -200,7 +206,7 @@ migrating an elasticsearch domain to enable encryption of data at rest.</p>
 <span class="p">}</span>
 
 </code></pre></div><p>This output <code>es_snapshot_role</code> will have permissions to enable creation of manual snapshot repo in s3 bucket</p>
-<div class="highlight"><pre class="highlight hcl"><code><span class="nx">resource</span> <span class="s2">"kubernetes_secret"</span> <span class="s2">"es_snapshots_role"</span> <span class="p">{</span>
+<div class="highlight"><pre class="highlight hcl" tabindex="0"><code><span class="nx">resource</span> <span class="s2">"kubernetes_secret"</span> <span class="s2">"es_snapshots_role"</span> <span class="p">{</span>
   <span class="nx">metadata</span> <span class="p">{</span>
     <span class="nx">name</span>      <span class="p">=</span> <span class="s2">"es-snapshot-role"</span>
     <span class="nx">namespace</span> <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">namespace</span>
@@ -217,7 +223,7 @@ migrating an elasticsearch domain to enable encryption of data at rest.</p>
 <li>Add the <code>aws_iam_role_name</code> of source ES domain and new encrypted ES domain to the <code>ns_annotation</code> module.</li>
 <li>Provide a different name to <code>aws-es-proxy-service</code> so it doesnot overwrite with existing source proxy.</li>
 </ul>
-<div class="highlight"><pre class="highlight hcl"><code><span class="nx">module</span> <span class="s2">"encrypted_es"</span> <span class="p">{</span>
+<div class="highlight"><pre class="highlight hcl" tabindex="0"><code><span class="nx">module</span> <span class="s2">"encrypted_es"</span> <span class="p">{</span>
   <span class="nx">source</span>                          <span class="p">=</span> <span class="s2">"github.com/ministryofjustice/cloud-platform-terraform-elasticsearch?ref=3.8.0"</span>
   <span class="nx">cluster_name</span>                    <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">cluster_name</span>
   <span class="nx">cluster_state_bucket</span>            <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">cluster_state_bucket</span>
@@ -249,7 +255,7 @@ migrating an elasticsearch domain to enable encryption of data at rest.</p>
 <ul>
 <li>Port forward the source ES domain using the proxy <code>aws-es-proxy-service</code> </li>
 </ul>
-<div class="highlight"><pre class="highlight plaintext"><code>  kubectl \
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>  kubectl \
     -n [your namespace] \
     port-forward \
     svc/aws-es-proxy-service 9200:9200
@@ -258,7 +264,7 @@ migrating an elasticsearch domain to enable encryption of data at rest.</p>
 <li><p>Register the snapshot repository with new encrypted Elasticsearch domain</p>
 <p>A sample template is given below:</p></li>
 </ul>
-<div class="highlight"><pre class="highlight plaintext"><code>    PUT http://localhost:9200/_snapshot/&lt;repo name for snapshot&gt;
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>    PUT http://localhost:9200/_snapshot/&lt;repo name for snapshot&gt;
   {
     "type": "s3",
     "settings": {
@@ -271,7 +277,7 @@ migrating an elasticsearch domain to enable encryption of data at rest.</p>
 <ul>
 <li>Port forward the encrypted ES domain using the proxy <code>aws-es-proxy-service-encrypted</code> </li>
 </ul>
-<div class="highlight"><pre class="highlight plaintext"><code>  kubectl \
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>  kubectl \
     -n [your namespace] \
     port-forward \
     svc/aws-es-proxy-service-encrypted 9200:9200
@@ -280,7 +286,7 @@ migrating an elasticsearch domain to enable encryption of data at rest.</p>
 <li><p>Register the snapshot repository with encrypted Elasticsearch domain</p>
 <p>A sample template is given below:</p></li>
 </ul>
-<div class="highlight"><pre class="highlight plaintext"><code>    PUT http://localhost:9200/_snapshot/&lt;repo-name-for-snapshot&gt;
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>    PUT http://localhost:9200/_snapshot/&lt;repo-name-for-snapshot&gt;
   {
     "type": "s3",
     "settings": {
@@ -294,7 +300,7 @@ migrating an elasticsearch domain to enable encryption of data at rest.</p>
 <ul>
 <li>Port forward the source ES domain using the proxy <code>aws-es-proxy-service</code> </li>
 </ul>
-<div class="highlight"><pre class="highlight plaintext"><code>  kubectl \
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>  kubectl \
     -n [your namespace] \
     port-forward \
     svc/aws-es-proxy-service 9200:9200
@@ -302,12 +308,12 @@ migrating an elasticsearch domain to enable encryption of data at rest.</p>
 <ul>
 <li>Create a snapshot </li>
 </ul>
-<div class="highlight"><pre class="highlight plaintext"><code>  PUT http://localhost:9200/_snapshot/&lt;repo-name-for-snapshot&gt;/&lt;snapshot-to-restore&gt;
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>  PUT http://localhost:9200/_snapshot/&lt;repo-name-for-snapshot&gt;/&lt;snapshot-to-restore&gt;
 </code></pre></div>
 <ul>
 <li>Port forward the encrypted Elasticsearch domain</li>
 </ul>
-<div class="highlight"><pre class="highlight plaintext"><code>  kubectl \
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>  kubectl \
     -n [your namespace] \
     port-forward \
     svc/aws-es-proxy-service-encrypted 9200:9200
@@ -316,7 +322,7 @@ migrating an elasticsearch domain to enable encryption of data at rest.</p>
 <li>Restore snapshot</li>
 </ul>
 <p>NOTE: <code>&quot;include_global_state&quot;:true</code> will restore all the key data</p>
-<div class="highlight"><pre class="highlight plaintext"><code>  POST http://localhost:9200/_snapshot/&lt;repo-name-for-snapshot&gt;/&lt;snapshot-to-restore&gt;/_restore
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>  POST http://localhost:9200/_snapshot/&lt;repo-name-for-snapshot&gt;/&lt;snapshot-to-restore&gt;/_restore
   {
     "include_global_state": true
   }

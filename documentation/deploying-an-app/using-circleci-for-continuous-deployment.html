@@ -4,7 +4,6 @@
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-      <meta name="robots" content="noindex">
 
     <title>Continuous Deployment of an application using CircleCI and Helm - Cloud Platform User Guide</title>
 
@@ -12,17 +11,18 @@
 
     <link rel="canonical" href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/deploying-an-app/using-circleci-for-continuous-deployment.html">
 
+      <meta name="robots" content="noindex" />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:domain" content="user-guide.cloud-platform.service.justice.gov.uk" />
+      <meta name="twitter:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
+      <meta name="twitter:title" content="Continuous Deployment of an application using CircleCI and Helm - Cloud Platform User Guide" />
+      <meta name="twitter:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/deploying-an-app/using-circleci-for-continuous-deployment.html" />
 
       <meta property="og:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
       <meta property="og:site_name" content="Cloud Platform User Guide" />
       <meta property="og:title" content="Continuous Deployment of an application using CircleCI and Helm" />
       <meta property="og:type" content="object" />
       <meta property="og:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/deploying-an-app/using-circleci-for-continuous-deployment.html" />
-      <meta property="twitter:card" content="summary" />
-      <meta property="twitter:domain" content="user-guide.cloud-platform.service.justice.gov.uk" />
-      <meta property="twitter:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
-      <meta property="twitter:title" content="Continuous Deployment of an application using CircleCI and Helm - Cloud Platform User Guide" />
-      <meta property="twitter:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/deploying-an-app/using-circleci-for-continuous-deployment.html" />
 
     
   </head>
@@ -65,32 +65,38 @@
       </div>
 
         <div id="toc-heading" class="toc-show fixedsticky">
-          <a href="#toc" class="toc-show__label js-toc-show" aria-controls="toc">
+          <button type="button" class="toc-show__label js-toc-show" aria-controls="toc">
             Table of contents <span class="toc-show__icon"></span>
-          </a>
+          </button>
         </div>
 
       <div class="app-pane__body" data-module="in-page-navigation">
           <div class="app-pane__toc">
-            <div class="toc" data-module="table-of-contents">
+            <div class="toc" data-module="table-of-contents" tabindex="-1" aria-label="Table of contents" role="dialog">
               <div class="search" data-module="search">
-  <form action="https://www.google.co.uk/search" method="get" role="search">
+  <form action="https://www.google.co.uk/search" method="get" role="search" class="search__form govuk-!-margin-bottom-4">
     <input type="hidden" name="as_sitesearch" value="https://user-guide.cloud-platform.service.justice.gov.uk"/>
-    <label class="govuk-label search__label" for="search">
+    <label class="govuk-label search__label" for="search" aria-hidden="true">
       Search (via Google)
     </label>
-    <input class="govuk-input govuk-!-margin-bottom-4" id="search" name="q" type="text" aria-controls="search-results" placeholder="Search">
+    <input
+      type="text"
+      id="search" name="q"
+      class="govuk-input govuk-!-margin-bottom-0 search__input"
+      aria-controls="search-results"
+      placeholder="Search">
+    <button type="submit" class="search__button">Search</button>
   </form>
   <div id="search-results" class="search-results" aria-hidden="true" role="dialog" aria-labelledby="search-results-title">
     <div class="search-results__inner">
       <button class="search-results__close">Close<span class="search-results__close-label"> search results</span></button>
-      <h2 id="search-results-title" class="search-results__title" aria-live="polite">Results</h2>
+      <h2 id="search-results-title" class="search-results__title" aria-live="assertive" role="alert">Results</h2>
       <div class="search-results__content"></div>
     </div>
   </div>
 </div>
 
-              <a href="#" class="toc__close js-toc-close" aria-controls="toc" aria-label="Hide table of contents"></a>
+              <button type="button" class="toc__close js-toc-close" aria-controls="toc" aria-label="Hide table of contents"></button>
               <nav id="toc" class="js-toc-list toc__list" aria-labelledby="toc-heading">
                       <ul>
   <li>
@@ -168,7 +174,7 @@
 <p>A Service Account is created in the <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces">namespace creation github repository</a>.</p>
 <p>If you have not created a CircleCI service account along with the role / rolebinding then you may
 use the below as an example:</p>
-<div class="highlight"><pre class="highlight yaml"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<div class="highlight"><pre class="highlight yaml" tabindex="0"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
 <span class="na">kind</span><span class="pi">:</span> <span class="s">ServiceAccount</span>
 <span class="na">metadata</span><span class="pi">:</span>
   <span class="na">name</span><span class="pi">:</span> <span class="s">circleci</span>
@@ -226,7 +232,7 @@ use the below as an example:</p>
   <span class="na">apiGroup</span><span class="pi">:</span> <span class="s">rbac.authorization.k8s.io</span>
 </code></pre></div><p>Remember to replace <code>&lt;YOUR-NAMESPACE&gt;</code> with your namespace. Save the above as &lsquo;serviceaccount-circleci.yaml&rsquo; under your <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces">namespace folder</a>.</p>
 <p>Raise a PR for your service account creation. Once approved you should then see your new CircleCI service account in your namespace.</p>
-<div class="highlight"><pre class="highlight yaml"><code>  <span class="s">$ kubectl get serviceaccounts --namespace &lt;YOUR-NAMESPACE&gt;</span>
+<div class="highlight"><pre class="highlight yaml" tabindex="0"><code>  <span class="s">$ kubectl get serviceaccounts --namespace &lt;YOUR-NAMESPACE&gt;</span>
   <span class="s">NAME       SECRETS   AGE</span>
   <span class="s">circleci   1         3h</span>
 
@@ -248,16 +254,16 @@ use the below as an example:</p>
 </code></pre></div><p>There will be a secret for the CircleCI service account. The secret contains the ca.crt and token which we will make available to the CircleCI image container as environment variables. This will allow it to authenticate against the cluster.
 Access to the cluster is scoped for the namespace the service account was created in.</p>
 <h3 id="retrieving-the-service-account-credentials">Retrieving the Service Account credentials</h3><p>Once the CircleCI service account is created above, you can grab the ca.crt as follows:</p>
-<div class="highlight"><pre class="highlight yaml"><code><span class="s">cloud-platform decode-secret -n &lt;YOUR-NAMESPACE&gt; -s &lt;NAME-OF-CIRCLECI-SERVICE-ACCOUNT-SECRET&gt; | grep ca.crt</span>
+<div class="highlight"><pre class="highlight yaml" tabindex="0"><code><span class="s">cloud-platform decode-secret -n &lt;YOUR-NAMESPACE&gt; -s &lt;NAME-OF-CIRCLECI-SERVICE-ACCOUNT-SECRET&gt; | grep ca.crt</span>
 </code></pre></div><p>Likewise grab the CircleCI service account token as follows:</p>
-<div class="highlight"><pre class="highlight yaml"><code><span class="s">cloud-platform decode-secret -n &lt;YOUR-NAMESPACE&gt; -s &lt;NAME-OF-CIRCLECI-SERVICE-ACCOUNT-SECRET&gt; | grep token</span>
+<div class="highlight"><pre class="highlight yaml" tabindex="0"><code><span class="s">cloud-platform decode-secret -n &lt;YOUR-NAMESPACE&gt; -s &lt;NAME-OF-CIRCLECI-SERVICE-ACCOUNT-SECRET&gt; | grep token</span>
 </code></pre></div><p>Both the ca.crt and token will be added as environment variables by creating a context in the CircleCI console, that holds these values as shown below.</p>
 <h3 id="linking-repository-to-circleci">Linking Repository to CircleCI</h3><p>MoJ has as an account with CircleCI, please login to <a href="https://circleci.com">CircleCI</a> using GitHub credentials. Select project, and if config.yml is in the repo CircleCI will build and run tests.</p>
 <h3 id="add-variables-to-circleci">Add variables to CircleCI</h3><p>There is a number of environment variables that you will need to set on your CircleCI project in order to build a docker image, push it to the ECR and trigger a deployment in your environment. On the project page, click the cog icon in the left pane. Click on &lsquo;Contexts&rsquo;. Click &lsquo;Create Context&rsquo;.
 Enter your preferred name for your context. Would make sense to add the environment as prefix to the context, i.e dev or prod.
 The context will hold your environment variables and later be used by the docker executor of the pipeline.</p>
 <p>Your context should look like as follows:</p>
-<p><a href="/images/circleci_context.png" target="_blank" rel="noopener noreferrer"><img src="/images/circleci_context.png" alt="CircleCI Context Environment Variables" /></a></p>
+<p><a href="/images/circleci_context.png" rel="noopener noreferrer"><img src="/images/circleci_context.png" alt="CircleCI Context Environment Variables" /></a></p>
 <p>Add the following environment variables:</p>
 <h4 id="aws-credentials">AWS credentials</h4><p>To authenticate with ECR, you will need to set:</p>
 
@@ -279,7 +285,7 @@ The context will hold your environment variables and later be used by the docker
 <h3 id="creating-the-config-yml">Creating the config.yml</h3><p>CircleCI uses a YAML file to identify how you want your testing environment set up and what tests you want to run. On CircleCI 2.0, this file must be called <code>config.yml</code> and must be in a hidden folder called <code>.circleci</code> .</p>
 <p><a href="https://circleci.com/docs/2.0/tutorials/">Tutorial</a> on creating a config.yml file. As long as you are building a Docker image you can configure CircleCI however you wish. The only additional configuration you will need to add is to upload an image to ECR and deploy to Kubernetes:</p>
 <h3 id="upload-to-ecr">Upload to ECR</h3><p>Below is an example how you can build and push an image to ECR:</p>
-<div class="highlight"><pre class="highlight yaml"><code>
+<div class="highlight"><pre class="highlight yaml" tabindex="0"><code>
 <span class="na">version</span><span class="pi">:</span> <span class="m">2.1</span>
 
 <span class="na">workflows</span><span class="pi">:</span>
@@ -303,7 +309,7 @@ The context will hold your environment variables and later be used by the docker
           <span class="s">docker build -t ${ECR_ENDPOINT}/&lt;REPO-NAME&gt; rails-app</span>
           <span class="s">docker push ${ECR_ENDPOINT}/&lt;REPO-NAME&gt;</span>
 </code></pre></div><h3 id="deploy-to-kubernetes">Deploy to Kubernetes</h3><p>Below is example of how you can first authenticate and then deploy to kubernetes</p>
-<div class="highlight"><pre class="highlight yaml"><code>
+<div class="highlight"><pre class="highlight yaml" tabindex="0"><code>
     <span class="pi">-</span> <span class="na">run</span><span class="pi">:</span>
         <span class="na">name</span><span class="pi">:</span> <span class="s">Authenticate with cluster</span>
         <span class="na">command</span><span class="pi">:</span> <span class="pi">|</span>
@@ -320,7 +326,7 @@ The context will hold your environment variables and later be used by the docker
           <span class="s">fi</span>
           <span class="s">kubectl --namespace=${K8S_NAMESPACE} get pods</span>
 </code></pre></div><h3 id="complete-config-file">Complete config file</h3><p>Below is the complete config file</p>
-<div class="highlight"><pre class="highlight yaml"><code><span class="na">version</span><span class="pi">:</span> <span class="m">2.1</span>
+<div class="highlight"><pre class="highlight yaml" tabindex="0"><code><span class="na">version</span><span class="pi">:</span> <span class="m">2.1</span>
 
 <span class="na">workflows</span><span class="pi">:</span>
   <span class="na">test-env-vars</span><span class="pi">:</span>
@@ -360,7 +366,7 @@ The context will hold your environment variables and later be used by the docker
           <span class="s">kubectl --namespace=${K8S_NAMESPACE} get pods</span>
 </code></pre></div><p>In the above config.yml replace <code>&lt;CONTEXT&gt;</code> with the name of the context you created. Also replace <code>&lt;REPO-NAME&gt;</code> with the name of your ECR repo excluding the tag name.</p>
 <p>For example if my repo name is myteam/myrepo and my image tag is rails then I would replace <code>&lt;REPO-NAME&gt;</code> with myteam/myrepo:rails with the full repo URL being:</p>
-<div class="highlight"><pre class="highlight shell"><code>754256621582.dkr.ecr.eu-west-2.amazonaws.com/myteam/myrepo:rails
+<div class="highlight"><pre class="highlight shell" tabindex="0"><code>754256621582.dkr.ecr.eu-west-2.amazonaws.com/myteam/myrepo:rails
 </code></pre></div><p>The above config.yml needs to be saved in a folder called .circleci in the root of your application repository.
 For demo purposes you may use the <a href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/deploying-an-app/multicontainer-app-deploy.html">multi-demo container repository</a></p>
 <p>In the &lsquo;jobs&rsquo; section we have a &lsquo;docker&rsquo; executor where we will execute the steps inside the specified docker image. In this case we will run our pipeline steps inside a circle ci docker image.</p>

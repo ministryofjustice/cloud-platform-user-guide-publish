@@ -4,7 +4,6 @@
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-      <meta name="robots" content="noindex">
 
     <title>Creating a Cloud Platform Environment - Cloud Platform User Guide</title>
 
@@ -12,17 +11,18 @@
 
     <link rel="canonical" href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/env-create.html">
 
+      <meta name="robots" content="noindex" />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:domain" content="user-guide.cloud-platform.service.justice.gov.uk" />
+      <meta name="twitter:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
+      <meta name="twitter:title" content="Creating a Cloud Platform Environment - Cloud Platform User Guide" />
+      <meta name="twitter:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/env-create.html" />
 
       <meta property="og:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
       <meta property="og:site_name" content="Cloud Platform User Guide" />
       <meta property="og:title" content="Creating a Cloud Platform Environment" />
       <meta property="og:type" content="object" />
       <meta property="og:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/env-create.html" />
-      <meta property="twitter:card" content="summary" />
-      <meta property="twitter:domain" content="user-guide.cloud-platform.service.justice.gov.uk" />
-      <meta property="twitter:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
-      <meta property="twitter:title" content="Creating a Cloud Platform Environment - Cloud Platform User Guide" />
-      <meta property="twitter:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/env-create.html" />
 
     
   </head>
@@ -65,32 +65,38 @@
       </div>
 
         <div id="toc-heading" class="toc-show fixedsticky">
-          <a href="#toc" class="toc-show__label js-toc-show" aria-controls="toc">
+          <button type="button" class="toc-show__label js-toc-show" aria-controls="toc">
             Table of contents <span class="toc-show__icon"></span>
-          </a>
+          </button>
         </div>
 
       <div class="app-pane__body" data-module="in-page-navigation">
           <div class="app-pane__toc">
-            <div class="toc" data-module="table-of-contents">
+            <div class="toc" data-module="table-of-contents" tabindex="-1" aria-label="Table of contents" role="dialog">
               <div class="search" data-module="search">
-  <form action="https://www.google.co.uk/search" method="get" role="search">
+  <form action="https://www.google.co.uk/search" method="get" role="search" class="search__form govuk-!-margin-bottom-4">
     <input type="hidden" name="as_sitesearch" value="https://user-guide.cloud-platform.service.justice.gov.uk"/>
-    <label class="govuk-label search__label" for="search">
+    <label class="govuk-label search__label" for="search" aria-hidden="true">
       Search (via Google)
     </label>
-    <input class="govuk-input govuk-!-margin-bottom-4" id="search" name="q" type="text" aria-controls="search-results" placeholder="Search">
+    <input
+      type="text"
+      id="search" name="q"
+      class="govuk-input govuk-!-margin-bottom-0 search__input"
+      aria-controls="search-results"
+      placeholder="Search">
+    <button type="submit" class="search__button">Search</button>
   </form>
   <div id="search-results" class="search-results" aria-hidden="true" role="dialog" aria-labelledby="search-results-title">
     <div class="search-results__inner">
       <button class="search-results__close">Close<span class="search-results__close-label"> search results</span></button>
-      <h2 id="search-results-title" class="search-results__title" aria-live="polite">Results</h2>
+      <h2 id="search-results-title" class="search-results__title" aria-live="assertive" role="alert">Results</h2>
       <div class="search-results__content"></div>
     </div>
   </div>
 </div>
 
-              <a href="#" class="toc__close js-toc-close" aria-controls="toc" aria-label="Hide table of contents"></a>
+              <button type="button" class="toc__close js-toc-close" aria-controls="toc" aria-label="Hide table of contents"></button>
               <nav id="toc" class="js-toc-list toc__list" aria-labelledby="toc-heading">
                       <ul>
   <li>
@@ -170,10 +176,10 @@ you to <a href="/documentation/deploying-an-app/helloworld-app-deploy.html#deplo
 files in the following GitHub repository, using the <code>cloud-platform</code> CLI tool:</p>
 <p><a href="https://github.com/ministryofjustice/cloud-platform-environments">cloud-platform-environments</a></p>
 <p>To create a namespace, clone the repository:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>$ git clone git@github.com:ministryofjustice/cloud-platform-environments.git
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>$ git clone git@github.com:ministryofjustice/cloud-platform-environments.git
 $ cd cloud-platform-environments
 </code></pre></div><p>Then, run this command to create your namespace:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>$ cloud-platform environment create
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>$ cloud-platform environment create
 </code></pre></div><p>You will be prompted to provide information about the new namespace, and the
 CLI tool will create the necessary YAML and Terraform files in the correct
 location in the repository.</p>
@@ -239,7 +245,7 @@ refer to.</p>
 place on it so that we have security and resource allocation properties.</p>
 <h3 id="00-namespace-yaml"><code>00-namespace.yaml</code></h3><p>The <code>00-namespace.yaml</code> file defines the namespace so that the Kubernetes
 cluster knows to create the namespace and what to call it.</p>
-<div class="highlight"><pre class="highlight plaintext"><code>
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -271,7 +277,7 @@ we will reference a Kubernetes default role <code>ClusterRole - admin</code>.</p
 admin permissions on the namespace to the set of users defined under
 <code>subjects</code>. In this case, the <code>&lt;yourTeam&gt;</code> GitHub group will have admin access
 to any resources within the namespace <code>myapp-dev</code>.</p>
-<div class="highlight"><pre class="highlight plaintext"><code>kind: RoleBinding
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: myapp-dev-admins  ### Your namespace with `-admin` e.g. `&lt;servicename-env&gt;-admin`
@@ -296,7 +302,7 @@ container will request on startup. This is what the Kubernetes scheduler uses
 to determine whether there is enough space on the cluster to run your
 application and what your application will start up with when it is created.
 <code>default</code> is the limit at which your application will be killed or throttled.</p>
-<div class="highlight"><pre class="highlight plaintext"><code>apiVersion: v1
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>apiVersion: v1
 kind: LimitRange
 metadata:
   name: limitrange
@@ -314,7 +320,7 @@ spec:
 which are made available to a namespace. On the Cloud Platform, we take a
 simple approach, and merely limit the maximum number of pods which a namespace
 is allowed to launch.</p>
-<div class="highlight"><pre class="highlight plaintext"><code>
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>
 apiVersion: v1
 kind: ResourceQuota
 metadata:
@@ -328,7 +334,7 @@ communicate with each other and other network endpoints. By default pods are
 non-isolated, they accept traffic from any source. We apply a network policy to
 restrict where traffic can come from, allowing traffic only from the <a href="https://kubernetes.io/docs/concepts/services-networking/ingress/">ingress
 controller</a> and other pods in your namespace.</p>
-<div class="highlight"><pre class="highlight plaintext"><code>apiVersion: networking.k8s.io/v1
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: default

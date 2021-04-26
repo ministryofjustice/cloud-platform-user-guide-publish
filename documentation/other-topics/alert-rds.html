@@ -4,7 +4,6 @@
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-      <meta name="robots" content="noindex">
 
     <title>Creating alerts for RDS - Cloud Platform User Guide</title>
 
@@ -12,17 +11,18 @@
 
     <link rel="canonical" href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/alert-rds.html">
 
+      <meta name="robots" content="noindex" />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:domain" content="user-guide.cloud-platform.service.justice.gov.uk" />
+      <meta name="twitter:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
+      <meta name="twitter:title" content="Creating alerts for RDS - Cloud Platform User Guide" />
+      <meta name="twitter:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/alert-rds.html" />
 
       <meta property="og:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
       <meta property="og:site_name" content="Cloud Platform User Guide" />
       <meta property="og:title" content="Creating alerts for RDS" />
       <meta property="og:type" content="object" />
       <meta property="og:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/alert-rds.html" />
-      <meta property="twitter:card" content="summary" />
-      <meta property="twitter:domain" content="user-guide.cloud-platform.service.justice.gov.uk" />
-      <meta property="twitter:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
-      <meta property="twitter:title" content="Creating alerts for RDS - Cloud Platform User Guide" />
-      <meta property="twitter:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/alert-rds.html" />
 
     
   </head>
@@ -65,32 +65,38 @@
       </div>
 
         <div id="toc-heading" class="toc-show fixedsticky">
-          <a href="#toc" class="toc-show__label js-toc-show" aria-controls="toc">
+          <button type="button" class="toc-show__label js-toc-show" aria-controls="toc">
             Table of contents <span class="toc-show__icon"></span>
-          </a>
+          </button>
         </div>
 
       <div class="app-pane__body" data-module="in-page-navigation">
           <div class="app-pane__toc">
-            <div class="toc" data-module="table-of-contents">
+            <div class="toc" data-module="table-of-contents" tabindex="-1" aria-label="Table of contents" role="dialog">
               <div class="search" data-module="search">
-  <form action="https://www.google.co.uk/search" method="get" role="search">
+  <form action="https://www.google.co.uk/search" method="get" role="search" class="search__form govuk-!-margin-bottom-4">
     <input type="hidden" name="as_sitesearch" value="https://user-guide.cloud-platform.service.justice.gov.uk"/>
-    <label class="govuk-label search__label" for="search">
+    <label class="govuk-label search__label" for="search" aria-hidden="true">
       Search (via Google)
     </label>
-    <input class="govuk-input govuk-!-margin-bottom-4" id="search" name="q" type="text" aria-controls="search-results" placeholder="Search">
+    <input
+      type="text"
+      id="search" name="q"
+      class="govuk-input govuk-!-margin-bottom-0 search__input"
+      aria-controls="search-results"
+      placeholder="Search">
+    <button type="submit" class="search__button">Search</button>
   </form>
   <div id="search-results" class="search-results" aria-hidden="true" role="dialog" aria-labelledby="search-results-title">
     <div class="search-results__inner">
       <button class="search-results__close">Close<span class="search-results__close-label"> search results</span></button>
-      <h2 id="search-results-title" class="search-results__title" aria-live="polite">Results</h2>
+      <h2 id="search-results-title" class="search-results__title" aria-live="assertive" role="alert">Results</h2>
       <div class="search-results__content"></div>
     </div>
   </div>
 </div>
 
-              <a href="#" class="toc__close js-toc-close" aria-controls="toc" aria-label="Hide table of contents"></a>
+              <button type="button" class="toc__close js-toc-close" aria-controls="toc" aria-label="Hide table of contents"></button>
               <nav id="toc" class="js-toc-list toc__list" aria-labelledby="toc-heading">
                       <ul>
   <li>
@@ -134,7 +140,7 @@
 <li>You know the RDS database identifier you want to monitor (which can be found in the RDS kubernetes secret in your namespace)</li>
 </ul>
 <h3 id="rds-metrics">RDS metrics</h3><p>Prometheus gathers and exposes a few RDS metrics. Here is the full list:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>aws_rds_cpuutilization_average
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>aws_rds_cpuutilization_average
 aws_rds_database_connections_average
 aws_rds_free_storage_space_average
 aws_rds_free_storage_space_minimum
@@ -145,7 +151,7 @@ aws_rds_read_latency_average
 aws_rds_write_iops_average
 aws_rds_write_latency_average
 </code></pre></div><h3 id="an-example">An example</h3><p>This is an example of a PrometheusRule that triggers an alert if the amount of free space of an RDS instance drops below 1Gb:</p>
-<div class="highlight"><pre class="highlight yaml"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">monitoring.coreos.com/v1</span>
+<div class="highlight"><pre class="highlight yaml" tabindex="0"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">monitoring.coreos.com/v1</span>
 <span class="na">kind</span><span class="pi">:</span> <span class="s">PrometheusRule</span>
 <span class="na">metadata</span><span class="pi">:</span>
   <span class="na">namespace</span><span class="pi">:</span> <span class="s">&lt;namespace&gt;</span>
@@ -168,7 +174,7 @@ aws_rds_write_latency_average
 <li>Run </li>
 </ul>
 <p>After creating a YAML file containing your prometheus rule, you can apply it like this:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>kubectl apply -f prometheus-custom-rules-&lt;application_name&gt;.yaml -n &lt;namespace&gt;
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>kubectl apply -f prometheus-custom-rules-&lt;application_name&gt;.yaml -n &lt;namespace&gt;
 </code></pre></div>
 <blockquote>
 <p>We recommend keeping your prometheus rule definitions in your namespace folder in the <a href="https://github.com/ministryofjustice/cloud-platform-environments">environments repository</a>. This ensures that your rules will be recreated in the event that we ever need to reinstall prometheus.</p>

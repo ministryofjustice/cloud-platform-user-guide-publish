@@ -4,7 +4,6 @@
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-      <meta name="robots" content="noindex">
 
     <title>The Cloud Platform CLI - Cloud Platform User Guide</title>
 
@@ -12,17 +11,18 @@
 
     <link rel="canonical" href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/cloud-platform-cli.html">
 
+      <meta name="robots" content="noindex" />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:domain" content="user-guide.cloud-platform.service.justice.gov.uk" />
+      <meta name="twitter:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
+      <meta name="twitter:title" content="The Cloud Platform CLI - Cloud Platform User Guide" />
+      <meta name="twitter:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/cloud-platform-cli.html" />
 
       <meta property="og:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
       <meta property="og:site_name" content="Cloud Platform User Guide" />
       <meta property="og:title" content="The Cloud Platform CLI" />
       <meta property="og:type" content="object" />
       <meta property="og:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/cloud-platform-cli.html" />
-      <meta property="twitter:card" content="summary" />
-      <meta property="twitter:domain" content="user-guide.cloud-platform.service.justice.gov.uk" />
-      <meta property="twitter:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
-      <meta property="twitter:title" content="The Cloud Platform CLI - Cloud Platform User Guide" />
-      <meta property="twitter:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/cloud-platform-cli.html" />
 
     
   </head>
@@ -65,32 +65,38 @@
       </div>
 
         <div id="toc-heading" class="toc-show fixedsticky">
-          <a href="#toc" class="toc-show__label js-toc-show" aria-controls="toc">
+          <button type="button" class="toc-show__label js-toc-show" aria-controls="toc">
             Table of contents <span class="toc-show__icon"></span>
-          </a>
+          </button>
         </div>
 
       <div class="app-pane__body" data-module="in-page-navigation">
           <div class="app-pane__toc">
-            <div class="toc" data-module="table-of-contents">
+            <div class="toc" data-module="table-of-contents" tabindex="-1" aria-label="Table of contents" role="dialog">
               <div class="search" data-module="search">
-  <form action="https://www.google.co.uk/search" method="get" role="search">
+  <form action="https://www.google.co.uk/search" method="get" role="search" class="search__form govuk-!-margin-bottom-4">
     <input type="hidden" name="as_sitesearch" value="https://user-guide.cloud-platform.service.justice.gov.uk"/>
-    <label class="govuk-label search__label" for="search">
+    <label class="govuk-label search__label" for="search" aria-hidden="true">
       Search (via Google)
     </label>
-    <input class="govuk-input govuk-!-margin-bottom-4" id="search" name="q" type="text" aria-controls="search-results" placeholder="Search">
+    <input
+      type="text"
+      id="search" name="q"
+      class="govuk-input govuk-!-margin-bottom-0 search__input"
+      aria-controls="search-results"
+      placeholder="Search">
+    <button type="submit" class="search__button">Search</button>
   </form>
   <div id="search-results" class="search-results" aria-hidden="true" role="dialog" aria-labelledby="search-results-title">
     <div class="search-results__inner">
       <button class="search-results__close">Close<span class="search-results__close-label"> search results</span></button>
-      <h2 id="search-results-title" class="search-results__title" aria-live="polite">Results</h2>
+      <h2 id="search-results-title" class="search-results__title" aria-live="assertive" role="alert">Results</h2>
       <div class="search-results__content"></div>
     </div>
   </div>
 </div>
 
-              <a href="#" class="toc__close js-toc-close" aria-controls="toc" aria-label="Hide table of contents"></a>
+              <button type="button" class="toc__close js-toc-close" aria-controls="toc" aria-label="Hide table of contents"></button>
               <nav id="toc" class="js-toc-list toc__list" aria-labelledby="toc-heading">
                       <ul>
   <li>
@@ -156,14 +162,14 @@ repository. Download whichever tarball is appropriate for your development
 environment, unpack it and put the <code>cloud-platform</code> binary somewhere on your
 <code>$PATH</code></p>
 <p>If you&rsquo;re on a Mac, you can do this by running the following commands:</p>
-<div class="highlight"><pre class="highlight shell"><code><span class="nv">LATEST</span><span class="o">=</span><span class="si">$(</span>curl <span class="nt">--silent</span> https://github.com/ministryofjustice/cloud-platform-cli/releases/latest | <span class="nb">sed</span> <span class="s1">'s/.*releases.tag.\(.*\)".*/\1/'</span><span class="si">)</span>
+<div class="highlight"><pre class="highlight shell" tabindex="0"><code><span class="nv">LATEST</span><span class="o">=</span><span class="si">$(</span>curl <span class="nt">--silent</span> https://github.com/ministryofjustice/cloud-platform-cli/releases/latest | <span class="nb">sed</span> <span class="s1">'s/.*releases.tag.\(.*\)".*/\1/'</span><span class="si">)</span>
 <span class="nv">TARBALL</span><span class="o">=</span><span class="s2">"cloud-platform-cli_</span><span class="k">${</span><span class="nv">LATEST</span><span class="k">}</span><span class="s2">_darwin_amd64.tar.gz"</span>
 wget https://github.com/ministryofjustice/cloud-platform-cli/releases/download/<span class="k">${</span><span class="nv">LATEST</span><span class="k">}</span>/<span class="k">${</span><span class="nv">TARBALL</span><span class="k">}</span>
 <span class="nb">tar </span>xzf <span class="k">${</span><span class="nv">TARBALL</span><span class="k">}</span>
 <span class="nb">mv </span>cloud-platform /usr/local/bin
 <span class="nb">rm</span> <span class="k">${</span><span class="nv">TARBALL</span><span class="k">}</span>
 </code></pre></div><p>After this, you should be able to run:</p>
-<div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span>cloud-platform version
+<div class="highlight"><pre class="highlight shell" tabindex="0"><code><span class="nv">$ </span>cloud-platform version
 </code></pre></div><p>&hellip;to confirm that your installation is working.</p>
 <h3 id="auto-update">Auto-update</h3><p>The <code>cloud-platform</code> binary will update itself whenever it detects a new
 version, so you should only ever have to install it once.</p>
@@ -275,21 +281,21 @@ service account resource will be created.</p>
 <p>You can query your new resource using the command <code>kubectl get serviceaccount -n &lt;namespace&gt;</code>.</p>
 <h4 id="github-actions-secrets">GitHub Actions Secrets</h4><p>If you are using <a href="https://docs.github.com/en/actions">GitHub Actions</a> for your deployment pipeline, the serviceaccount module can automatically manage <a href="https://docs.github.com/en/actions/reference/encrypted-secrets">GitHub Actions Secrets</a> containing the certificate and token required to authenticate to the cluster and issue commands for your namespace.</p>
 <p>In the <code>resources/serviceaccount.tf</code> file, you should see this section:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>  # Uncomment and provide repository names to create github actions secrets
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>  # Uncomment and provide repository names to create github actions secrets
   # containing the ca.crt and token for use in github actions CI/CD pipelines
   # github_repositories = ["my-repo"]
 </code></pre></div><p>To use this feature, uncomment the last line, and set the list of repositories in which you want the GitHub Actions Secrets to be created.</p>
 <p>e.g. if you have two GitHub repositories in your project, called <code>ministryofjustice/frontend</code> and <code>ministryofjustice/backend</code>, you would change the last line to:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>github_repositories = ["frontend", "backend"]
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>github_repositories = ["frontend", "backend"]
 </code></pre></div><p>Once your PR is merged, those repositories should have secrets named: <code>KUBE_CERT</code>, and <code>KUBE_TOKEN</code>. You can use these secrets in your GitHub Actions pipelines.</p>
 <p>See the <a href="https://github.com/ministryofjustice/cloud-platform-terraform-serviceaccount#kubernetes-serviceaccount-module">module documentation</a> for more information.</p>
 <h3 id="check-your-kubernetes-config-file">Check your kubernetes config file</h3><p>You can use the CLI tool to verify the github teams listed in your <code>id-token</code>
 in your <code>~/.kube/config</code> file. Missing github teams are sometimes a reason why
 people are unable to access objects in their namespaces.</p>
 <p>To check your kube config id-token, run this command:</p>
-<div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span>cloud-platform kubecfg id-token-claims
+<div class="highlight"><pre class="highlight shell" tabindex="0"><code><span class="nv">$ </span>cloud-platform kubecfg id-token-claims
 </code></pre></div><p>You should see output similar to this:</p>
-<div class="highlight"><pre class="highlight shell"><code><span class="o">{</span>
+<div class="highlight"><pre class="highlight shell" tabindex="0"><code><span class="o">{</span>
         <span class="s2">"aud"</span>: <span class="s2">"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"</span>,
         <span class="s2">"email"</span>: <span class="s2">"david@whatever.com"</span>,
         <span class="s2">"email_verified"</span>: <span class="nb">true</span>,
@@ -309,9 +315,9 @@ people are unable to access objects in their namespaces.</p>
 <span class="o">}</span>
 </code></pre></div><p>The github teams are listed under <code>https://k8s.integration.dsd.io/groups</code> as
 above.</p>
-<h3 id="base64-decode-a-kubernetes-secret">Base64 decode a kubernetes secret</h3><div class="highlight"><pre class="highlight shell"><code>cloud-platform decode-secret <span class="nt">-n</span> &lt;namespace_name&gt; <span class="nt">-s</span> &lt;secret_name&gt;
+<h3 id="base64-decode-a-kubernetes-secret">Base64 decode a kubernetes secret</h3><div class="highlight"><pre class="highlight shell" tabindex="0"><code>cloud-platform decode-secret <span class="nt">-n</span> &lt;namespace_name&gt; <span class="nt">-s</span> &lt;secret_name&gt;
 </code></pre></div><p>e.g.</p>
-<div class="highlight"><pre class="highlight shell"><code>cloud-platform decode-secret <span class="nt">-n</span> dstest <span class="nt">-s</span> rds-instance-output
+<div class="highlight"><pre class="highlight shell" tabindex="0"><code>cloud-platform decode-secret <span class="nt">-n</span> dstest <span class="nt">-s</span> rds-instance-output
 
 <span class="o">{</span>
     <span class="s2">"apiVersion"</span>: <span class="s2">"v1"</span>,
@@ -349,13 +355,13 @@ on your RDS instance, you first have to set these environment variables:</p>
 <p>To make this easier, if you run <code>decode-secret</code> with the
 <code>--export-aws-credentials</code> flag (or <code>-e</code> for short), you will get output like
 this:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>$ cloud-platform decode-secret -n dstest -s rds-instance-output -e
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>$ cloud-platform decode-secret -n dstest -s rds-instance-output -e
 export AWS_REGION="eu-west-2"
 export AWS_ACCESS_KEY_ID="XXXXXXXXXXXXXXXXXXXX"
 export AWS_SECRET_ACCESS_KEY="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 </code></pre></div><p>If you wrap the command in <code>eval</code>, it will set the variables in your current
 shell, so you can do things like this:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>$ eval(cloud-platform decode-secret -n dstest -s rds-instance-output -e)
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>$ eval(cloud-platform decode-secret -n dstest -s rds-instance-output -e)
 $ aws rds describe-db-instances --db-instance-identifier=cloud-platform-xxxxxxxxxxxxxxxx
 </code></pre></div>
 

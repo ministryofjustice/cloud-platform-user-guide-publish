@@ -4,7 +4,6 @@
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-      <meta name="robots" content="noindex">
 
     <title>ModSecurity - Web Application Firewall - Cloud Platform User Guide</title>
 
@@ -12,17 +11,18 @@
 
     <link rel="canonical" href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/modsecurity.html">
 
+      <meta name="robots" content="noindex" />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:domain" content="user-guide.cloud-platform.service.justice.gov.uk" />
+      <meta name="twitter:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
+      <meta name="twitter:title" content="ModSecurity - Web Application Firewall - Cloud Platform User Guide" />
+      <meta name="twitter:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/modsecurity.html" />
 
       <meta property="og:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
       <meta property="og:site_name" content="Cloud Platform User Guide" />
       <meta property="og:title" content="ModSecurity - Web Application Firewall" />
       <meta property="og:type" content="object" />
       <meta property="og:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/modsecurity.html" />
-      <meta property="twitter:card" content="summary" />
-      <meta property="twitter:domain" content="user-guide.cloud-platform.service.justice.gov.uk" />
-      <meta property="twitter:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
-      <meta property="twitter:title" content="ModSecurity - Web Application Firewall - Cloud Platform User Guide" />
-      <meta property="twitter:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/modsecurity.html" />
 
     
   </head>
@@ -65,32 +65,38 @@
       </div>
 
         <div id="toc-heading" class="toc-show fixedsticky">
-          <a href="#toc" class="toc-show__label js-toc-show" aria-controls="toc">
+          <button type="button" class="toc-show__label js-toc-show" aria-controls="toc">
             Table of contents <span class="toc-show__icon"></span>
-          </a>
+          </button>
         </div>
 
       <div class="app-pane__body" data-module="in-page-navigation">
           <div class="app-pane__toc">
-            <div class="toc" data-module="table-of-contents">
+            <div class="toc" data-module="table-of-contents" tabindex="-1" aria-label="Table of contents" role="dialog">
               <div class="search" data-module="search">
-  <form action="https://www.google.co.uk/search" method="get" role="search">
+  <form action="https://www.google.co.uk/search" method="get" role="search" class="search__form govuk-!-margin-bottom-4">
     <input type="hidden" name="as_sitesearch" value="https://user-guide.cloud-platform.service.justice.gov.uk"/>
-    <label class="govuk-label search__label" for="search">
+    <label class="govuk-label search__label" for="search" aria-hidden="true">
       Search (via Google)
     </label>
-    <input class="govuk-input govuk-!-margin-bottom-4" id="search" name="q" type="text" aria-controls="search-results" placeholder="Search">
+    <input
+      type="text"
+      id="search" name="q"
+      class="govuk-input govuk-!-margin-bottom-0 search__input"
+      aria-controls="search-results"
+      placeholder="Search">
+    <button type="submit" class="search__button">Search</button>
   </form>
   <div id="search-results" class="search-results" aria-hidden="true" role="dialog" aria-labelledby="search-results-title">
     <div class="search-results__inner">
       <button class="search-results__close">Close<span class="search-results__close-label"> search results</span></button>
-      <h2 id="search-results-title" class="search-results__title" aria-live="polite">Results</h2>
+      <h2 id="search-results-title" class="search-results__title" aria-live="assertive" role="alert">Results</h2>
       <div class="search-results__content"></div>
     </div>
   </div>
 </div>
 
-              <a href="#" class="toc__close js-toc-close" aria-controls="toc" aria-label="Hide table of contents"></a>
+              <button type="button" class="toc__close js-toc-close" aria-controls="toc" aria-label="Hide table of contents"></button>
               <nav id="toc" class="js-toc-list toc__list" aria-labelledby="toc-heading">
                       <ul>
   <li>
@@ -129,7 +135,7 @@
 <blockquote>
 <h4 id="quick-start">Quick Start</h4><p>We have a dedicated ingress-controller with ModSecurity enabled.</p>
 <p>To enable and point your application to this ingress-controller, use the following annotations on your ingress manifest file:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>annotations:
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>annotations:
  kubernetes.io/ingress.class: "modsec01"
  nginx.ingress.kubernetes.io/enable-modsecurity: "true"
  nginx.ingress.kubernetes.io/modsecurity-snippet: |
@@ -140,17 +146,17 @@
 <p>For the Cloud Platform, ModSecurity has been configured as an opt-in feature. New and current applications will require a specific set of annotations to be added to their ingress manifest file.</p>
 <h3 id="ingress-annotations">Ingress Annotations</h3><p>We have a dedicated ingress-controller with ModSecurity enabled separate from the default ingress-controller. 
 To point your application to the ModSec ingress-controller, add the following annotation to your ingress manifest file:</p>
-<div class="highlight"><pre class="highlight yaml"><code><span class="s">kubernetes.io/ingress.class</span><span class="pi">:</span> <span class="s2">"</span><span class="s">modsec01"</span>
+<div class="highlight"><pre class="highlight yaml" tabindex="0"><code><span class="s">kubernetes.io/ingress.class</span><span class="pi">:</span> <span class="s2">"</span><span class="s">modsec01"</span>
 </code></pre></div><p>To enable ModSecurity for your application, add the following annotation to your ingress manifest file:</p>
-<div class="highlight"><pre class="highlight yaml"><code><span class="s">nginx.ingress.kubernetes.io/enable-modsecurity</span><span class="pi">:</span> <span class="s2">"</span><span class="s">true"</span>
+<div class="highlight"><pre class="highlight yaml" tabindex="0"><code><span class="s">nginx.ingress.kubernetes.io/enable-modsecurity</span><span class="pi">:</span> <span class="s2">"</span><span class="s">true"</span>
 </code></pre></div><p>This annotation enables ModSecurity for the ingress on the nginx ingress-controller in detection only mode. There is no disruptive action if a critical rule triggers, but it is logged in the nginx-ingress.log file. The <code>SecRuleEngine</code> is set to <code>Detection Only Mode</code>.</p>
-<div class="highlight"><pre class="highlight yaml"><code><span class="s">nginx.ingress.kubernetes.io/modsecurity-snippet</span><span class="pi">:</span> <span class="pi">|</span>
+<div class="highlight"><pre class="highlight yaml" tabindex="0"><code><span class="s">nginx.ingress.kubernetes.io/modsecurity-snippet</span><span class="pi">:</span> <span class="pi">|</span>
       <span class="s">SecRuleEngine On</span>
 </code></pre></div><p>The <code>SecRuleEngine On</code> configures ModSecurity to actively block traffic classed as malicious using Anomaly Scoring.</p>
-<div class="highlight"><pre class="highlight yaml"><code><span class="s">nginx.ingress.kubernetes.io/modsecurity-transaction-id</span><span class="pi">:</span> <span class="s2">"</span><span class="s">$request_id"</span>
+<div class="highlight"><pre class="highlight yaml" tabindex="0"><code><span class="s">nginx.ingress.kubernetes.io/modsecurity-transaction-id</span><span class="pi">:</span> <span class="s2">"</span><span class="s">$request_id"</span>
 </code></pre></div><p>The above annotation is optional, but it can be used to pass transactionIDs from nginx.</p>
 <p>Example:</p>
-<div class="highlight"><pre class="highlight yaml"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">networking.k8s.io/v1beta1</span>
+<div class="highlight"><pre class="highlight yaml" tabindex="0"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">networking.k8s.io/v1beta1</span>
 <span class="na">kind</span><span class="pi">:</span> <span class="s">Ingress</span>
 <span class="na">metadata</span><span class="pi">:</span>
   <span class="na">name</span><span class="pi">:</span> <span class="s">app-ingress</span>
@@ -175,7 +181,7 @@ To point your application to the ModSec ingress-controller, add the following an
 Fluent-bit is used to ship error logs into the Cloud Platform ELK stack. To view any possible logs, log into <a href="https://kibana.cloud-platform.service.justice.gov.uk/_plugin/kibana/">Kibana</a>, 
 select <code>kubernetes_ingress</code> index and search for <code>ModSecurity</code>. You can filter down to a particular host using <code>log_processed.http_host.log is &quot;host: &quot;test-ingress.url&quot;</code></p>
 <p>Error Log Example:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>2019/01/01 11:00:00 [warn] 12647#12647: *1158975 [client 12.123.1.12] ModSecurity: Access denied with code 403 (phase 2). Matched "Operator `Ge'
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>2019/01/01 11:00:00 [warn] 12647#12647: *1158975 [client 12.123.1.12] ModSecurity: Access denied with code 403 (phase 2). Matched "Operator `Ge'
  with parameter `5' against variable `TX:ANOMALY_SCORE' (Value: `5' ) [file "/etc/nginx/owasp-modsecurity-crs/rules/
  REQUEST-949-BLOCKING-EVALUATION.conf"] [line "01"] [id "00001"] [rev ""] [msg "Inbound Anomaly Score Exceeded (Total Score: 5)"] [data ""] 
  [severity "2"] [ver ""] [maturity "0"] [accuracy "0"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag 

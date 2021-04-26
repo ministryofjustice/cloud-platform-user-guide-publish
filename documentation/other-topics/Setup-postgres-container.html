@@ -4,7 +4,6 @@
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-      <meta name="robots" content="noindex">
 
     <title>Create a Postgres container - Cloud Platform User Guide</title>
 
@@ -12,17 +11,18 @@
 
     <link rel="canonical" href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/Setup-postgres-container.html">
 
+      <meta name="robots" content="noindex" />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:domain" content="user-guide.cloud-platform.service.justice.gov.uk" />
+      <meta name="twitter:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
+      <meta name="twitter:title" content="Create a Postgres container - Cloud Platform User Guide" />
+      <meta name="twitter:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/Setup-postgres-container.html" />
 
       <meta property="og:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
       <meta property="og:site_name" content="Cloud Platform User Guide" />
       <meta property="og:title" content="Create a Postgres container" />
       <meta property="og:type" content="object" />
       <meta property="og:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/Setup-postgres-container.html" />
-      <meta property="twitter:card" content="summary" />
-      <meta property="twitter:domain" content="user-guide.cloud-platform.service.justice.gov.uk" />
-      <meta property="twitter:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
-      <meta property="twitter:title" content="Create a Postgres container - Cloud Platform User Guide" />
-      <meta property="twitter:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/Setup-postgres-container.html" />
 
     
   </head>
@@ -65,32 +65,38 @@
       </div>
 
         <div id="toc-heading" class="toc-show fixedsticky">
-          <a href="#toc" class="toc-show__label js-toc-show" aria-controls="toc">
+          <button type="button" class="toc-show__label js-toc-show" aria-controls="toc">
             Table of contents <span class="toc-show__icon"></span>
-          </a>
+          </button>
         </div>
 
       <div class="app-pane__body" data-module="in-page-navigation">
           <div class="app-pane__toc">
-            <div class="toc" data-module="table-of-contents">
+            <div class="toc" data-module="table-of-contents" tabindex="-1" aria-label="Table of contents" role="dialog">
               <div class="search" data-module="search">
-  <form action="https://www.google.co.uk/search" method="get" role="search">
+  <form action="https://www.google.co.uk/search" method="get" role="search" class="search__form govuk-!-margin-bottom-4">
     <input type="hidden" name="as_sitesearch" value="https://user-guide.cloud-platform.service.justice.gov.uk"/>
-    <label class="govuk-label search__label" for="search">
+    <label class="govuk-label search__label" for="search" aria-hidden="true">
       Search (via Google)
     </label>
-    <input class="govuk-input govuk-!-margin-bottom-4" id="search" name="q" type="text" aria-controls="search-results" placeholder="Search">
+    <input
+      type="text"
+      id="search" name="q"
+      class="govuk-input govuk-!-margin-bottom-0 search__input"
+      aria-controls="search-results"
+      placeholder="Search">
+    <button type="submit" class="search__button">Search</button>
   </form>
   <div id="search-results" class="search-results" aria-hidden="true" role="dialog" aria-labelledby="search-results-title">
     <div class="search-results__inner">
       <button class="search-results__close">Close<span class="search-results__close-label"> search results</span></button>
-      <h2 id="search-results-title" class="search-results__title" aria-live="polite">Results</h2>
+      <h2 id="search-results-title" class="search-results__title" aria-live="assertive" role="alert">Results</h2>
       <div class="search-results__content"></div>
     </div>
   </div>
 </div>
 
-              <a href="#" class="toc__close js-toc-close" aria-controls="toc" aria-label="Hide table of contents"></a>
+              <button type="button" class="toc__close js-toc-close" aria-controls="toc" aria-label="Hide table of contents"></button>
               <nav id="toc" class="js-toc-list toc__list" aria-labelledby="toc-heading">
                       <ul>
   <li>
@@ -133,7 +139,7 @@
 <li>You have installed <a href="https://helm.sh/">Helm</a> on your local machine</li>
 </ul>
 <h2 id="set-up">Set up</h2><p>First copy this <a href="https://github.com/ministryofjustice/cloud-platform-reference-app/blob/master/helm_deploy/django-app/charts/postgresql/values.yaml">values.yaml</a> file to your working directory.</p>
-<div class="highlight"><pre class="highlight plaintext"><code>wget https://raw.githubusercontent.com/ministryofjustice/cloud-platform-reference-app/main/helm_deploy/django-app/charts/postgresql/values.yaml
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>wget https://raw.githubusercontent.com/ministryofjustice/cloud-platform-reference-app/main/helm_deploy/django-app/charts/postgresql/values.yaml
 </code></pre></div><p>You should edit the file to set your own values for:</p>
 
 <ul>
@@ -142,29 +148,29 @@
 <li><code>postgresqlDatabase</code></li>
 </ul>
 <p>The postgres helm chart is in the &ldquo;bitnami&rdquo; chart repository, so you need to add that:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>helm repo add bitnami https://charts.bitnami.com/bitnami
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>helm repo add bitnami https://charts.bitnami.com/bitnami
 </code></pre></div><p>Then install the edited chart like this:</p>
-<div class="highlight"><pre class="highlight shell"><code>helm <span class="nb">install </span>mydb bitnami/postgresql <span class="nt">-f</span> values.yaml <span class="nt">--namespace</span> &lt;your namespace&gt;
+<div class="highlight"><pre class="highlight shell" tabindex="0"><code>helm <span class="nb">install </span>mydb bitnami/postgresql <span class="nt">-f</span> values.yaml <span class="nt">--namespace</span> &lt;your namespace&gt;
 </code></pre></div><p>Change <code>mydb</code> to whatever name you want your pod to have.</p>
 <p>Check that the PostgreSQL Helm Chart is deployed sucessfully:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>kubectl get pods --namespace &lt;your namespace&gt;
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>kubectl get pods --namespace &lt;your namespace&gt;
 </code></pre></div><p>If the Installation was successful you should see something similar to this:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>NAME                        READY     STATUS    RESTARTS   AGE
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>NAME                        READY     STATUS    RESTARTS   AGE
 mydb-postgresql-0           1/1       Running   0          39m
 </code></pre></div><p>You should have a postgres pod with the status <strong>running</strong>. You can also check the logs of the PostgreSQL pod:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>kubectl --namespace &lt;your namespace&gt; logs mydb-postgresql-0
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>kubectl --namespace &lt;your namespace&gt; logs mydb-postgresql-0
 </code></pre></div><p>If the PostgreSQL setup was successful, the last line should be something like:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>2020-08-07 14:32:58.158 GMT [1] LOG:  database system is ready to accept connections
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>2020-08-07 14:32:58.158 GMT [1] LOG:  database system is ready to accept connections
 </code></pre></div><h2 id="accessing-your-postgresql-db">Accessing your PostgreSQL DB</h2><p>PostgreSQL can be accessed via port 5432 on the following DNS name from within the cluster:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>mydb-postgresql.&lt;your namespace&gt;.svc.cluster.local - Read/Write connection
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>mydb-postgresql.&lt;your namespace&gt;.svc.cluster.local - Read/Write connection
 </code></pre></div><p>The <code>postgresqlPassword</code> you have set will be stored as a secret in your namespace, to get the password for the <code>postgres</code> datase user, run:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>export POSTGRES_PASSWORD=$(kubectl get secret --namespace &lt;your namespace&gt; mydb-postgresql -o jsonpath="{.data.postgresql-password}" | base64 --decode)
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>export POSTGRES_PASSWORD=$(kubectl get secret --namespace &lt;your namespace&gt; mydb-postgresql -o jsonpath="{.data.postgresql-password}" | base64 --decode)
 </code></pre></div><p>To connect to your database from outside the cluster execute the following commands:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>kubectl port-forward --namespace &lt;your namespace&gt; svc/mydb-postgresql 5432:5432 &amp;
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>kubectl port-forward --namespace &lt;your namespace&gt; svc/mydb-postgresql 5432:5432 &amp;
 
 PGPASSWORD="$POSTGRES_PASSWORD" psql --host 127.0.0.1 -U postgres -d my-database -p 5432
 </code></pre></div><h2 id="cleaning-up">Cleaning up</h2><p>When you have finished with your postgres instance, you can get rid of it like this:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>helm uninstall mydb --namespace &lt;your namespace&gt;
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>helm uninstall mydb --namespace &lt;your namespace&gt;
 </code></pre></div>
 <blockquote>
 <p>If you used something other than <code>mydb</code> as the name of your installation, you

@@ -4,7 +4,6 @@
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-      <meta name="robots" content="noindex">
 
     <title>Namespace/Container Resource Limits - Cloud Platform User Guide</title>
 
@@ -12,17 +11,18 @@
 
     <link rel="canonical" href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/concepts/namespace-limits.html">
 
+      <meta name="robots" content="noindex" />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:domain" content="user-guide.cloud-platform.service.justice.gov.uk" />
+      <meta name="twitter:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
+      <meta name="twitter:title" content="Namespace/Container Resource Limits - Cloud Platform User Guide" />
+      <meta name="twitter:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/concepts/namespace-limits.html" />
 
       <meta property="og:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
       <meta property="og:site_name" content="Cloud Platform User Guide" />
       <meta property="og:title" content="Namespace/Container Resource Limits" />
       <meta property="og:type" content="object" />
       <meta property="og:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/concepts/namespace-limits.html" />
-      <meta property="twitter:card" content="summary" />
-      <meta property="twitter:domain" content="user-guide.cloud-platform.service.justice.gov.uk" />
-      <meta property="twitter:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
-      <meta property="twitter:title" content="Namespace/Container Resource Limits - Cloud Platform User Guide" />
-      <meta property="twitter:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/concepts/namespace-limits.html" />
 
     
   </head>
@@ -65,32 +65,38 @@
       </div>
 
         <div id="toc-heading" class="toc-show fixedsticky">
-          <a href="#toc" class="toc-show__label js-toc-show" aria-controls="toc">
+          <button type="button" class="toc-show__label js-toc-show" aria-controls="toc">
             Table of contents <span class="toc-show__icon"></span>
-          </a>
+          </button>
         </div>
 
       <div class="app-pane__body" data-module="in-page-navigation">
           <div class="app-pane__toc">
-            <div class="toc" data-module="table-of-contents">
+            <div class="toc" data-module="table-of-contents" tabindex="-1" aria-label="Table of contents" role="dialog">
               <div class="search" data-module="search">
-  <form action="https://www.google.co.uk/search" method="get" role="search">
+  <form action="https://www.google.co.uk/search" method="get" role="search" class="search__form govuk-!-margin-bottom-4">
     <input type="hidden" name="as_sitesearch" value="https://user-guide.cloud-platform.service.justice.gov.uk"/>
-    <label class="govuk-label search__label" for="search">
+    <label class="govuk-label search__label" for="search" aria-hidden="true">
       Search (via Google)
     </label>
-    <input class="govuk-input govuk-!-margin-bottom-4" id="search" name="q" type="text" aria-controls="search-results" placeholder="Search">
+    <input
+      type="text"
+      id="search" name="q"
+      class="govuk-input govuk-!-margin-bottom-0 search__input"
+      aria-controls="search-results"
+      placeholder="Search">
+    <button type="submit" class="search__button">Search</button>
   </form>
   <div id="search-results" class="search-results" aria-hidden="true" role="dialog" aria-labelledby="search-results-title">
     <div class="search-results__inner">
       <button class="search-results__close">Close<span class="search-results__close-label"> search results</span></button>
-      <h2 id="search-results-title" class="search-results__title" aria-live="polite">Results</h2>
+      <h2 id="search-results-title" class="search-results__title" aria-live="assertive" role="alert">Results</h2>
       <div class="search-results__content"></div>
     </div>
   </div>
 </div>
 
-              <a href="#" class="toc__close js-toc-close" aria-controls="toc" aria-label="Hide table of contents"></a>
+              <button type="button" class="toc__close js-toc-close" aria-controls="toc" aria-label="Hide table of contents"></button>
               <nav id="toc" class="js-toc-list toc__list" aria-labelledby="toc-heading">
                       <ul>
   <li>
@@ -139,18 +145,18 @@
 <p>When you create a namespace the <a href="https://kubernetes.io/docs/concepts/policy/resource-quotas/">ResourceQuota</a> specifies limits on the amount of resources that it will allow the namespace to request. This <a href="https://github.com/ministryofjustice/cloud-platform-environments/blob/main/namespace-resources-cli-template/03-resourcequota.yaml">file</a> defines the defaults we assign to new namespaces. The <code>requests.cpu</code> specifies the CPU resources, usually in <a href="https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#resource-units-in-kubernetes">millicores</a> aka millicpus. <code>requests.memory</code> specifies the required memory, usually in <a href="https://en.wikipedia.org/wiki/Mebibyte">mebibytes</a>.</p>
 <p>These values represent the amount of CPU and memory that the cluster will <strong>set aside as soon as this namespace is created</strong>, regardless of whether or not those resources are being used to do any useful work.</p>
 <p>This means it is possible to run out of cluster resources before any work is actually performed, just by requesting (i.e. reserving) capacity.</p>
-<p><a href="/images/cluster-namespace-packing.png" target="_blank" rel="noopener noreferrer"><img src="/images/cluster-namespace-packing.png" alt="Cluster namespace packing" /></a></p>
+<p><a href="/images/cluster-namespace-packing.png" rel="noopener noreferrer"><img src="/images/cluster-namespace-packing.png" alt="Cluster namespace packing" /></a></p>
 <p>For this reason, we need to be conservative when assigning request limits to namespaces. This won&rsquo;t prevent your namespace from accessing resources that it needs, but a lower request limit will help us to use the capacity of the cluster more efficiently, to run everyone&rsquo;s workloads.</p>
 <h2 id="container-request-limits">Container request limits</h2><p>The smallest unit of work the cluster cares about is a container.</p>
 <p>Kubernetes workloads are generally defined in terms of <a href="https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/">pods</a>, where each pod defines a number of containers. Containers also have request limits and hard limits on the resources that will be set aside for them, or which they shouldn&rsquo;t exceed.</p>
 <p><a href="https://raw.githubusercontent.com/ministryofjustice/fb-av/6cdba5db4e2feb440c7b6a303f241728b9cee5f8/deploy/fb-av-chart/templates/deployment.yaml">Here</a> is an example of a deployment template which specifies limits for the container it launches.</p>
 <p>Whenever the scheduler tries to schedule a pod, it reserves whatever request limits are specified for each container. If the deployment doesn&rsquo;t specify request limits for a given container, the default for the namespace will be used. This default comes from the namespace&rsquo;s <a href="https://kubernetes.io/docs/concepts/policy/limit-range/">LimitRange</a>. In our case, the default we apply for new namespaces is specified <a href="https://github.com/ministryofjustice/cloud-platform-environments/blob/main/namespace-resources-cli-template/02-limitrange.yaml">here</a>.</p>
-<p><a href="/images/deployment-one-replica.png" target="_blank" rel="noopener noreferrer"><img src="/images/deployment-one-replica.png" alt="Deployment one replica" /></a></p>
+<p><a href="/images/deployment-one-replica.png" rel="noopener noreferrer"><img src="/images/deployment-one-replica.png" alt="Deployment one replica" /></a></p>
 <p>The diagram above shows a namespace with a deployment consisting of four containers. If the service team wanted to run multiple replicas of this deployment, the scheduler would not allow it, because the namespace capacity limit (the pink square) is not enough to set aside the amount of resources that each of the containers say they want (the outer green square; i.e. you couldn&rsquo;t fit another green square of that size inside the pink square).</p>
 <h2 id="resources-requested-versus-resources-used">Resources Requested versus Resources Used</h2><p>So far, we&rsquo;ve only been talking about what resources we are <strong>requesting</strong>, and it&rsquo;s clear that we can quickly run out of capacity in the cluster if we request too many resources. But, how closely does what we request match what we use?</p>
 <p>We have created <a href="https://reports.cloud-platform.service.justice.gov.uk/namespace_usage_cpu">this report</a> that you can run to see how your namespace is doing (click on a namespace name to get more details. If yours is not visible, you can click on any namespace and replace the namespace name in the browser address bar to see yours).</p>
 <p>Here is the current result (25/07/19) from running the script against the <code>monitoring</code> namespace (where things like <a href="https://prometheus.io/">prometheus</a> and <a href="https://prometheus.io/docs/alerting/alertmanager/">alert-manager</a> run)</p>
-<div class="highlight"><pre class="highlight plaintext"><code>Namespace: monitoring
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>Namespace: monitoring
 
 Request limit:        CPU: 10000,     Memory: 24000
 Requested:            CPU: 2215,      Memory: 13115
@@ -162,7 +168,7 @@ Resources in-use:     CPU: 363,       Memory: 6795
 
 CPU values are in millicores (m). Memory values are in mebibytes (Mi).
 </code></pre></div><p>As you can see, we&rsquo;re doing quite badly in terms of efficient usage of cluster resources. Inside the namespace, we&rsquo;re requesting 2215 millicores of CPU, but only using 363, and we&rsquo;re requesting 13115Mi of memory, but only using 6795Mi.</p>
-<p><a href="/images/requested-versus-used.png" target="_blank" rel="noopener noreferrer"><img src="/images/requested-versus-used.png" alt="Requested versus used" /></a></p>
+<p><a href="/images/requested-versus-used.png" rel="noopener noreferrer"><img src="/images/requested-versus-used.png" alt="Requested versus used" /></a></p>
 <p>Worse still, we have a request limit of 10000m CPU and 24000Mi of memory (i.e. 10 CPU cores, and 25G of memory). Those resources have been set aside for the monitoring namespace, and are not available to run any other workloads.</p>
 <p>If this pattern were to be repeated across all the namespaces in the cluster, we would have a serious problem. We can make the cluster bigger to get more capacity, and we have done so several times, but there are knock-on effects. The more cluster nodes we have, the harder the cluster control software has to work, and some functions get slower, or even stop working altogether, so more work has to be done to scale <em>those</em> up, and so on.</p>
 <p>For this reason, we avoid specifying memory and CPU limits on namespaces, and our <a href="https://github.com/ministryofjustice/cloud-platform-environments/blob/main/namespace-resources-cli-template/03-resourcequota.yaml">resource quota template</a> merely limits the number of pods a namespace can launch. This has worked well so far, but if you have specific reasons why you need a different approach in your namespace, please start a discussion in the #ask-cloud-platform channel.</p>

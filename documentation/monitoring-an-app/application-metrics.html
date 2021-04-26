@@ -4,7 +4,6 @@
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-      <meta name="robots" content="noindex">
 
     <title>Getting application metrics into Prometheus - Cloud Platform User Guide</title>
 
@@ -12,17 +11,18 @@
 
     <link rel="canonical" href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/monitoring-an-app/application-metrics.html">
 
+      <meta name="robots" content="noindex" />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:domain" content="user-guide.cloud-platform.service.justice.gov.uk" />
+      <meta name="twitter:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
+      <meta name="twitter:title" content="Getting application metrics into Prometheus - Cloud Platform User Guide" />
+      <meta name="twitter:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/monitoring-an-app/application-metrics.html" />
 
       <meta property="og:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
       <meta property="og:site_name" content="Cloud Platform User Guide" />
       <meta property="og:title" content="Getting application metrics into Prometheus" />
       <meta property="og:type" content="object" />
       <meta property="og:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/monitoring-an-app/application-metrics.html" />
-      <meta property="twitter:card" content="summary" />
-      <meta property="twitter:domain" content="user-guide.cloud-platform.service.justice.gov.uk" />
-      <meta property="twitter:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
-      <meta property="twitter:title" content="Getting application metrics into Prometheus - Cloud Platform User Guide" />
-      <meta property="twitter:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/monitoring-an-app/application-metrics.html" />
 
     
   </head>
@@ -65,32 +65,38 @@
       </div>
 
         <div id="toc-heading" class="toc-show fixedsticky">
-          <a href="#toc" class="toc-show__label js-toc-show" aria-controls="toc">
+          <button type="button" class="toc-show__label js-toc-show" aria-controls="toc">
             Table of contents <span class="toc-show__icon"></span>
-          </a>
+          </button>
         </div>
 
       <div class="app-pane__body" data-module="in-page-navigation">
           <div class="app-pane__toc">
-            <div class="toc" data-module="table-of-contents">
+            <div class="toc" data-module="table-of-contents" tabindex="-1" aria-label="Table of contents" role="dialog">
               <div class="search" data-module="search">
-  <form action="https://www.google.co.uk/search" method="get" role="search">
+  <form action="https://www.google.co.uk/search" method="get" role="search" class="search__form govuk-!-margin-bottom-4">
     <input type="hidden" name="as_sitesearch" value="https://user-guide.cloud-platform.service.justice.gov.uk"/>
-    <label class="govuk-label search__label" for="search">
+    <label class="govuk-label search__label" for="search" aria-hidden="true">
       Search (via Google)
     </label>
-    <input class="govuk-input govuk-!-margin-bottom-4" id="search" name="q" type="text" aria-controls="search-results" placeholder="Search">
+    <input
+      type="text"
+      id="search" name="q"
+      class="govuk-input govuk-!-margin-bottom-0 search__input"
+      aria-controls="search-results"
+      placeholder="Search">
+    <button type="submit" class="search__button">Search</button>
   </form>
   <div id="search-results" class="search-results" aria-hidden="true" role="dialog" aria-labelledby="search-results-title">
     <div class="search-results__inner">
       <button class="search-results__close">Close<span class="search-results__close-label"> search results</span></button>
-      <h2 id="search-results-title" class="search-results__title" aria-live="polite">Results</h2>
+      <h2 id="search-results-title" class="search-results__title" aria-live="assertive" role="alert">Results</h2>
       <div class="search-results__content"></div>
     </div>
   </div>
 </div>
 
-              <a href="#" class="toc__close js-toc-close" aria-controls="toc" aria-label="Hide table of contents"></a>
+              <button type="button" class="toc__close js-toc-close" aria-controls="toc" aria-label="Hide table of contents"></button>
               <nav id="toc" class="js-toc-list toc__list" aria-labelledby="toc-heading">
                       <ul>
   <li>
@@ -144,9 +150,9 @@
 <h3 id="assumptions">Assumptions</h3><p>To keep this document short we will assume you already have an application up and running in a namespace on the Cloud Platform, if not, please see <a href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/deploying-an-app/multicontainer-app-deploy.html#deploying-a-multi-container-application-to-the-cloud-platform">Deploying a multi-container application to the Cloud Platform</a>.</p>
 <h3 id="changing-the-application-code">Changing the application code</h3><p>We need to add the Prometheus Ruby client library via a gem to give us our <code>/metrics</code> endpoint.</p>
 <p>First, add the gem to your Gemfile and install with bundler.</p>
-<div class="highlight"><pre class="highlight plaintext"><code>gem `prometheus-client`
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>gem `prometheus-client`
 </code></pre></div><p>Next, we need to amend the <code>config.ru</code> file and include the two <code>rack</code> middlewares required by the <code>prometheus-client</code>.</p>
-<div class="highlight"><pre class="highlight plaintext"><code>require_relative 'config/environment'
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>require_relative 'config/environment'
 require 'prometheus/middleware/collector'
 require 'prometheus/middleware/exporter'
 
@@ -155,16 +161,16 @@ use Prometheus::Middleware::Exporter
 
 run Rails.application
 </code></pre></div><p>If you&rsquo;re running this locally, you&rsquo;ll now be able to query your <code>/metrics</code> endpoint and see some metrics data. If nothing appears, or metrics cannot be found, this hasn&rsquo;t worked.</p>
-<div class="highlight"><pre class="highlight plaintext"><code>curl localhost:3000/metrics
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>curl localhost:3000/metrics
 </code></pre></div><p>Build, tag and push your application changes to your code repository and deploy the latest version into your Cloud Platform namespace. Confirm your <code>/metrics</code> endpoint is now accessible from your url.</p>
-<div class="highlight"><pre class="highlight plaintext"><code>curl https://myapp.cloud-platform/metrics
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>curl https://myapp.cloud-platform/metrics
 </code></pre></div><h3 id="add-service-endpoint-and-servicemonitor">Add Service endpoint and ServiceMonitor</h3><p>We need to expose the metrics endpoint with a <code>Service</code> and tell the Cloud Platform Prometheus to scrape the endpoint with a <code>ServiceMonitor</code> object in Kubernetes. A <code>ServiceMonitor</code> is a custom resource definition (<a href="https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions/">CRD</a>) that allows you to automatically generate Prometheus scrape configuration based on a specified resource.</p>
 <p>In this example, we&rsquo;re using the same port to expose both our application and metrics endpoint so we&rsquo;ll need to query our existing <code>Service</code> for the current port name. However, if you&rsquo;re exposing a different port you&rsquo;ll need to either amend your current <code>Service</code> or create a new one.</p>
 <p>Let&rsquo;s find out our current port name and number by running:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>kubectl -n &lt;namespace&gt; get svc rails-app-service -o=jsonpath={.spec.ports[0].name}
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>kubectl -n &lt;namespace&gt; get svc rails-app-service -o=jsonpath={.spec.ports[0].name}
 </code></pre></div><p>As you can see, the name of the port we&rsquo;re exposing is <code>http</code>.</p>
 <p>Create and apply your service monitor <code>&lt;application&gt;-serviceMonitor.yaml</code>, as below:</p>
-<div class="highlight"><pre class="highlight yaml"><code>   <span class="na">apiVersion</span><span class="pi">:</span> <span class="s">monitoring.coreos.com/v1</span>
+<div class="highlight"><pre class="highlight yaml" tabindex="0"><code>   <span class="na">apiVersion</span><span class="pi">:</span> <span class="s">monitoring.coreos.com/v1</span>
    <span class="na">kind</span><span class="pi">:</span> <span class="s">ServiceMonitor</span>
    <span class="na">metadata</span><span class="pi">:</span>
      <span class="na">name</span><span class="pi">:</span> <span class="s">rails-app-service</span>
@@ -178,7 +184,7 @@ run Rails.application
 </code></pre></div><p>This will tell Prometheus to go and scrape that endpoint every 15 seconds and store any exposed metrics.</p>
 <h3 id="add-a-networkpolicy-resource">Add a NetworkPolicy resource</h3><p>The Prometheus server is in the &lsquo;monitoring&rsquo; namespace, but by default, any network connections from outside your application&rsquo;s namespace will be blocked. So, to allow prometheus to scrape your application&rsquo;s <code>/metrics</code> endpoint, we need to add a network policy to allow connections from the monitoring namespace.</p>
 <p>Create and apply a new resource <code>&lt;application&gt;-networkPolicy.yaml</code>, as below:</p>
-<div class="highlight"><pre class="highlight yaml"><code>   <span class="na">kind</span><span class="pi">:</span> <span class="s">NetworkPolicy</span>
+<div class="highlight"><pre class="highlight yaml" tabindex="0"><code>   <span class="na">kind</span><span class="pi">:</span> <span class="s">NetworkPolicy</span>
    <span class="na">apiVersion</span><span class="pi">:</span> <span class="s">networking.k8s.io/v1</span>
    <span class="na">metadata</span><span class="pi">:</span>
      <span class="na">name</span><span class="pi">:</span> <span class="s">allow-prometheus-scraping</span>
@@ -196,9 +202,9 @@ run Rails.application
              <span class="na">component</span><span class="pi">:</span> <span class="s">monitoring</span>
 </code></pre></div><h3 id="querying-metrics">Querying metrics</h3><p>We can now query our <code>/metric</code> endpoint using the Cloud Platform Prometheus.</p>
 <p>Head to <a href="https://prometheus.cloud-platform.service.justice.gov.uk/graph">Cloud Platform Prometheus</a> and use the following promql query to view the application latency (remembering to change the namespace value):</p>
-<div class="highlight"><pre class="highlight plaintext"><code>http_server_request_duration_seconds_sum{namespace="my-namespace"}
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>http_server_request_duration_seconds_sum{namespace="my-namespace"}
 </code></pre></div><p>The output will be something like:
-<a href="/images/prometheus.png" target="_blank" rel="noopener noreferrer"><img src="/images/prometheus.png" alt="Image of prometheus output" /></a></p>
+<a href="/images/prometheus.png" rel="noopener noreferrer"><img src="/images/prometheus.png" alt="Image of prometheus output" /></a></p>
 <h3 id="example-in-full">Example in full</h3><p>If you&rsquo;d like to see the changes I&rsquo;ve made to the <a href="https://github.com/ministryofjustice/cloud-platform-multi-container-demo-app">cloud-platform-multi-container-demo-app</a>, please see this <a href="https://github.com/ministryofjustice/cloud-platform-multi-container-demo-app/pull/7">PR</a>.</p>
 <h3 id="applications-configured-to-use-multiple-processes">Applications configured to use multiple processes</h3><p>If you&rsquo;re using a pre-forking web server (like unicorn or puma for Ruby, or gunicorn for Python) and have it configured to use multiple processes, then you need to use a Prometheus client library that supports exporting metrics from multiple processes. Not all the official clients do that. If you don&rsquo;t use a library which supports this, then requests to <code>/metrics</code> could be served by any of the processes, which would mean Prometheus sees inconsistent data on each scrape. The <code>prometheus-client</code> library we used in the example above supports multi-process metrics so will need to be aggregated, to report coherent total numbers. For more information on this please read <a href="https://github.com/prometheus/client_ruby#aggregation-settings-for-multi-process-stores">this</a> article.</p>
 <h3 id="more-information-on-service-monitors">More information on Service Monitors</h3><p><a href="https://coreos.com/blog/the-prometheus-operator.html">CoreOS Blog on Prometheus Operator and ServiceMonitor</a></p>

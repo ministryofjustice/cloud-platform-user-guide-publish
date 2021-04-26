@@ -4,7 +4,6 @@
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-      <meta name="robots" content="noindex">
 
     <title>Upgrade an RDS database - Cloud Platform User Guide</title>
 
@@ -12,17 +11,18 @@
 
     <link rel="canonical" href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/upgrade-rds-db.html">
 
+      <meta name="robots" content="noindex" />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:domain" content="user-guide.cloud-platform.service.justice.gov.uk" />
+      <meta name="twitter:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
+      <meta name="twitter:title" content="Upgrade an RDS database - Cloud Platform User Guide" />
+      <meta name="twitter:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/upgrade-rds-db.html" />
 
       <meta property="og:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
       <meta property="og:site_name" content="Cloud Platform User Guide" />
       <meta property="og:title" content="Upgrade an RDS database" />
       <meta property="og:type" content="object" />
       <meta property="og:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/upgrade-rds-db.html" />
-      <meta property="twitter:card" content="summary" />
-      <meta property="twitter:domain" content="user-guide.cloud-platform.service.justice.gov.uk" />
-      <meta property="twitter:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
-      <meta property="twitter:title" content="Upgrade an RDS database - Cloud Platform User Guide" />
-      <meta property="twitter:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/upgrade-rds-db.html" />
 
     
   </head>
@@ -65,32 +65,38 @@
       </div>
 
         <div id="toc-heading" class="toc-show fixedsticky">
-          <a href="#toc" class="toc-show__label js-toc-show" aria-controls="toc">
+          <button type="button" class="toc-show__label js-toc-show" aria-controls="toc">
             Table of contents <span class="toc-show__icon"></span>
-          </a>
+          </button>
         </div>
 
       <div class="app-pane__body" data-module="in-page-navigation">
           <div class="app-pane__toc">
-            <div class="toc" data-module="table-of-contents">
+            <div class="toc" data-module="table-of-contents" tabindex="-1" aria-label="Table of contents" role="dialog">
               <div class="search" data-module="search">
-  <form action="https://www.google.co.uk/search" method="get" role="search">
+  <form action="https://www.google.co.uk/search" method="get" role="search" class="search__form govuk-!-margin-bottom-4">
     <input type="hidden" name="as_sitesearch" value="https://user-guide.cloud-platform.service.justice.gov.uk"/>
-    <label class="govuk-label search__label" for="search">
+    <label class="govuk-label search__label" for="search" aria-hidden="true">
       Search (via Google)
     </label>
-    <input class="govuk-input govuk-!-margin-bottom-4" id="search" name="q" type="text" aria-controls="search-results" placeholder="Search">
+    <input
+      type="text"
+      id="search" name="q"
+      class="govuk-input govuk-!-margin-bottom-0 search__input"
+      aria-controls="search-results"
+      placeholder="Search">
+    <button type="submit" class="search__button">Search</button>
   </form>
   <div id="search-results" class="search-results" aria-hidden="true" role="dialog" aria-labelledby="search-results-title">
     <div class="search-results__inner">
       <button class="search-results__close">Close<span class="search-results__close-label"> search results</span></button>
-      <h2 id="search-results-title" class="search-results__title" aria-live="polite">Results</h2>
+      <h2 id="search-results-title" class="search-results__title" aria-live="assertive" role="alert">Results</h2>
       <div class="search-results__content"></div>
     </div>
   </div>
 </div>
 
-              <a href="#" class="toc__close js-toc-close" aria-controls="toc" aria-label="Hide table of contents"></a>
+              <button type="button" class="toc__close js-toc-close" aria-controls="toc" aria-label="Hide table of contents"></button>
               <nav id="toc" class="js-toc-list toc__list" aria-labelledby="toc-heading">
                       <ul>
   <li>
@@ -177,12 +183,12 @@
 </blockquote>
 <h4 id="use-the-aws-cli-to-get-your-existing-database-configuration">Use the AWS CLI to get your existing database configuration</h4><p>When your RDS instance is created, an IAM user is also created, and the AWS credentials are stored as kubernetes secrets in your namespace.</p>
 <p>We will use these credentials with the <a href="https://aws.amazon.com/cli/">AWS CLI tool</a> to describe and then modify your RDS instance.</p>
-<h5 id="get-your-rds-instance-identifier-and-iam-user-credentials">Get your RDS instance identifier and IAM user credentials</h5><div class="highlight"><pre class="highlight plaintext"><code>kubectl -n [your namespace] get secret
+<h5 id="get-your-rds-instance-identifier-and-iam-user-credentials">Get your RDS instance identifier and IAM user credentials</h5><div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>kubectl -n [your namespace] get secret
 </code></pre></div><p>This will give you a list of the secrets in your namespace. Identify the RDS
 instance secret via its name, and decode its contents using the <a href="/documentation/getting-started/cloud-platform-cli.html">cloud platform cli</a>:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>cloud-platform decode-secret -n [your namespace] -s [secret name]
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>cloud-platform decode-secret -n [your namespace] -s [secret name]
 </code></pre></div><p>Here is a redacted example:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>cloud-platform decode-secret -n dstest -s rds-instance-output
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>cloud-platform decode-secret -n dstest -s rds-instance-output
 
 {
     "apiVersion": "v1",
@@ -208,12 +214,12 @@ instance secret via its name, and decode its contents using the <a href="/docume
     "type": "Opaque"
 }
 </code></pre></div><p>Use the values you see to set the following environment variables:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>export db=db2axxxxxxxxxxxxxx
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>export db=db2axxxxxxxxxxxxxx
 export AWS_ACCESS_KEY_ID=AKIAXXXXXXXXXXXXXXXX
 export AWS_SECRET_ACCESS_KEY="qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq"
 export AWS_REGION=eu-west-2
 </code></pre></div><p>Now you can get the relevant configuration details of your RDS instance like this:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>$ aws rds describe-db-instances --db-instance-identifier $db \
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>$ aws rds describe-db-instances --db-instance-identifier $db \
   | jq ".DBInstances[] | {engine: .Engine, version: .EngineVersion, db_parameter_group: .DBParameterGroups[].DBParameterGroupName}"
 
 # Output should be something like this:
@@ -229,7 +235,7 @@ export AWS_REGION=eu-west-2
 <p>If you have configured any specific PostgreSQL settings for your database, such that your application will not work using the default parameter group, you may need to create a new parameter group based on the new PostgreSQL version, and use that instead of the default parameter group here.</p>
 </blockquote>
 <p>This is the list of default parameter groups. Use the one matching the <strong>current</strong> database engine version of your RDS instance:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>default.aurora-postgresql11
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>default.aurora-postgresql11
 default.aurora-postgresql9.6
 default.aurora5.6
 default.mariadb10.4
@@ -241,7 +247,7 @@ default.postgres9.4
 default.postgres9.5
 default.postgres9.6
 </code></pre></div><p>For example, to change to the default PostgreSQL 9.5 parameter group:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>aws rds modify-db-instance --db-instance-identifier $db \
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>aws rds modify-db-instance --db-instance-identifier $db \
   --db-parameter-group-name default.postgres9.5
 </code></pre></div><p>This will output a few screenfuls of JSON, which you can ignore. After making the change, repeat the <code>describe-db-instances</code> command to confirm that the change has worked.</p>
 
@@ -250,7 +256,7 @@ default.postgres9.6
 </blockquote>
 <h5 id="upgrade-your-rds-instance">Upgrade your RDS instance</h5><p>After your RDS instance has been removed from the existing database parameter group, you can raise a PR in the environments repository to upgrade your RDS instance.</p>
 <p>e.g. To upgrade from PostgreSQL 9.5 to 9.6 (this is a <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_UpgradeDBInstance.PostgreSQL.html#USER_UpgradeDBInstance.PostgreSQL.MajorVersion">major version upgrade</a>), you would change your <code>resources/rds.tf</code> file like this:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>-  db_engine_version          = "9.5"
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>-  db_engine_version          = "9.5"
 +  db_engine_version          = "9.6"
 ...
 -  rds_family = "postgres9.5"

@@ -4,7 +4,6 @@
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-      <meta name="robots" content="noindex">
 
     <title>Migrating an RDS instance - Cloud Platform User Guide</title>
 
@@ -12,17 +11,18 @@
 
     <link rel="canonical" href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/aws-rds-migration.html">
 
+      <meta name="robots" content="noindex" />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:domain" content="user-guide.cloud-platform.service.justice.gov.uk" />
+      <meta name="twitter:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
+      <meta name="twitter:title" content="Migrating an RDS instance - Cloud Platform User Guide" />
+      <meta name="twitter:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/aws-rds-migration.html" />
 
       <meta property="og:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
       <meta property="og:site_name" content="Cloud Platform User Guide" />
       <meta property="og:title" content="Migrating an RDS instance" />
       <meta property="og:type" content="object" />
       <meta property="og:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/aws-rds-migration.html" />
-      <meta property="twitter:card" content="summary" />
-      <meta property="twitter:domain" content="user-guide.cloud-platform.service.justice.gov.uk" />
-      <meta property="twitter:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
-      <meta property="twitter:title" content="Migrating an RDS instance - Cloud Platform User Guide" />
-      <meta property="twitter:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/aws-rds-migration.html" />
 
     
   </head>
@@ -65,32 +65,38 @@
       </div>
 
         <div id="toc-heading" class="toc-show fixedsticky">
-          <a href="#toc" class="toc-show__label js-toc-show" aria-controls="toc">
+          <button type="button" class="toc-show__label js-toc-show" aria-controls="toc">
             Table of contents <span class="toc-show__icon"></span>
-          </a>
+          </button>
         </div>
 
       <div class="app-pane__body" data-module="in-page-navigation">
           <div class="app-pane__toc">
-            <div class="toc" data-module="table-of-contents">
+            <div class="toc" data-module="table-of-contents" tabindex="-1" aria-label="Table of contents" role="dialog">
               <div class="search" data-module="search">
-  <form action="https://www.google.co.uk/search" method="get" role="search">
+  <form action="https://www.google.co.uk/search" method="get" role="search" class="search__form govuk-!-margin-bottom-4">
     <input type="hidden" name="as_sitesearch" value="https://user-guide.cloud-platform.service.justice.gov.uk"/>
-    <label class="govuk-label search__label" for="search">
+    <label class="govuk-label search__label" for="search" aria-hidden="true">
       Search (via Google)
     </label>
-    <input class="govuk-input govuk-!-margin-bottom-4" id="search" name="q" type="text" aria-controls="search-results" placeholder="Search">
+    <input
+      type="text"
+      id="search" name="q"
+      class="govuk-input govuk-!-margin-bottom-0 search__input"
+      aria-controls="search-results"
+      placeholder="Search">
+    <button type="submit" class="search__button">Search</button>
   </form>
   <div id="search-results" class="search-results" aria-hidden="true" role="dialog" aria-labelledby="search-results-title">
     <div class="search-results__inner">
       <button class="search-results__close">Close<span class="search-results__close-label"> search results</span></button>
-      <h2 id="search-results-title" class="search-results__title" aria-live="polite">Results</h2>
+      <h2 id="search-results-title" class="search-results__title" aria-live="assertive" role="alert">Results</h2>
       <div class="search-results__content"></div>
     </div>
   </div>
 </div>
 
-              <a href="#" class="toc__close js-toc-close" aria-controls="toc" aria-label="Hide table of contents"></a>
+              <button type="button" class="toc__close js-toc-close" aria-controls="toc" aria-label="Hide table of contents"></button>
               <nav id="toc" class="js-toc-list toc__list" aria-labelledby="toc-heading">
                       <ul>
   <li>
@@ -173,7 +179,7 @@ The migration steps outlined below have been tested from a pod running the <code
 <li>The RDS instance needs to support SSL connections.</li>
 </ul>
 <h3 id="step-1-pre-data">Step 1 - Pre-Data</h3><p>First, to export,  we run:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>pg_dump -U source_username \
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>pg_dump -U source_username \
      -h source_endpoint \
      -d source_database \
      -O \
@@ -181,26 +187,26 @@ The migration steps outlined below have been tested from a pod running the <code
 </code></pre></div><p>Here, <code>-O</code> tells RDS to export the table structure without owners.
 The command above stores the data in a local file.</p>
 <p>Then to restore this into the <em>target</em>, we use <code>psql</code>:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>psql -U target_username \
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>psql -U target_username \
      -h target_endpoint \
      -d target_database \
      -f pre-data.sql
 </code></pre></div><p>If using a local file is problematic, those two commands can be piped together (<code>|</code>)</p>
 <h3 id="step-2-sequences">Step 2 - Sequences</h3><p>Sequences are essential for your database to know what the latest increment of the primary keys is. Sequences are held in special tables that will not be migrated during step 1.</p>
 <p>First, to export,  we run :</p>
-<div class="highlight"><pre class="highlight plaintext"><code>pg_dump -U source_username \
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>pg_dump -U source_username \
      -h source_endpoint \
      -d source_database \
      -t '*_seq' &gt; sequences.sql
 </code></pre></div><p>Here, <code>-t &#39;*_seq&#39;</code> indicates to <code>pg_dump</code> that we only want to export tables with names ending in <code>_seq</code>, which are the sequences.</p>
 <p>Then to restore this into the <em>target</em>, we use <code>psql</code>:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>psql -U target_username \
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>psql -U target_username \
      -h target_endpoint \
      -d target_database \
      -f sequences.sql
 </code></pre></div><p>If using a local file is problematic, those two commands can be piped together (<code>|</code>)</p>
 <h3 id="step-3-data">Step 3 - Data</h3><p>First, to export,  we run :</p>
-<div class="highlight"><pre class="highlight plaintext"><code>pg_dump -U source_username \
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>pg_dump -U source_username \
      -h source_endpoint \
      -d source_database \
      -O \
@@ -208,7 +214,7 @@ The command above stores the data in a local file.</p>
 </code></pre></div><p>Here, <code>-O</code> tells RDS to export the table structure without owners.
 The command above stores the data in a local file.</p>
 <p>Then to restore this into the <em>target</em>, we use <code>psql</code>:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>psql -U target_username \
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>psql -U target_username \
      -h target_endpoint \
      -d target_database \
      -f data.sql
@@ -217,13 +223,13 @@ The command above stores the data in a local file.</p>
 All of data is contained within the <code>post-data</code> section.</p>
 <p>The process is almost identical to Step 1:</p>
 <p>First, to export,  we run:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>pg_dump -U source_username \
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>pg_dump -U source_username \
      -h source_endpoint \
      -d source_database \
      -O \
      --section=post-data &gt; post-data.sql
 </code></pre></div><p>Then to restore this into the <em>target</em>, we use <code>psql</code>:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>psql -U target_username \
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>psql -U target_username \
      -h target_endpoint \
      -d target_database \
      -f post-data.sql
