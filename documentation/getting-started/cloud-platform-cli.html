@@ -106,7 +106,7 @@
         <a href="#installation"><span>Installation</span></a>
         <ul>
           <li>
-            <a href="#auto-update"><span>Auto-update</span></a>
+            <a href="#keeping-up-to-date"><span>Keeping up to date</span></a>
           </li>
         </ul>
       </li>
@@ -168,11 +168,13 @@ wget https://github.com/ministryofjustice/cloud-platform-cli/releases/download/<
 <span class="nb">tar </span>xzf <span class="k">${</span><span class="nv">TARBALL</span><span class="k">}</span>
 <span class="nb">mv </span>cloud-platform /usr/local/bin
 <span class="nb">rm</span> <span class="k">${</span><span class="nv">TARBALL</span><span class="k">}</span>
+</code></pre></div><p>or use Homebrew:</p>
+<div class="highlight"><pre class="highlight shell" tabindex="0"><code>brew <span class="nb">install </span>ministryofjustice/cloud-platform-tap/cloud-platform-cli
 </code></pre></div><p>After this, you should be able to run:</p>
 <div class="highlight"><pre class="highlight shell" tabindex="0"><code><span class="nv">$ </span>cloud-platform version
 </code></pre></div><p>&hellip;to confirm that your installation is working.</p>
-<h3 id="auto-update">Auto-update</h3><p>The <code>cloud-platform</code> binary will update itself whenever it detects a new
-version, so you should only ever have to install it once.</p>
+<h3 id="keeping-up-to-date">Keeping up to date</h3><p>The <code>cloud-platform</code> binary will attempt update itself whenever it detects a new
+version. If you installed it via brew then it&rsquo;ll be kept up to date when you run <code>brew update/upgrade</code>.</p>
 <h2 id="functions">Functions</h2><p>This describes the current capabilities of the CLI tool.</p>
 
 <ul>
