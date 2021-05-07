@@ -159,13 +159,13 @@ the following steps:</p>
 <div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>kubectl \
   -n [your namespace] \
   run port-forward-pod \
-  --generator=run-pod/v1 \
   --image=ministryofjustice/port-forward \
   --port=5432 \
   --env="REMOTE_HOST=[your database hostname]" \
   --env="LOCAL_PORT=5432" \
   --env="REMOTE_PORT=5432"
-</code></pre></div>
+</code></pre></div><p>Use port <code>1433</code> for MS-SQL.</p>
+
 <blockquote>
 <p>This creates a pod in your namespace, but without a deployment to manage it.</p>
 <p>Manually-created pods (i.e. those which are not part of a <a href="https://kubernetes.io/docs/tasks/run-application/run-stateless-application-deployment/">deployment</a>) block
@@ -179,11 +179,14 @@ this, please make it part of a <a href="https://kubernetes.io/docs/tasks/run-app
   -n [your namespace] \
   port-forward \
   port-forward-pod 5432:5432
-</code></pre></div><p>You need to leave this running as long as you are accessing the database.</p>
+</code></pre></div><p>Use port <code>1433</code> for MS-SQL.</p>
+<p>You need to leave this running as long as you are accessing the database.</p>
 <h3 id="3-access-the-database">3. Access the database</h3><p>Now you can connect to the database as if it were running locally, on your machine.</p>
 <p>If you are exporting a database URL from your RDS kubernetes secret, it might have a value like this:</p>
 <div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>postgres://cpDvquXO5B:R1eDN0xEUnaH6Aqr@cloud-platform-df3589e0e7acba37.cdwm328dlye6.eu-west-2.rds.amazonaws.com:5432/dbdf3589e0e7acba37
 
+</code></pre></div><p>For MS-SQL, use <a href="https://cloudblogs.microsoft.com/sqlserver/2017/05/16/sql-server-command-line-tools-for-macos-released/">sqlcmd for MacOS</a> and test with a command like</p>
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>sqlcmd -S tcp:127.0.0.1,1433 -U $user -P $pass -Q 'select @@version'
 </code></pre></div><p>You can use this URL to connect to your database via the port forward you have set up, but you need to replace the database hostname, (<code>cloud-platform-df3589e0e7acba37.cdwm328dlye6.eu-west-2.rds.amazonaws.com</code> in this example), with <code>localhost</code>.</p>
 <p>So, if you were starting from the database URL above, the database connection command you will run on your local machine would be:</p>
 <div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>psql postgres://cpDvquXO5B:R1eDN0xEUnaH6Aqr@localhost:5432/dbdf3589e0e7acba37
