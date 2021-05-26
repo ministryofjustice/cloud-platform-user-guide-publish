@@ -198,18 +198,17 @@
 - Environment variables: Unique variables defined in your project.</p>
 <p>In this document, we will use environment variables to deploy to a single environment/namespace. However, if you wish to deploy to multiple namespaces (dev/staging/production) it&rsquo;s recommended you explore <a href="https://circleci.com/docs/2.0/contexts/">contexts</a> further.</p>
 <p>To deploy to a single namespace, select the &ldquo;Project Settings&rdquo; and then &ldquo;Environment Variables&rdquo;. The following should be set:</p>
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>- AWS_DEFAULT_REGION # This should be set to `eu-west-2`.
+- AWS_ACCESS_KEY_ID # If you're deploying to ECR you can find this value in a [namespace secret](https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/ecr-setup.html#accessing-the-credentials).
+- AWS_SECRET_ACCESS_KEY # As above, this should be stored in a namespace secret and is used for ECR.
 
-<ul>
-<li>AWS_DEFAULT_REGION # This should be set to <code>eu-west-2</code>.</li>
-<li>AWS_ACCESS_KEY_ID # If you&rsquo;re deploying to ECR you can find this value in a <a href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/ecr-setup.html#accessing-the-credentials">namespace secret</a>.</li>
-<li><p>AWS_SECRET_ACCESS_KEY # As above, this should be stored in a namespace secret and is used for ECR.</p></li>
-<li><p>ECR_ENDPOINT # This should be the ECR name your intend to push your images to e.g. <code>738437979232.dkr.ecr.eu-west-2.amazonaws.com/webops/cloud-platform-reference-app-ecr</code></p></li>
-<li><p>K8S_CLUSTER_NAME # The full name of the cluster e.g. <code>live-1.cloud-platform.service.justice.gov.uk</code></p></li>
-<li><p>K8S_NAMESPACE # The name of the namespace/environment (see <a href="/documentation/getting-started/env-create.html#creating-a-cloud-platform-environment">Create a namespace</a>)</p></li>
-<li><p>K8S_CLUSTER_CERT # The CA Certificate for the cluster, can be acquired from the <code>Secret</code> that is generated for the <code>serviceaccount</code> (as stated above)</p></li>
-<li><p>K8S_TOKEN # The access token generated for the <code>serviceaccount</code>. Please note, you should first base64 decode the token value you retrieve from the secret <a href="/documentation/deploying-an-app/using-circleci-for-continuous-deployment.html#creating-a-service-account-for-circleci">in the previous section</a>, e.g. <code>echo &lt;thereallylongstringthatyougetback&gt; | base64 --decode</code>.</p></li>
-</ul>
-<h2 id="configuring-circleci">Configuring CircleCI</h2><p>This is a really simple example of adding a build and deploy section to your configuration. If you&rsquo;d rather see this in action, please checkout the <a href="https://github.com/ministryofjustice/cloud-platform-reference-app/blob/main/.circleci/config.yml">cloud-platform-reference-app</a></p>
+- ECR_ENDPOINT # This should be the ECR name your intend to push your images to e.g. `738437979232.dkr.ecr.eu-west-2.amazonaws.com/webops/cloud-platform-reference-app-ecr`
+
+- K8S_CLUSTER_NAME # The full name of the cluster e.g. `live-1.cloud-platform.service.justice.gov.uk`
+- K8S_NAMESPACE # The name of the namespace/environment (see [Create a namespace][env-create])
+- K8S_CLUSTER_CERT # The CA Certificate for the cluster, can be acquired from the `Secret` that is generated for the `serviceaccount` (as stated above)
+- K8S_TOKEN # The access token generated for the `serviceaccount`. Please note, you should first base64 decode the token value you retrieve from the secret [in the previous section][create-sa], e.g. `echo &lt;thereallylongstringthatyougetback&gt; | base64 --decode`.
+</code></pre></div><h2 id="configuring-circleci">Configuring CircleCI</h2><p>This is a really simple example of adding a build and deploy section to your configuration. If you&rsquo;d rather see this in action, please checkout the <a href="https://github.com/ministryofjustice/cloud-platform-reference-app/blob/main/.circleci/config.yml">cloud-platform-reference-app</a></p>
 <h3 id="building-and-pushing-image-to-ecr">Building and pushing image to ECR</h3><p>Below is an example how you can build and push an image to ECR:</p>
 <div class="highlight"><pre class="highlight yaml" tabindex="0"><code><span class="na">version</span><span class="pi">:</span> <span class="m">2</span>
 
