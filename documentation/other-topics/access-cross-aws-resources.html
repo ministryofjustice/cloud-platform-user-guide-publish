@@ -298,8 +298,8 @@ resource "aws_iam_role_policy_attachment" "&lt;namespace&gt;-&lt;policy-name&gt;
         labels:
           app: wordpress
           tier: frontend
-          annotations:
-            iam.amazonaws.com/role: &lt;role-name&gt;
+        annotations:
+          iam.amazonaws.com/role: &lt;role-name&gt;
       spec:
         containers:
         - image: wordpressdemo/wpapp:1.1
@@ -325,8 +325,8 @@ resource "aws_iam_role_policy_attachment" "&lt;namespace&gt;-&lt;policy-name&gt;
         labels:
           app: wordpress
           tier: frontend
-          annotations:
-            iam.amazonaws.com/role: my-namespace-app-iam-role
+        annotations:
+          iam.amazonaws.com/role: my-namespace-app-iam-role
       spec:
         containers:
         - image: wordpressdemo/wpapp:1.1
@@ -398,16 +398,16 @@ and <a href="https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/AssumeRoleCrede
 </ol>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2021-07-29">
+              <div data-module='page-expiry' data-last-reviewed-on="2021-08-27">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 29 April 2021.
+      This page was last reviewed on 27 May 2021.
 
-        It needs to be reviewed again on 29 July 2021
+        It needs to be reviewed again on 27 August 2021
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 29 July 2021.
+      This page was set to be reviewed before 27 August 2021.
       This might mean the content is out of date.
     </div>
   </div>
