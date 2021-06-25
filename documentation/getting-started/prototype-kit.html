@@ -176,14 +176,14 @@ several files in a folder called:</p>
 <div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>namespaces/live-1.cloud-platform.service.justice.gov.uk/[name you chose]
 </code></pre></div><p>Create a new branch, <code>git add</code> the new folder and then raise a pull request.</p>
 <p>Once a member of the Cloud Platform team has approved your PR, merge it.</p>
-<p>When you merge the PR, the Cloud Platform CI/CD pipeline will create your
-namespace and github repository. The github repository has a <a href="https://github.com/features/actions">GitHub Actions</a>
-workflow which will continuously deploy any changes made to the <code>main</code> branch
-of the repository.</p>
+<p>When you merge the PR, the <a href="/documentation/other-topics/apply-pipeline.html">Apply Pipeline</a>
+will create your namespace and github repository. The github repository has a
+deployment workflow, implemented as a <a href="https://github.com/features/actions">GitHub Actions</a> workflow, which will
+continuously deploy any changes made to the <code>main</code> branch of the repository.</p>
 <h2 id="caveats">Caveats</h2><p>There are a few things to be aware of, concerning your prototype kit site:</p>
 
 <ul>
-<li><p>The continuous deployment workflow usually takes around 5 minutes to run</p></li>
+<li><p>The deployment workflow usually takes around 5 minutes to run</p></li>
 <li><p>The very first run of the deployment workflow will fail. This is because the
 github repository (and its deployment workflow) has to be created before some
 of the resources the workflow depends on.  You can use the &ldquo;re-run&rdquo; button in
@@ -211,8 +211,7 @@ stanza:</li>
 <span class="p">}</span>
 </code></pre></div>
 <blockquote>
-<p>If you use the GitHub UI to disable branch protection, the Cloud Platform
-deployment pipeline will re-enable it shortly afterwards.</p>
+<p>If you use the GitHub UI to disable branch protection, the <a href="/documentation/other-topics/apply-pipeline.html">Apply Pipeline</a> will re-enable it shortly afterwards.</p>
 <p>The only way to permanently disable it is to remove it from the terraform
 source code.</p>
 </blockquote>
@@ -228,7 +227,7 @@ delete your repository</p></li>
 </ol>
 
 <blockquote>
-<p>The Cloud Platform deployment pipeline has the GitHub privileges required to
+<p>The <a href="/documentation/other-topics/apply-pipeline.html">Apply Pipeline</a> has the GitHub privileges required to
 <strong>create</strong> repositories, but not to <strong>delete</strong> them. This is a deliberate
 safety feature.</p>
 </blockquote>

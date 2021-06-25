@@ -162,9 +162,9 @@
 <h2 id="2-upgrade-your-existing-rds-instance">2. Upgrade your existing RDS instance</h2><p>The upgrade process involves these steps:</p>
 
 <ul>
-<li>Raise and merge a PR to <a href="/documentation/other-topics/long-running-env-operations.html">tell the apply pipeline to skip your namespace</a></li>
+<li>Raise and merge a PR to <a href="/documentation/other-topics/long-running-env-operations.html">tell the Apply Pipeline to skip your namespace</a></li>
 <li>Alter your RDS instance to use the default <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithParamGroups.html">parameter group</a> for your <strong>current</strong> PostgreSQL version</li>
-<li>Raise and merge a PR to change your PostgreSQL version to the one you want - the pipeline will handle the upgrade for you</li>
+<li>Raise and merge a PR to change your PostgreSQL version to the one you want - the Apply Pipeline will handle the upgrade for you</li>
 <li>Raise another PR to <a href="/documentation/other-topics/long-running-env-operations.html">remove the &ldquo;skip file&rdquo;</a> from your namespace</li>
 </ul>
 <h3 id="2-upgrade-your-existing-rds-instance-advantages">Advantages</h3>
@@ -252,7 +252,7 @@ default.postgres9.6
 </code></pre></div><p>This will output a few screenfuls of JSON, which you can ignore. After making the change, repeat the <code>describe-db-instances</code> command to confirm that the change has worked.</p>
 
 <blockquote>
-<p>It is important that the apply pipeline is paused, at this point, or it will revert the above change, and your upgrade will fail.</p>
+<p>It is important that the Apply Pipeline is paused, at this point, or it will revert the above change, and your upgrade will fail.</p>
 </blockquote>
 <h5 id="upgrade-your-rds-instance">Upgrade your RDS instance</h5><p>After your RDS instance has been removed from the existing database parameter group, you can raise a PR in the environments repository to upgrade your RDS instance.</p>
 <p>e.g. To upgrade from PostgreSQL 9.5 to 9.6 (this is a <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_UpgradeDBInstance.PostgreSQL.html#USER_UpgradeDBInstance.PostgreSQL.MajorVersion">major version upgrade</a>), you would change your <code>resources/rds.tf</code> file like this:</p>
@@ -261,7 +261,7 @@ default.postgres9.6
 ...
 -  rds_family = "postgres9.5"
 +  rds_family = "postgres9.6"
-</code></pre></div><p>When this PR is merged, the pipeline will upgrade your RDS instance.</p>
+</code></pre></div><p>When this PR is merged, the <a href="/documentation/other-topics/apply-pipeline.html">Apply Pipeline</a> will upgrade your RDS instance.</p>
 
 <blockquote>
 <p>In testing, data in the database was preserved, and the total downtime of the RDS instance was approx. 7 minutes. You need to carry out your own tests in your non-production namespace(s) to confirm that this behaviour is similar and acceptable, for your service.</p>

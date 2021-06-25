@@ -185,8 +185,8 @@ CLI tool will create the necessary YAML and Terraform files in the correct
 location in the repository.</p>
 <p>Please create a new branch, add the new files and raise a pull request. The
 cloud platform team need to approve your pull request before you can merge it.
-Once you have done this, a build pipeline will create your namespace on the
-cluster.</p>
+Once you have done this, the <a href="/documentation/other-topics/apply-pipeline.html">Apply Pipeline</a>
+will create your namespace on the cluster.</p>
 <p>Please create <strong>one PR per namespace</strong> i.e. if you need namespaces <code>myapp-dev</code>,
 <code>myapp-staging</code> and <code>myapp-prod</code>, please raise a separate PR for each one. This
 makes it a lot easier for the cloud platform team to review your PRs.</p>
@@ -198,8 +198,9 @@ makes it a lot easier for the cloud platform team to review your PRs.</p>
 match the namespace name, it&rsquo;s worth choosing a good name at this stage.</p>
 </blockquote>
 <p>This is all you need to do in order to create your namespace.</p>
-<h2 id="accessing-your-environments">Accessing your environments</h2><p>Once the pipeline has completed you will be able to check that your environment
-is available by running:</p>
+<h2 id="accessing-your-environments">Accessing your environments</h2><p>The <a href="/documentation/other-topics/apply-pipeline.html">Apply Pipeline</a> deployment
+should complete in about 3 minutes, and you will be able to check that your
+environment is available by running:</p>
 <p><code>$ kubectl get namespaces</code></p>
 <p>This will return a list of the namespaces within the cluster, and you should
 see yours in the list.</p>
@@ -256,11 +257,12 @@ metadata:
   annotations:
     cloud-platform.justice.gov.uk/application: "My Service"
     ...
-</code></pre></div><p>The namespace is your (team&rsquo;s) &lsquo;private&rsquo; part of the cluster. The name of
-your namespace must be unique across the whole of the cluster. If you try to
-create a new namespace using the name of one which already exists, you will get
-an error when you try to apply the generated kubernetes config files (or when
-our build pipeline applies them on your behalf).</p>
+</code></pre></div><p>The namespace is your (team&rsquo;s) &lsquo;private&rsquo; part of the cluster. The name of your
+namespace must be unique across the whole of the cluster. If you try to create a
+new namespace using the name of one which already exists, you will get an error
+when you try to apply the generated kubernetes config files (or when the <a href="/documentation/other-topics/apply-pipeline.html">Apply
+Pipeline</a> applies them on your
+behalf).</p>
 <p>For &lsquo;real&rsquo; services, this is very unlikely to be a problem - most services have
 distinct names, so namespace name conflicts are unlikely. But, if you are
 creating a test/dummy namespace in order to learn how the platform works, it&rsquo;s

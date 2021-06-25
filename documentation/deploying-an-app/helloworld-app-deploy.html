@@ -200,7 +200,7 @@ deploying changes to the application:</p>
 <li>Tag the image and push it to your ECR</li>
 <li>Update your kubernetes files to deploy the updated application</li>
 </ul>
-<p>The process of building an image and pushing it to an ECR will normally be carried out by a build pipeline. For this initial walkthrough, we will go through these steps manually. Later we will go through an example of setting up a <a href="https://circleci.com">CircleCI</a> job to do this automatically. The steps are similar if you&rsquo;re using other CI/CD tools such as <a href="https://travis-ci.org">TravisCI</a>.</p>
+<p>The process of building an image and pushing it to an ECR will normally be carried out an application&rsquo;s build pipeline. However, for this initial walkthrough, we will go through these steps manually. Later we will go through an example of setting up a <a href="https://circleci.com">CircleCI</a> job to do this automatically. The steps are similar if you&rsquo;re using other CI/CD tools such as <a href="https://travis-ci.org">TravisCI</a>.</p>
 <h2 id="prerequisites">Prerequisites</h2><p>This guide assumes the following:</p>
 
 <ul>
@@ -325,8 +325,9 @@ on port 4567, and has the <code>app</code> label <code>helloworld-rubyapp</code>
 </ul>
 
 <blockquote>
-<p>Everything but the first step will usually be done automatically by your
-CI/CD pipeline, but it&rsquo;s worth understanding what&rsquo;s going on.</p>
+<p>Everything but the first step would usually be done automatically by your
+application&rsquo;s CI/CD pipeline, but we&rsquo;re doing it manually here for ease of
+understanding.</p>
 </blockquote>
 <h2 id="step-3-create-an-amazon-ecr">Step 3 - Create an Amazon ECR</h2><p>Our initial deployment of the Hello World application pulls a docker image from
 Docker Hub - a public docker image repository.</p>

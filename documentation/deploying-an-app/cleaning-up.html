@@ -122,8 +122,9 @@ associated AWS resources, and helps to keep our hosting costs down.</p>
 deleting the folder:</p>
 <div class="highlight"><pre class="highlight plaintext" tabindex="0"><code> namespaces/live-1.cloud-platform.service.justice.gov.uk/mynamespace
 </code></pre></div><p>&hellip;and all its contents, from the <a href="https://github.com/ministryofjustice/cloud-platform-environments">cloud-platform-environments</a> repository.</p>
-<p>Merging this <a href="https://help.github.com/en/articles/about-pull-requests">PR</a> will trigger an automated pipeline which will delete all of
-your namespace&rsquo;s AWS resources, followed by the namespace itself.</p>
+<p>Merging this <a href="https://help.github.com/en/articles/about-pull-requests">PR</a> will trigger the <a href="/documentation/other-topics/apply-pipeline.html">Apply Pipeline</a>,
+which will delete all of your namespace&rsquo;s AWS resources, followed by the
+namespace itself.</p>
 
 <blockquote>
 <p>NB: If you have set up a CI/CD pipeline, which deploys into your namespace,

@@ -165,7 +165,7 @@ aws rds describe-db-snapshots --db-instance-identifier &lt;db-instance-identifie
 </code></pre></div><p>It is important to retain the original settings associated with the DB instance when restoring from the snapshot. So don&rsquo;t make any other changes to this file.</p>
 <h4 id="4-contact-the-cloud-platform-team-about-the-restore-providing-the-db-instance-identifier-and-the-pr-raised">4. Contact the Cloud Platform team about the restore, providing the <code>db-instance-identifier</code> and the PR raised.</h4><h4 id="5-before-the-pr-can-be-merged-the-cloud-platform-team-have-to">5. Before the PR can be merged, the Cloud Platform team have to:</h4>
 <ul>
-<li>pause the concourse pipeline, and</li>
+<li>pause the <a href="/documentation/other-topics/apply-pipeline.html">Apply Pipeline</a>, and</li>
 <li>rename the DB Instance via the AWS console</li>
 </ul>
 <p>This allows the pipeline to create the new DB Instance from the snapshot, using the same name and settings as the original, and preserves the database endpoint and credentials.</p>
@@ -176,7 +176,7 @@ aws rds describe-db-snapshots --db-instance-identifier &lt;db-instance-identifie
 <p>To fix this, change the <code>db_engine_version</code> in your <code>rds.tf</code> from <code>10.4</code> to the one AWS upgraded to, in this case <code>10.4.13</code> and repeat the previous steps again.</p>
 <p>Once the the terraform apply is successful, and the new DB instance has been created, revert the changes made for <code>db_engine_version</code>.</p>
 </blockquote>
-<h4 id="6-merge-the-pr-to-master-and-check-that-the-build-pipeline-creates-the-new-db-instance-with-the-same-identifier-and-endpoints-the-cloud-platform-team-can-also-apply-your-changes-manually-if-this-is-time-critical">6. Merge the PR to master and check that the build pipeline creates the new DB instance with the same identifier and endpoints. The Cloud Platform team can also apply your changes manually if this is time critical.</h4><p>Once the new DB instance is restored and available, your application should be able to access the database with the same database credentials and endpoint as before.</p>
+<h4 id="6-merge-the-pr-to-master-and-check-that-the-apply-pipeline-creates-the-new-db-instance-with-the-same-identifier-and-endpoints-the-cloud-platform-team-can-also-apply-your-changes-manually-if-this-is-time-critical">6. Merge the PR to master and check that the Apply Pipeline creates the new DB instance with the same identifier and endpoints. The Cloud Platform team can also apply your changes manually if this is time critical.</h4><p>Once the new DB instance is restored and available, your application should be able to access the database with the same database credentials and endpoint as before.</p>
 <p>After you have verified that your DB instance and the database is working as expected, let the Cloud Platform team know so they can delete the old, renamed DB instance.</p>
 
 
