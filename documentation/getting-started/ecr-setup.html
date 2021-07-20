@@ -153,6 +153,29 @@
 <li><p>Use the CLI tool to create your ECR</p>
 <div class="highlight"><pre class="highlight shell" tabindex="0"><code><span class="nv">$ </span>cloud-platform environment ecr create
 </code></pre></div><p>This will create a <code>resources/ecr.tf</code> file in your namespace folder.</p></li>
+<li><p>Update github variables</p>
+<p>Ensure you have the below variables added to <code>variables.tf</code></p>
+<div class="highlight"><pre class="highlight shell" tabindex="0"><code>variable <span class="s2">"github_owner"</span> <span class="o">{</span>
+description <span class="o">=</span> <span class="s2">"The GitHub organization or individual user account containing the app's code repo. Used by the Github Terraform provider. See: https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/ecr-setup.html#accessing-the-credentials"</span>
+default     <span class="o">=</span> <span class="s2">"ministryofjustice"</span>
+<span class="o">}</span>
+
+variable <span class="s2">"github_token"</span> <span class="o">{</span>
+description <span class="o">=</span> <span class="s2">"Required by the Github Terraform provider"</span>
+default     <span class="o">=</span> <span class="s2">""</span>
+<span class="o">}</span>
+</code></pre></div><p>If you have created your environment using <a href="/documentation/getting-started/cloud-platform-cli.html">Cloud Platform CLI</a>, this will be already added to the <code>variables.tf</code></p></li>
+<li><p>Update provider block</p>
+<p>Ensure the provider is added to the required_providers in versions.tf</p>
+<div class="highlight"><pre class="highlight shell" tabindex="0"><code>    github <span class="o">=</span> <span class="o">{</span>
+    <span class="nb">source</span> <span class="o">=</span> <span class="s2">"integrations/github"</span>
+    <span class="o">}</span>
+</code></pre></div><p>Ensure the provider configuration is added to the main.tf</p>
+<div class="highlight"><pre class="highlight shell" tabindex="0"><code>    provider <span class="s2">"github"</span> <span class="o">{</span>
+    token <span class="o">=</span> var.github_token
+    owner <span class="o">=</span> var.github_owner
+    <span class="o">}</span>
+</code></pre></div><p>If you have created your environment using <a href="/documentation/getting-started/cloud-platform-cli.html">Cloud Platform CLI</a>, this will be already added to the <code>versions.tf</code></p></li>
 <li><p>git add, commit and push to your branch</p></li>
 <li><p>Raise a PR to have your change approved</p></li>
 </ol>
@@ -181,16 +204,16 @@
 <h2 id="next-steps">Next steps</h2><p>Try <a href="/documentation/deploying-an-app/app-deploy-helm.html#deploying-an-application-to-the-cloud-platform-with-helm">deploying an app</a> with <a href="https://helm.sh/">Helm</a>, a Kubernetes package manager, or <a href="/documentation/deploying-an-app/helloworld-app-deploy.html#deploying-a-39-hello-world-39-application-to-the-cloud-platform">deploying manually</a> by writing some custom YAML files.</p>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2021-07-29">
+              <div data-module='page-expiry' data-last-reviewed-on="2021-10-20">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 29 April 2021.
+      This page was last reviewed on 20 July 2021.
 
-        It needs to be reviewed again on 29 July 2021
+        It needs to be reviewed again on 20 October 2021
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 29 July 2021.
+      This page was set to be reviewed before 20 October 2021.
       This might mean the content is out of date.
     </div>
   </div>

@@ -169,12 +169,17 @@
 <li>You have created an <a href="/documentation/getting-started/ecr-setup.html#creating-an-ecr-repository">ECR repository</a>.</li>
 </ul>
 <h2 id="creating-a-service-account-for-circleci">Creating a service account for CircleCI</h2><p>As part of the CircleCI deployment pipeline, CircleCI will need to authenticate with the Cloud Platform cluster. In order to do so, Kubernetes uses <a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/">service accounts</a>. Service accounts provide an identity for processes that run in a cluster allowing the process to access the API server.</p>
-<p>To create a service account:
-- Download the <a href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/cloud-platform-cli.html#the-cloud-platform-cli">cloud-platform-cli tool</a>
-- Run the command <code>cloud-platform environment serviceaccount create</code> in your <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live-1.cloud-platform.service.justice.gov.uk">namespace</a> as outlined in the <a href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/cloud-platform-cli.html#the-cloud-platform-cli">instructions</a>
-- Add a <code>serviceaccount_name</code> variable called <code>circleci</code> (This doesn&rsquo;t have to be circleci, it&rsquo;s just easier for reference)
-- Raise a PR for your service account creation. Once approved you should then see your new CircleCI service account in your namespace.</p>
-<p>Note - A good example of a service account created in the Cloud Platform can be found in the <a href="https://github.com/ministryofjustice/cloud-platform-environments/blob/main/namespaces/live-1.cloud-platform.service.justice.gov.uk/cloud-platform-reference-app">cloud-platform-reference-app</a> namespace.</p>
+<p>To create a service account:</p>
+
+<ul>
+<li>Download the <a href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/cloud-platform-cli.html#the-cloud-platform-cli">cloud-platform-cli tool</a></li>
+<li>Run the command <code>cloud-platform environment serviceaccount create</code> in your <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live-1.cloud-platform.service.justice.gov.uk">namespace</a> as outlined in the <a href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/cloud-platform-cli.html#the-cloud-platform-cli">instructions</a></li>
+<li>Add a <code>serviceaccount_name</code> variable called <code>circleci</code> (This doesn&rsquo;t have to be circleci, it&rsquo;s just easier for reference)</li>
+<li>Ensure <code>github_owner</code> and <code>github_token</code> variables are defined in variables.tf. This is added by default if you created the environment using the [cloud-platform-cli tool]</li>
+<li>Ensure github provider block is added to versions.tf and main.tf. This is added by default if you created the environment using the [cloud-platform-cli tool]</li>
+<li>Raise a PR for your service account creation. Once approved you should then see your new CircleCI service account in your namespace.</li>
+</ul>
+<p>Note - A good example of a service account created in the Cloud Platform can be found in the <a href="https://github.com/ministryofjustice/cloud-platform-environments/blob/main/namespaces/live.cloud-platform.service.justice.gov.uk/cloud-platform-reference-app">cloud-platform-reference-app</a> namespace.</p>
 <p>Once your service account is created you should be able to see it by running the following commands:</p>
 <div class="highlight"><pre class="highlight shell" tabindex="0"><code>  <span class="nv">$ </span>kubectl get serviceaccounts <span class="nt">--namespace</span> &lt;YOUR-NAMESPACE&gt;
   NAME       SECRETS   AGE
@@ -260,16 +265,16 @@
 https://circleci.com/docs/2.0/test/</p>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2021-07-29">
+              <div data-module='page-expiry' data-last-reviewed-on="2021-10-20">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 29 April 2021.
+      This page was last reviewed on 20 July 2021.
 
-        It needs to be reviewed again on 29 July 2021
+        It needs to be reviewed again on 20 October 2021
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 29 July 2021.
+      This page was set to be reviewed before 20 October 2021.
       This might mean the content is out of date.
     </div>
   </div>

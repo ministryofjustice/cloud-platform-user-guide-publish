@@ -223,6 +223,10 @@ credentials you will need in order to use your ECR.</p>
 your namespace folder, and that this defines all the variables which appear in
 the template <code>ecr.tf</code> file. If this is not the case, you may need to amend the
 generated file.</p>
+<p>It also assumes you already have a <code>resources/variables.tf</code>, <code>resources/main.tf</code> 
+and <code>resources/versions.tf</code> file below your namespace folder, and that this defines all the variables, 
+provider declarations and configurations needed for the <code>ecr.tf</code> file. If this is not the case, 
+you may need to amend those files by comparing with the <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespace-resources-cli-template/resources">template files</a></p>
 </blockquote>
 <h3 id="add-an-rds-to-your-namespace">Add an RDS to your namespace</h3>
 <ul>
@@ -281,6 +285,13 @@ generated file.</p>
 <p>After the cloud platform team have approved your PR, please merge it, and your
 service account resource will be created.</p>
 <p>You can query your new resource using the command <code>kubectl get serviceaccount -n &lt;namespace&gt;</code>.</p>
+
+<blockquote>
+<p>The CLI tool assumes you already have a <code>resources/variables.tf</code>, <code>resources/main.tf</code> 
+and <code>resources/versions.tf</code> file below your namespace folder, and that this defines all the variables, 
+provider declarations and configurations needed for the <code>resources/serviceaccount.tf</code> file. If this is not the case, 
+you may need to amend those files by comparing with the <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespace-resources-cli-template/resources">template files</a></p>
+</blockquote>
 <h4 id="github-actions-secrets">GitHub Actions Secrets</h4><p>If you are using <a href="https://docs.github.com/en/actions">GitHub Actions</a> for your deployment pipeline, the serviceaccount module can automatically manage <a href="https://docs.github.com/en/actions/reference/encrypted-secrets">GitHub Actions Secrets</a> containing the certificate and token required to authenticate to the cluster and issue commands for your namespace.</p>
 <p>In the <code>resources/serviceaccount.tf</code> file, you should see this section:</p>
 <div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>  # Uncomment and provide repository names to create github actions secrets
@@ -367,16 +378,16 @@ shell, so you can do things like this:</p>
 $ aws rds describe-db-instances --db-instance-identifier=cloud-platform-xxxxxxxxxxxxxxxx
 </code></pre></div>
 
-              <div data-module='page-expiry' data-last-reviewed-on="2021-08-11">
+              <div data-module='page-expiry' data-last-reviewed-on="2021-10-20">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 11 May 2021.
+      This page was last reviewed on 20 July 2021.
 
-        It needs to be reviewed again on 11 August 2021
+        It needs to be reviewed again on 20 October 2021
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 11 August 2021.
+      This page was set to be reviewed before 20 October 2021.
       This might mean the content is out of date.
     </div>
   </div>
