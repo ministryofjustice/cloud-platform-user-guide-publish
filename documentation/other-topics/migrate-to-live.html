@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en" class="govuk-template no-js">
+  <head>
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+    <title>Migrate to the "Live" cluster - Cloud Platform User Guide</title>
+
+    <link href="/stylesheets/manifest.css" rel="stylesheet" />
+
+    <link rel="canonical" href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/migrate-to-live.html">
+
+      <meta name="robots" content="noindex" />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:domain" content="user-guide.cloud-platform.service.justice.gov.uk" />
+      <meta name="twitter:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
+      <meta name="twitter:title" content="Migrate to the &quot;Live&quot; cluster - Cloud Platform User Guide" />
+      <meta name="twitter:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/migrate-to-live.html" />
+
+      <meta property="og:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
+      <meta property="og:site_name" content="Cloud Platform User Guide" />
+      <meta property="og:title" content="Migrate to the &quot;Live&quot; cluster" />
+      <meta property="og:type" content="object" />
+      <meta property="og:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/migrate-to-live.html" />
+
+    
+  </head>
+
+  <body class="govuk-template__body">
+    <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
+
+    <div class="app-pane">
+      <div class="app-pane__header toc-open-disabled">
+        <a href="#content" class="govuk-skip-link">Skip to main content</a>
+
+        <header class="govuk-header app-header" role="banner" data-module="govuk-header">
+  <div class="govuk-header__container govuk-header__container--full-width">
+    <div class="govuk-header__logo">
+      <a href="/" class="govuk-header__link govuk-header__link--homepage">
+        <span class="govuk-header__product-name">
+          Cloud Platform User Guide
+        </span>
+      </a>
+    </div>
+    <div class="govuk-header__content">
+      <button type="button" class="govuk-header__menu-button govuk-js-header-toggle" aria-controls="navigation" aria-label="Show or hide Top Level Navigation">Menu</button>
+      <nav>
+        <ul id="navigation" class="govuk-header__navigation govuk-header__navigation--end" aria-label="Top Level Navigation">
+            <li class="govuk-header__navigation-item">
+              <a class="govuk-header__link" href="mailto:platforms+user-guide@digital.justice.gov.uk?subject=User+guide+feedback">Feedback / Report a problem</a>
+            </li>
+            <li class="govuk-header__navigation-item">
+              <a class="govuk-header__link" href="/">Documentation</a>
+            </li>
+            <li class="govuk-header__navigation-item">
+              <a class="govuk-header__link" href="https://github.com/ministryofjustice/cloud-platform-user-guide">GitHub</a>
+            </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>
+
+      </div>
+
+        <div id="toc-heading" class="toc-show fixedsticky">
+          <button type="button" class="toc-show__label js-toc-show" aria-controls="toc">
+            Table of contents <span class="toc-show__icon"></span>
+          </button>
+        </div>
+
+      <div class="app-pane__body" data-module="in-page-navigation">
+          <div class="app-pane__toc">
+            <div class="toc" data-module="table-of-contents" tabindex="-1" aria-label="Table of contents" role="dialog">
+              <div class="search" data-module="search">
+  <form action="https://www.google.co.uk/search" method="get" role="search" class="search__form govuk-!-margin-bottom-4">
+    <input type="hidden" name="as_sitesearch" value="https://user-guide.cloud-platform.service.justice.gov.uk"/>
+    <label class="govuk-label search__label" for="search" aria-hidden="true">
+      Search (via Google)
+    </label>
+    <input
+      type="text"
+      id="search" name="q"
+      class="govuk-input govuk-!-margin-bottom-0 search__input"
+      aria-controls="search-results"
+      placeholder="Search">
+    <button type="submit" class="search__button">Search</button>
+  </form>
+  <div id="search-results" class="search-results" aria-hidden="true" role="dialog" aria-labelledby="search-results-title">
+    <div class="search-results__inner">
+      <button class="search-results__close">Close<span class="search-results__close-label"> search results</span></button>
+      <h2 id="search-results-title" class="search-results__title" aria-live="assertive" role="alert">Results</h2>
+      <div class="search-results__content"></div>
+    </div>
+  </div>
+</div>
+
+              <button type="button" class="toc__close js-toc-close" aria-controls="toc" aria-label="Hide table of contents"></button>
+              <nav id="toc" class="js-toc-list toc__list" aria-labelledby="toc-heading">
+                      <ul>
+  <li>
+    <a href="#migrate-to-the-quot-live-quot-cluster"><span>Migrate to the “Live” cluster</span></a>
+    <ul>
+      <li>
+        <a href="#introduction"><span>Introduction</span></a>
+        <ul>
+          <li>
+            <a href="#terms-used-in-this-document"><span>Terms used in this document</span></a>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <a href="#why-should-you-migrate"><span>Why should you migrate</span></a>
+      </li>
+      <li>
+        <a href="#what-are-you-migrating"><span>What are you migrating</span></a>
+      </li>
+      <li>
+        <a href="#prerequisites-for-migration"><span>Prerequisites for migration</span></a>
+      </li>
+      <li>
+        <a href="#how-to-migrate"><span>How to migrate</span></a>
+      </li>
+      <li>
+        <a href="#step-1-agree-a-time-to-perform-the-migration"><span>Step 1 - Agree a time to perform the migration</span></a>
+      </li>
+      <li>
+        <a href="#step-2-amend-your-ingress-resource"><span>Step 2 - Amend your ingress resource</span></a>
+      </li>
+      <li>
+        <a href="#step-3-copy-the-namespace-directory-from-quot-live-quot-1-to-quot-live-quot"><span>Step 3 - Copy the namespace directory from “Live”-1 to “Live”</span></a>
+      </li>
+      <li>
+        <a href="#step-4-authenticate-to-the-quot-live-quot-cluster"><span>Step 4 - Authenticate to the “Live” cluster</span></a>
+      </li>
+      <li>
+        <a href="#step-4-add-a-new-ingress-resource"><span>Step 4 - Add a new ingress resource</span></a>
+      </li>
+      <li>
+        <a href="#step-5-create-a-new-step-to-your-deployment-pipeline"><span>Step 5 - Create a new step to your deployment pipeline</span></a>
+        <ul>
+          <li>
+            <a href="#deploy-with-github-actions"><span>Deploy with GitHub Actions</span></a>
+          </li>
+          <li>
+            <a href="#deploy-with-circleci"><span>Deploy with CircleCI</span></a>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <a href="#step-6-trigger-your-pipeline"><span>Step 6 - Trigger your pipeline</span></a>
+      </li>
+      <li>
+        <a href="#step-7-test-your-application"><span>Step 7 - Test your application</span></a>
+      </li>
+      <li>
+        <a href="#step-8-start-sending-real-traffic"><span>Step 8 - Start sending real traffic</span></a>
+      </li>
+      <li>
+        <a href="#step-9-cleanup-old-quot-live-1-quot-namespace"><span>Step 9 - Cleanup old “Live-1” namespace</span></a>
+      </li>
+      <li>
+        <a href="#links-for-the-new-cluster"><span>Links for the new cluster</span></a>
+      </li>
+      <li>
+        <a href="#how-to-roll-back"><span>How to roll back</span></a>
+      </li>
+      <li>
+        <a href="#troubleshooting"><span>Troubleshooting</span></a>
+      </li>
+      <li>
+        <a href="#feedback-welcome"><span>Feedback welcome</span></a>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+
+              </nav>
+            </div>
+          </div>
+
+        <div class="app-pane__content toc-open-disabled">
+          <main id="content" class="technical-documentation" data-module="anchored-headings">
+              <h1 id="migrate-to-the-quot-live-quot-cluster">Migrate to the &ldquo;Live&rdquo; cluster</h1><h2 id="introduction">Introduction</h2><p>This document intends to act as a guide to help you migrate your namespace from &ldquo;Live-1&rdquo; to &ldquo;Live&rdquo;.</p>
+<h3 id="terms-used-in-this-document">Terms used in this document</h3><p>There are some confusing names and terms used in this document. Here are a few:
+- &ldquo;Live-1&rdquo; = The name of the current Cloud Platform (Kubernetes) cluster your namespace is deployed to.
+- &ldquo;Live&rdquo; = The name of a new Cloud Platform (EKS) cluster that you&rsquo;ll need to migrate to.</p>
+<h2 id="why-should-you-migrate">Why should you migrate</h2><p>The Cloud Platform is a Kubernetes cluster deployed using a tool named kOps. When the Cloud Platform was conceived in 2017, Kubernetes management tools such as EKS (Elastic Kubernetes Service from AWS) and GKE (Google Kubernetes Engine) were in their infancy. An architecture decision record (ADR) was created with the understanding and acceptance of the extra management overhead and slightly slower release times. Since then, EKS has matured to a state where the benefits of running a multi-tenant cluster without the overhead of maintaining the control plane has become extremely attractive. If you wish to read more, please see this ADR.</p>
+<h2 id="what-are-you-migrating">What are you migrating</h2><p>You will be migrating your Cloud Platform namespace, all permissions and resources in your namespace <a href="#">directory</a>. This doesn&rsquo;t include AWS resources.</p>
+<h2 id="prerequisites-for-migration">Prerequisites for migration</h2><p>There are just a few things you need to ensure before you migrate between clusters.</p>
+
+<ul>
+<li><p>Ensure your containers are &ldquo;stateless&rdquo;. During the transition between clusters, your pods will be running simultaneously between &ldquo;Live&rdquo; and &ldquo;Live-1&rdquo;. Any state that your containers (inside the pod) store on disk or persistent volume (such as EBS) will not be copied to the new cluster.</p></li>
+<li><p>Check that multiple copies of your app can communicate simultaneously with AWS resources. These AWS resources will be shared between clusters. For example, your RDS instance will accept connections from pods in &ldquo;Live&rdquo; and &ldquo;Live-1&rdquo;.</p></li>
+</ul>
+<p>If this is a concern or you&rsquo;d like to check in advance, please feel free to contact the Cloud Platform team.</p>
+<h2 id="how-to-migrate">How to migrate</h2><p>The rest of this document contains the steps required to perform the migration. This is very much a work in progress, so please leave feedback if you&rsquo;ve either struggled to understand a step or feel it could be clarified further.</p>
+<h2 id="step-1-agree-a-time-to-perform-the-migration">Step 1 - Agree a time to perform the migration</h2><p>During the process of migration high velocity apps will be unable to deploy to &ldquo;Live-1&rdquo;. You should speak to your team and agree a time and date to attempt to migrate your namespace. It&rsquo;s also recommended that you get familiar with migrating a non-production namespace before attempting prod.</p>
+<h2 id="step-2-amend-your-ingress-resource">Step 2 - Amend your ingress resource</h2><p>To ensure that you can send traffic to both clusters simultaneously you must add an annotation to your <code>ingress</code> resource to allow traffic weighting.</p>
+<p>This looks as follows:</p>
+<div class="highlight"><pre class="highlight yaml" tabindex="0"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">networking.k8s.io/v1beta1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Ingress</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">annotations</span><span class="pi">:</span>
+    <span class="s">external-dns.alpha.kubernetes.io/set-identifier</span><span class="pi">:</span> <span class="s">$namespace-live-1-cluster</span>
+    <span class="s">external-dns.alpha.kubernetes.io/aws-weight</span><span class="pi">:</span> <span class="s2">"</span><span class="s">50"</span>
+</code></pre></div><p>(Note - Please change the <code>$namespace</code> value in the above example to the namespace you are migrating.)</p>
+<p>The idea behind the annotation is to control where the traffic is going. Using the above example 50% of the traffic will be sent to the ingress in the &ldquo;Live-1&rdquo; cluster. In a later step, we will create another resource in the &ldquo;Live&rdquo; cluster that will weight the traffic between the two clusters.</p>
+<h2 id="step-3-copy-the-namespace-directory-from-quot-live-quot-1-to-quot-live-quot">Step 3 - Copy the namespace directory from &ldquo;Live&rdquo;-1 to &ldquo;Live&rdquo;</h2><p>Copy the <a href="#">namespace</a> directory from the <a href="#">live-1.cloud-platform.service.justice.gov.uk</a> parent directory to its sibling directory <a href="#">live-1.cloud-platform.service.justice.gov.uk</a>. This change will need to reviewed by the Cloud Platform team. Create a pull request and wait for approval. An example can be seen <a href="#">here</a>.</p>
+<h2 id="step-4-authenticate-to-the-quot-live-quot-cluster">Step 4 - Authenticate to the &ldquo;Live&rdquo; cluster</h2><p>Grab a new set of credentials from <a href="#">login.apps.live.cloud-platform.service.justice.gov.uk</a>.</p>
+<h2 id="step-4-add-a-new-ingress-resource">Step 4 - Add a new ingress resource</h2><p>Create a duplicate ingress resource? How do we advise the user here?</p>
+<h2 id="step-5-create-a-new-step-to-your-deployment-pipeline">Step 5 - Create a new step to your deployment pipeline</h2><p>There are multi ways people are deploying their application, this guide will cover two of them:</p>
+<h3 id="deploy-with-github-actions">Deploy with GitHub Actions</h3><p>Add instructions for deploying to live with gha.</p>
+<h3 id="deploy-with-circleci">Deploy with CircleCI</h3><p>Add instructions for deploying to live with circle.</p>
+<h2 id="step-6-trigger-your-pipeline">Step 6 - Trigger your pipeline</h2><p>Trigger your application pipeline. This is normally done manually or by a push to branch.</p>
+<h2 id="step-7-test-your-application">Step 7 - Test your application</h2><p>Test your application is working on the new cluster by performing manual tests. How do we test this?</p>
+<h2 id="step-8-start-sending-real-traffic">Step 8 - Start sending real traffic</h2><p>Traffic flow is controlled by tweaking external-dns ingress annotation (<code>aws-weight</code>), which is used to determine the proportion of traffic sent to that ingress. Initially it is not expected to have any traffic because live’s ingresses have <code>external-dns.alpha.kubernetes.io/aws-weight: &quot;0&quot;</code>. For example, by setting this value to 5, route53 will send 5% of real traffic to the application.</p>
+<p>It is advised to send between 1-10% of the traffic to the live cluster. Once the traffic flows into the live cluster and the application behaves as expected, you could send 100% of the traffic into live cluster and 0% into live-1 cluster.</p>
+<p>NOTE: If results are not successful within the live cluster, rollback the annotations to their initial state (0% weight).</p>
+<h2 id="step-9-cleanup-old-quot-live-1-quot-namespace">Step 9 - Cleanup old &ldquo;Live-1&rdquo; namespace</h2><p>Once you&rsquo;ve migrated to the &ldquo;Live&rdquo; cluster you can remove your namespace from the <a href="#">&ldquo;Live-1&rdquo;</a> directory. This is as simple as running the command:</p>
+<div class="highlight"><pre class="highlight shell" tabindex="0"><code><span class="nb">rm</span> <span class="nt">-rf</span> ./namespaces/live-1.cloud-platform.service.justice.gov.uk/&lt;my-namespace-name&gt;
+</code></pre></div><p>The deletion will need to be written back to the main branch, so create a Pull Request and have it approved by the Cloud Platform team.</p>
+<h2 id="links-for-the-new-cluster">Links for the new cluster</h2><h2 id="how-to-roll-back">How to roll back</h2><h2 id="troubleshooting">Troubleshooting</h2><h2 id="feedback-welcome">Feedback welcome</h2>
+
+              <div data-module='page-expiry' data-last-reviewed-on="2021-10-20">
+    <div class='page-expiry--not-expired'>
+      This page was last reviewed on 20 July 2021.
+
+        It needs to be reviewed again on 20 October 2021
+.
+    </div>
+
+    <div class='page-expiry--expired'>
+      This page was set to be reviewed before 20 October 2021.
+      This might mean the content is out of date.
+    </div>
+  </div>
+
+          </main>
+
+          <aside>
+              <ul class="contribution-banner">
+                <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide/blob/main/source/documentation/other-topics/migrate-to-live.html.md.erb">View source</a></li>
+                <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide/issues/new?labels=bug&amp;title=Re:%20'Migrate%20to%20the%20&quot;Live&quot;%20cluster'&amp;body=Problem%20with%20'Migrate%20to%20the%20&quot;Live&quot;%20cluster'%20(https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/migrate-to-live.html)">Report problem</a></li>
+                <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide">GitHub Repo</a></li>
+              </ul>
+          </aside>
+
+          <footer class="govuk-footer app-footer" role="contentinfo">
+  <div class="govuk-footer__meta">
+    <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
+
+
+      <svg
+        aria-hidden="true"
+        focusable="false"
+        class="govuk-footer__licence-logo"
+        xmlns="http://www.w3.org/2000/svg"
+        viewbox="0 0 483.2 195.7"
+        height="17"
+        width="41"
+      >
+        <path
+          fill="currentColor"
+          d="M421.5 142.8V.1l-50.7 32.3v161.1h112.4v-50.7zm-122.3-9.6A47.12 47.12 0 0 1 221 97.8c0-26 21.1-47.1 47.1-47.1 16.7 0 31.4 8.7 39.7 21.8l42.7-27.2A97.63 97.63 0 0 0 268.1 0c-36.5 0-68.3 20.1-85.1 49.7A98 98 0 0 0 97.8 0C43.9 0 0 43.9 0 97.8s43.9 97.8 97.8 97.8c36.5 0 68.3-20.1 85.1-49.7a97.76 97.76 0 0 0 149.6 25.4l19.4 22.2h3v-87.8h-80l24.3 27.5zM97.8 145c-26 0-47.1-21.1-47.1-47.1s21.1-47.1 47.1-47.1 47.2 21 47.2 47S123.8 145 97.8 145"
+        />
+      </svg>
+      <span class="govuk-footer__licence-description">
+        All content is available under the
+        <a
+          class="govuk-footer__link"
+          href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+          rel="license"
+        >Open Government Licence v3.0</a>, except where otherwise stated
+      </span>
+    </div>
+    <div class="govuk-footer__meta-item">
+      <a
+        class="govuk-footer__link govuk-footer__copyright-logo"
+        href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/"
+      >© Crown copyright</a>
+    </div>
+  </div>
+</footer>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <script src="/javascripts/application.js"></script>
+  </body>
+</html>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-138188246-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-138188246-1');
+</script>
+
+<script>
+  // Add the current window.location to the body of the
+  // feedback email message.
+  function sendFeedback(mailto, event) {
+    event.preventDefault();
+
+    var body = "Feedback/Problem on page: " + window.location + "\n";
+    var href = mailto + '&body=' + encodeURIComponent(body);
+
+    window.location = href;
+  }
+
+  $(document).ready(function() {
+    var feedbackLink = $('a[href^="mailto:"]:contains("Feedback")')[0];
+    var mailto = feedbackLink.href;
+    $(feedbackLink).on('click', function(event) { sendFeedback(mailto, event); });
+  });
+</script>
