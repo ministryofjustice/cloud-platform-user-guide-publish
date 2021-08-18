@@ -256,11 +256,12 @@ you could send 100% of the traffic into live cluster and 0% into live-1 cluster.
 assume_enabled        = "false"
 </code></pre></div><h3 id="cross-account-iam-roles">Cross account IAM roles</h3><p>For users who use KIAM for <a href="https://github.com/ministryofjustice/cloud-platform-infrastructure/tree/main/terraform/cross-account-IAM">cross account IAM roles</a>, will be using <a href="https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html">IRSA</a> in EKS, these <a href="https://github.com/ministryofjustice/cloud-platform-infrastructure/tree/main/terraform/cross-account-IAM">roles</a> needs to define inside <a href="https://github.com/ministryofjustice/cloud-platform-environments/">environments repo</a> using this guidence <a href="/documentation/other-topics/access-cross-aws-resources-irsa-eks.html#use-iam-roles-for-service-accounts-to-access-resources-in-a-different-aws-account">here</a>.</p>
 <h3 id="ttlsecondsafterfinished">ttlSecondsAfterFinished</h3><p>TTL Controller for Finished Resources(ttlSecondsAfterFinished) is not available in EKS yet. For users who use ttlSecondsAfterFinished to clear completed jobs, should setup <a href="https://kubernetes.io/docs/tasks/job/automated-tasks-with-cron-jobs/#jobs-history-limits">Jobs History Limits</a> using failedJobsHistoryLimit and successfulJobsHistoryLimit.</p>
-<h2 id="links-for-the-new-cluster">Links for the new cluster</h2><p>Prometheus: https://prometheus.live.cloud-platform.service.justice.gov.uk
-AlertManager: https://alertmanager.live.cloud-platform.service.justice.gov.uk
-Grafana: https://grafana.live.cloud-platform.service.justice.gov.uk 
-Kibana: https://kibana.cloud-platform.service.justice.gov.uk/_plugin/kibana/app/kibana#/home?_g=()
-Authenticating to the Cluster: <a href="https://login.live.cloud-platform.service.justice.gov.uk">login.live.cloud-platform.service.justice.gov.uk</a></p>
+<h2 id="links-for-the-new-cluster">Links for the new cluster</h2><p>Prometheus: <a href="https://prometheus.live.cloud-platform.service.justice.gov.uk">https://prometheus.live.cloud-platform.service.justice.gov.uk</a></p>
+<p>AlertManager: <a href="https://alertmanager.live.cloud-platform.service.justice.gov.uk">https://alertmanager.live.cloud-platform.service.justice.gov.uk</a></p>
+<p>Grafana: <a href="https://grafana.live.cloud-platform.service.justice.gov.uk">https://grafana.live.cloud-platform.service.justice.gov.uk</a></p>
+<p>Kibana:
+<a href="https://kibana.cloud-platform.service.justice.gov.uk/_plugin/kibana/app/kibana#/home?_g=()">https://kibana.cloud-platform.service.justice.gov.uk/_plugin/kibana</a></p>
+<p>Authenticating to the Cluster: <a href="https://login.live.cloud-platform.service.justice.gov.uk">login.live.cloud-platform.service.justice.gov.uk</a></p>
 <h2 id="how-to-roll-back">How to roll back</h2><h2 id="troubleshooting">Troubleshooting</h2><h2 id="feedback-welcome">Feedback welcome</h2>
 
               <div data-module='page-expiry' data-last-reviewed-on="2021-10-20">
