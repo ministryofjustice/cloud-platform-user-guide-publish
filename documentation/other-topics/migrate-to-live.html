@@ -129,7 +129,7 @@
         <a href="#step-2-amend-your-ingress-resource"><span>Step 2 - Amend your ingress resource</span></a>
       </li>
       <li>
-        <a href="#step-3-copy-the-namespace-directory-from-quot-live-quot-1-to-quot-live-quot"><span>Step 3 - Copy the namespace directory from “Live”-1 to “Live”</span></a>
+        <a href="#step-3-copy-the-namespace-directory-from-quot-live-1-quot-to-quot-live-quot"><span>Step 3 - Copy the namespace directory from “Live-1” to “Live”</span></a>
       </li>
       <li>
         <a href="#step-4-authenticate-to-the-quot-live-quot-cluster"><span>Step 4 - Authenticate to the “Live” cluster</span></a>
@@ -198,9 +198,12 @@
         <div class="app-pane__content toc-open-disabled">
           <main id="content" class="technical-documentation" data-module="anchored-headings">
               <h1 id="migrate-to-the-quot-live-quot-cluster">Migrate to the &ldquo;Live&rdquo; cluster</h1><h2 id="introduction">Introduction</h2><p>This document intends to act as a guide to help you migrate your namespace from &ldquo;Live-1&rdquo; to &ldquo;Live&rdquo;.</p>
-<h3 id="terms-used-in-this-document">Terms used in this document</h3><p>There are some confusing names and terms used in this document. Here are a few:
-- &ldquo;Live-1&rdquo; = The name of the current Cloud Platform (Kubernetes) cluster your namespace is deployed to.
-- &ldquo;Live&rdquo; = The name of a new Cloud Platform (EKS) cluster that you&rsquo;ll need to migrate to.</p>
+<h3 id="terms-used-in-this-document">Terms used in this document</h3><p>There are some confusing names and terms used in this document. Here are a few:</p>
+
+<ul>
+<li><p>&ldquo;Live-1&rdquo; = The name of the current Cloud Platform (Kubernetes) cluster your namespace is deployed to.</p></li>
+<li><p>&ldquo;Live&rdquo; = The name of a new Cloud Platform (EKS) cluster that you&rsquo;ll need to migrate to.</p></li>
+</ul>
 <h2 id="why-should-you-migrate">Why should you migrate</h2><p>The Cloud Platform is a Kubernetes cluster deployed using a tool named kOps. When the Cloud Platform was conceived in 2017, Kubernetes management tools such as EKS (Elastic Kubernetes Service from AWS) and GKE (Google Kubernetes Engine) were in their infancy. An architecture decision record (ADR) was created with the understanding and acceptance of the extra management overhead and slightly slower release times. Since then, EKS has matured to a state where the benefits of running a multi-tenant cluster without the overhead of maintaining the control plane has become extremely attractive. If you wish to read more, please see this ADR.</p>
 <h2 id="what-are-you-migrating">What are you migrating</h2><p>You will be migrating your Cloud Platform namespace, all permissions and resources in your namespace <a href="#">directory</a>. This doesn&rsquo;t include AWS resources.</p>
 <h2 id="prerequisites-for-migration">Prerequisites for migration</h2><p>There are just a few things you need to ensure before you migrate between clusters.</p>
@@ -222,7 +225,7 @@
     <span class="s">external-dns.alpha.kubernetes.io/aws-weight</span><span class="pi">:</span> <span class="s2">"</span><span class="s">50"</span>
 </code></pre></div><p>(Note - Please change the <code>$namespace</code> value in the above example to the namespace you are migrating.)</p>
 <p>The idea behind the annotation is to control where the traffic is going. Using the above example 50% of the traffic will be sent to the ingress in the &ldquo;Live-1&rdquo; cluster. In a later step, we will create another resource in the &ldquo;Live&rdquo; cluster that will weight the traffic between the two clusters.</p>
-<h2 id="step-3-copy-the-namespace-directory-from-quot-live-quot-1-to-quot-live-quot">Step 3 - Copy the namespace directory from &ldquo;Live&rdquo;-1 to &ldquo;Live&rdquo;</h2><p>Copy the <a href="#">namespace</a> directory from the <a href="#">live-1.cloud-platform.service.justice.gov.uk</a> parent directory to its sibling directory <a href="#">live-1.cloud-platform.service.justice.gov.uk</a>. This change will need to reviewed by the Cloud Platform team. Create a pull request and wait for approval. An example can be seen <a href="#">here</a>.</p>
+<h2 id="step-3-copy-the-namespace-directory-from-quot-live-1-quot-to-quot-live-quot">Step 3 - Copy the namespace directory from &ldquo;Live-1&rdquo; to &ldquo;Live&rdquo;</h2><p>Copy the <a href="#">namespace</a> directory from the <a href="#">live-1.cloud-platform.service.justice.gov.uk</a> parent directory to its sibling directory <a href="#">live-1.cloud-platform.service.justice.gov.uk</a>. This change will need to reviewed by the Cloud Platform team. Create a pull request and wait for approval. An example can be seen <a href="#">here</a>.</p>
 <p>We have few resources that needs amending when migrating to EKS, please look at <a href="/documentation/other-topics/migrate-to-live.html#namespace-resource-changes">Namespace resource changes</a>, before raising a pull request.</p>
 <h2 id="step-4-authenticate-to-the-quot-live-quot-cluster">Step 4 - Authenticate to the &ldquo;Live&rdquo; cluster</h2><p>Grab a new set of credentials from <a href="https://login.live.cloud-platform.service.justice.gov.uk">login.live.cloud-platform.service.justice.gov.uk</a>.</p>
 <h2 id="step-5-add-a-new-ingress-resource">Step 5 - Add a new ingress resource</h2><p>Create a new Ingress from the copy of &ldquo;live-1&rdquo; Ingress. Amend the <code>aws-weight</code> annotation to &ldquo;0&rdquo;, this will not send any traffic to &ldquo;live&rdquo;. In the later step, we start sending real traffic by tweaking external-dns ingress annotation (<code>aws-weight</code>)</p>
