@@ -216,7 +216,9 @@ the event of any problems with our certificate/DNS systems.</p>
        name: &lt;my-ingress&gt;
        namespace: &lt;my-namespace&gt;
        annotations:
-         kubernetes.io/ingress.class: &lt;my-namespace&gt;
+         kubernetes.io/ingress.class: nginx
+         external-dns.alpha.kubernetes.io/set-identifier: &lt;ingress-name&gt;-&lt;environment-name&gt;-&lt;colour&gt;
+         external-dns.alpha.kubernetes.io/aws-weight: "100"
      spec:
        tls:
        - hosts:
@@ -239,7 +241,8 @@ the event of any problems with our certificate/DNS systems.</p>
    +         backend:
    +           serviceName: &lt;my-svc&gt;
    +           servicePort: 80
-</code></pre></div><p>Once you&rsquo;ve made the changes to your <code>Ingress</code>, the cluster (and more
+</code></pre></div><p>(Note - Please change the <code>ingress-name</code> and <code>environment-name</code> values in the above example, you can get the <code>environment-name</code> value from your namespace label &ldquo;cloud-platform.justice.gov.uk/environment-name&rdquo;. The <code>colour</code> should be <code>blue</code> for ingress in live-1 and <code>green</code> for ingress in EKS <code>live</code> cluster)</p>
+<p>Once you&rsquo;ve made the changes to your <code>Ingress</code>, the cluster (and more
 specifically, <code>external-dns</code>) will update the necessary records defined in it.
 This usually takes less than a minute until you are able to access your
 endpoint. However, depending on the DNS name servers your workstation uses, you

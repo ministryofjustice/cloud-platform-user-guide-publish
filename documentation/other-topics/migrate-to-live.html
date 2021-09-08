@@ -221,9 +221,9 @@
 <span class="na">kind</span><span class="pi">:</span> <span class="s">Ingress</span>
 <span class="na">metadata</span><span class="pi">:</span>
   <span class="na">annotations</span><span class="pi">:</span>
-    <span class="s">external-dns.alpha.kubernetes.io/set-identifier</span><span class="pi">:</span> <span class="s">$namespace-live-1-cluster</span>
+    <span class="s">external-dns.alpha.kubernetes.io/set-identifier</span><span class="pi">:</span> <span class="s">&lt;ingress-name&gt;-&lt;environment-name&gt;-&lt;colour&gt;</span>
     <span class="s">external-dns.alpha.kubernetes.io/aws-weight</span><span class="pi">:</span> <span class="s2">"</span><span class="s">50"</span>
-</code></pre></div><p>(Note - Please change the <code>$namespace</code> value in the above example to the namespace you are migrating.)</p>
+</code></pre></div><p>(Note - Please change the <code>ingress-name</code> and <code>environment-name</code> values in the above example, you can get the <code>environment-name</code> value from your namespace label &ldquo;cloud-platform.justice.gov.uk/environment-name&rdquo;. The <code>colour</code> should be <code>blue</code> for ingress in live-1 and <code>green</code> for ingress in EKS <code>live</code> cluster)</p>
 <p>The idea behind the annotation is to control where the traffic is going. Using the above example 50% of the traffic will be sent to the ingress in the &ldquo;Live-1&rdquo; cluster. In a later step, we will create another resource in the &ldquo;Live&rdquo; cluster that will weight the traffic between the two clusters.</p>
 <h2 id="step-3-copy-the-namespace-directory-from-quot-live-1-quot-to-quot-live-quot">Step 3 - Copy the namespace directory from &ldquo;Live-1&rdquo; to &ldquo;Live&rdquo;</h2><p>Copy the namespace directory i.e <code>/myapp-dev</code> from <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live-1.cloud-platform.service.justice.gov.uk">live-1 directory</a> to <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk">live directory</a>.</p>
 <p>This change will need to reviewed by the Cloud Platform team. Create a pull request and wait for approval. 
@@ -235,9 +235,10 @@ An example can be seen <a href="https://github.com/ministryofjustice/cloud-platf
 <span class="na">kind</span><span class="pi">:</span> <span class="s">Ingress</span>
 <span class="na">metadata</span><span class="pi">:</span>
   <span class="na">annotations</span><span class="pi">:</span>
-    <span class="s">external-dns.alpha.kubernetes.io/set-identifier</span><span class="pi">:</span> <span class="s">$namespace-live-1-cluster</span>
+    <span class="s">external-dns.alpha.kubernetes.io/set-identifier</span><span class="pi">:</span> <span class="s">&lt;ingress-name&gt;-&lt;environment-name&gt;-&lt;colour&gt;</span>
     <span class="s">external-dns.alpha.kubernetes.io/aws-weight</span><span class="pi">:</span> <span class="s2">"</span><span class="s">0"</span>
-</code></pre></div><h2 id="step-6-create-a-new-step-to-your-deployment-pipeline">Step 6 - Create a new step to your deployment pipeline</h2><p>There are multi ways people are deploying their application, this guide will cover two of them:</p>
+</code></pre></div><p>(Note - Please change the <code>colour</code> to <code>green</code> for ingress in live)</p>
+<h2 id="step-6-create-a-new-step-to-your-deployment-pipeline">Step 6 - Create a new step to your deployment pipeline</h2><p>There are multi ways people are deploying their application, this guide will cover two of them:</p>
 <h3 id="deploy-with-github-actions">Deploy with GitHub Actions</h3><p>For teams using Github Actions as continuous deployment following <a href="/documentation/deploying-an-app/github-actions-continuous-deployment.html#continuous-deployment-of-an-application-using-github-actions">user guide</a>, update your service account module in the “cloud-platform-environments” repo to push secrets with different names for <a href="https://github.com/ministryofjustice/cloud-platform-environments/blob/main/namespaces/live-1.cloud-platform.service.justice.gov.uk/justicedata-prod/resources/serviceaccount.tf#L4-L7">example</a>. Use the new secrets to authenticate to the &ldquo;live&rdquo; cluster. You can either create separate GitHub action or add additional steps to your existing GitHub action to deploy in the &ldquo;live&rdquo; cluster</p>
 <h3 id="deploy-with-circleci">Deploy with CircleCI</h3><p>For teams who use circleci for continuous deployment, will see your new CircleCI service account created in &ldquo;live&rdquo; cluster after the namespace directory is copied from &ldquo;Live&rdquo;-1.</p>
 <p>Once the service account is created, you can grab the ca.crt, token and cluster_name, to authenticate to the &ldquo;live&rdquo; cluster.</p>

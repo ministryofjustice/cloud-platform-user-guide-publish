@@ -257,6 +257,8 @@ docker push 754256621582.dkr.ecr.eu-west-2.amazonaws.com/webops/dstest-ecr:1.0
   <span class="na">name</span><span class="pi">:</span> <span class="s">helloworld-nginx-ingress</span>
   <span class="na">annotations</span><span class="pi">:</span>
     <span class="s">kubernetes.io/ingress.class</span><span class="pi">:</span> <span class="s">nginx</span>
+    <span class="s">external-dns.alpha.kubernetes.io/set-identifier</span><span class="pi">:</span> <span class="s">&lt;ingress-name&gt;-&lt;environment-name&gt;-&lt;colour&gt;</span>
+    <span class="s">external-dns.alpha.kubernetes.io/aws-weight</span><span class="pi">:</span> <span class="s2">"</span><span class="s">100"</span>
 <span class="na">spec</span><span class="pi">:</span>
   <span class="na">tls</span><span class="pi">:</span>
   <span class="pi">-</span> <span class="na">hosts</span><span class="pi">:</span>
@@ -269,7 +271,8 @@ docker push 754256621582.dkr.ecr.eu-west-2.amazonaws.com/webops/dstest-ecr:1.0
         <span class="na">backend</span><span class="pi">:</span>
           <span class="na">serviceName</span><span class="pi">:</span> <span class="s">nginx-service</span>
           <span class="na">servicePort</span><span class="pi">:</span> <span class="m">8080</span>
-</code></pre></div><p>Deploy to the cluster like this:</p>
+</code></pre></div><p>(Note - Please change the <code>ingress-name</code> and <code>environment-name</code> values in the above example, you can get the <code>environment-name</code> value from your namespace label &ldquo;cloud-platform.justice.gov.uk/environment-name&rdquo;. The <code>colour</code> should be <code>blue</code> for ingress in live-1 and <code>green</code> for ingress in EKS <code>live</code> cluster)</p>
+<p>Deploy to the cluster like this:</p>
 <div class="highlight"><pre class="highlight shell" tabindex="0"><code>kubectl <span class="nt">-n</span> &lt;your namespace&gt; apply <span class="nt">-f</span> kubernetes-deploy.yaml
 </code></pre></div><p>After a few seconds, you should be able to visit the ingress hostname and see &ldquo;Hello, World!&rdquo;</p>
 <h3 id="deployment-summary">Deployment summary</h3><p>To make a change to our project, we need to:</p>

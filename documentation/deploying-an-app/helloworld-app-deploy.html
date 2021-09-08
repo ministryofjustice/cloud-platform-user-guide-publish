@@ -260,6 +260,10 @@ directory to the namespace called <code>my-namespace</code> (or whatever you cal
 kind: Ingress
 metadata:
   name: helloworld-rubyapp-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    external-dns.alpha.kubernetes.io/set-identifier: &lt;ingress-name&gt;-&lt;environment-name&gt;-&lt;colour&gt;
+    external-dns.alpha.kubernetes.io/aws-weight: "100"
 spec:
   tls:
   - hosts:
@@ -272,7 +276,8 @@ spec:
         backend:
           serviceName: rubyapp-service
           servicePort: 4567
-</code></pre></div><p>This tells the cluster that our ingress should accept web traffic to the hostname we
+</code></pre></div><p>(Note - Please change the <code>ingress-name</code> and <code>environment-name</code> values in the above example, you can get the <code>environment-name</code> value from your namespace label &ldquo;cloud-platform.justice.gov.uk/environment-name&rdquo;. The <code>colour</code> should be <code>blue</code> for ingress in live-1 and <code>green</code> for ingress in EKS <code>live</code> cluster)</p>
+<p>This tells the cluster that our ingress should accept web traffic to the hostname we
 defined, and should route that traffic to port 4567 of the &ldquo;service&rdquo; called
 <code>rubyapp-service</code>.</p>
 <h3 id="service-yaml">service.yaml</h3><div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>apiVersion: v1
