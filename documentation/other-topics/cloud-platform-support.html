@@ -103,10 +103,16 @@
     <a href="#cloud-platform-support"><span>Cloud Platform Support</span></a>
     <ul>
       <li>
-        <a href="#background"><span>Background</span></a>
+        <a href="#overview"><span>Overview</span></a>
       </li>
       <li>
-        <a href="#cloud-platform-team-support-processes"><span>Cloud Platform Team Support Processes</span></a>
+        <a href="#where-to-find-help"><span>Where to find help</span></a>
+      </li>
+      <li>
+        <a href="#shared-responsibility-model"><span>Shared responsibility model</span></a>
+      </li>
+      <li>
+        <a href="#cloud-platform-team-support-processes"><span>Cloud Platform Team support processes</span></a>
       </li>
       <li>
         <a href="#what-does-cloud-platform-team-support"><span>What does Cloud Platform Team support</span></a>
@@ -115,12 +121,7 @@
         <a href="#what-the-cloud-platform-team-doesn-t-support"><span>What the Cloud Platform Team doesn’t support</span></a>
       </li>
       <li>
-        <a href="#what-this-means-for-cloud-platform-users"><span>What this means for Cloud Platform users</span></a>
-        <ul>
-          <li>
-            <a href="#where-to-find-help"><span>Where to find help</span></a>
-          </li>
-        </ul>
+        <a href="#responsibilities-of-cloud-platform-users"><span>Responsibilities of Cloud Platform users</span></a>
       </li>
     </ul>
   </li>
@@ -133,14 +134,21 @@
 
         <div class="app-pane__content toc-open-disabled">
           <main id="content" class="technical-documentation" data-module="anchored-headings">
-              <h1 id="cloud-platform-support">Cloud Platform Support</h1><h2 id="background">Background</h2><p>The Cloud Platform Team has built a new platform to replace Template Deploy. We are employing modern tools and techniques to enable teams to develop and support their modern cloud native software and infrastructure.</p>
-<p>This also provides us with an opportunity to enable teams, through self-service, to develop and support products the way they want to, without having to rely on the Cloud Platform Team for assistance.</p>
-<p>This new flexibility changes the way in which the Cloud Platform team provides support to our users.</p>
-<h2 id="cloud-platform-team-support-processes">Cloud Platform Team Support Processes</h2><p>The Cloud Platform <a href="/documentation/reference/operational-processes.html#cloud-platform-operational-processes">Operational Processes</a> details how we will offer support to our users for the new platform.</p>
+              <h1 id="cloud-platform-support">Cloud Platform Support</h1><h2 id="overview">Overview</h2><p>The Cloud Platform Team provides support for users who run software on the platform. Requests and questions are answered on our slack channel, with quick response from the team.</p>
+<p>The platform is <em>self-service</em>. Users are provided with the tools to operate, monitor and support their software that runs on the platform. The platform automatically spins up the containers and infrastructure, as defined by the users, and the platform team is responsible for making sure this platform functionality works smoothly.</p>
+<h2 id="where-to-find-help">Where to find help</h2><p>If you have any questions or require help from the Cloud Platform Team in relation to the new Cloud Platform contact us at the <code>#ask-cloud-platform</code> Slack channel.</p>
+<h2 id="shared-responsibility-model">Shared responsibility model</h2><p>The healthly running of the software that runs on top of the platform is a <em>shared responsibility</em>:</p>
+
+<ul>
+<li><p>users - for example a service team building a digital service - provide the container images, specifie the infrastructure and config, and &lsquo;operate&rsquo; their software, which includes monitoring the metrics, logs and responding to issues with the app, and provide support to their service users. This is the &ldquo;You build it, you run it&rdquo; / DevOps philosophy.</p></li>
+<li><p>the Cloud Platform ensures the infrastructure and config supplied by the service team get applied to Kubernetes and AWS, and that the platform itself runs smoothly, including Kubernetes, montoring and logging. The team also manage the relationship with AWS.</p></li>
+</ul>
+<p>The Cloud Platform Team commits to providing an excellent level of service, in managing and operating the platform.</p>
+<h2 id="cloud-platform-team-support-processes">Cloud Platform Team support processes</h2><p>The Cloud Platform <a href="/documentation/reference/operational-processes.html#cloud-platform-operational-processes">Operational Processes</a> details how we will offer support to our users for the new platform.</p>
 <p>This includes support hours, out-of-hours support, operational communication with users, incident management, and how we measure performance.</p>
 <h2 id="what-does-cloud-platform-team-support">What does Cloud Platform Team support</h2><p>Below is a diagram of the Cloud Platform.</p>
-<p><a href="https://github.com/ministryofjustice/cloud-platform/blob/main/docs/images/cloud-platform-architecture-diagram.png" rel="noopener noreferrer"><img src="https://github.com/ministryofjustice/cloud-platform/blob/main/docs/images/cloud-platform-architecture-diagram.png" alt="Cloud Platform Diagram" /></a></p>
-<p>The Cloud Platform Team supports everything outside of a user’s namespace.</p>
+<p><a href="https://github.com/ministryofjustice/cloud-platform/raw/main/docs/images/cloud-platform-architecture-diagram.png" rel="noopener noreferrer"><img src="https://github.com/ministryofjustice/cloud-platform/raw/main/docs/images/cloud-platform-architecture-diagram.png" alt="Cloud Platform Diagram" /></a></p>
+<p>The Cloud Platform Team supports everything apart from what is running in a user’s namespace, and their AWS resources.</p>
 <p>Support includes:</p>
 
 <ul>
@@ -159,7 +167,7 @@
 <li>ongoing maintenance of the application, including patching, updating dependencies, and ensuring it remains deployable</li>
 <li>user support for users of the application</li>
 </ul>
-<h2 id="what-this-means-for-cloud-platform-users">What this means for Cloud Platform users</h2><p>It means teams using the platform will be responsible for supporting the infrastructure they build, and the applications running on it.</p>
+<h2 id="responsibilities-of-cloud-platform-users">Responsibilities of Cloud Platform users</h2><p>It means teams using the platform will be responsible for operating and supporting the applications and infrastructure they run on the platform.</p>
 <p>We expect teams or service areas using the platform to ensure they can, for the life of the service:</p>
 
 <ul>
@@ -171,19 +179,18 @@
 <p>The Cloud Platform Team will be responsible for support of the underlying platform and “building blocks” that we make available to users.</p>
 <p>The new Cloud Platform introduces modern technology that users may not already be familiar with. The Cloud Platform User Guide is intended to help users understand some of the basic concepts of working with Kubernetes, as well as providing links to useful training and reference materials. In addition, the Cloud Platform Team will be very happy to assist with any queries you might have on the #ask-cloud-platform slack channel.</p>
 <p>You can also speak to your line manager or Head of Profession should you have any further training needs.</p>
-<h3 id="where-to-find-help">Where to find help</h3><p>If you have any questions or require help from the Cloud Platform Team in relation to the new Cloud Platform contact us at the <code>#ask-cloud-platform</code> slack channel.</p>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2021-10-19">
+              <div data-module='page-expiry' data-last-reviewed-on="2021-12-10">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 19 July 2021.
+      This page was last reviewed on 10 September 2021.
 
-        It needs to be reviewed again on 19 October 2021
+        It needs to be reviewed again on 10 December 2021
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 19 October 2021.
+      This page was set to be reviewed before 10 December 2021.
       This might mean the content is out of date.
     </div>
   </div>
