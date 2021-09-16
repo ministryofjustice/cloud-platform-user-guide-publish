@@ -129,7 +129,7 @@
         <a href="#step-2-amend-your-ingress-resource"><span>Step 2 - Amend your ingress resource</span></a>
       </li>
       <li>
-        <a href="#step-3-copy-the-namespace-directory-from-quot-live-1-quot-to-quot-live-quot"><span>Step 3 - Copy the namespace directory from “Live-1” to “Live”</span></a>
+        <a href="#step-3-migrate-your-namespace-environment-to-quot-live-quot"><span>Step 3 - Migrate your namespace environment to “live”</span></a>
       </li>
       <li>
         <a href="#step-4-authenticate-to-the-quot-live-quot-cluster"><span>Step 4 - Authenticate to the “Live” cluster</span></a>
@@ -161,20 +161,6 @@
         <a href="#step-10-cleanup-old-quot-live-1-quot-namespace"><span>Step 10 - Cleanup old “Live-1” namespace</span></a>
       </li>
       <li>
-        <a href="#namespace-resource-changes"><span>Namespace resource changes</span></a>
-        <ul>
-          <li>
-            <a href="#elasticsearch-module"><span>Elasticsearch module</span></a>
-          </li>
-          <li>
-            <a href="#cross-account-iam-roles"><span>Cross account IAM roles</span></a>
-          </li>
-          <li>
-            <a href="#ttlsecondsafterfinished"><span>ttlSecondsAfterFinished</span></a>
-          </li>
-        </ul>
-      </li>
-      <li>
         <a href="#links-for-the-new-cluster"><span>Links for the new cluster</span></a>
       </li>
       <li>
@@ -182,6 +168,11 @@
       </li>
       <li>
         <a href="#troubleshooting"><span>Troubleshooting</span></a>
+        <ul>
+          <li>
+            <a href="#ttlsecondsafterfinished"><span>ttlSecondsAfterFinished</span></a>
+          </li>
+        </ul>
       </li>
       <li>
         <a href="#feedback-welcome"><span>Feedback welcome</span></a>
@@ -198,11 +189,11 @@
         <div class="app-pane__content toc-open-disabled">
           <main id="content" class="technical-documentation" data-module="anchored-headings">
               <h1 id="migrate-to-the-quot-live-quot-cluster">Migrate to the &ldquo;Live&rdquo; cluster</h1><h2 id="introduction">Introduction</h2><p>This document intends to act as a guide to help you migrate your namespace from &ldquo;Live-1&rdquo; to &ldquo;Live&rdquo;.</p>
-<h3 id="terms-used-in-this-document">Terms used in this document</h3><p>There are some confusing names and terms used in this document. Here are a few:
-- &ldquo;Live-1&rdquo; = The name of the current Cloud Platform (Kubernetes) cluster your namespace is deployed to.</p>
+<h3 id="terms-used-in-this-document">Terms used in this document</h3><p>There are some confusing names and terms used in this document. Here are a few:</p>
 
 <ul>
-<li>&ldquo;Live&rdquo; = The name of a new Cloud Platform (EKS) cluster that you&rsquo;ll need to migrate to.</li>
+<li><p>&ldquo;Live-1&rdquo; = The name of the current Cloud Platform (Kubernetes) cluster your namespace is deployed to.</p></li>
+<li><p>&ldquo;Live&rdquo; = The name of a new Cloud Platform (EKS) cluster that you&rsquo;ll need to migrate to.</p></li>
 </ul>
 <h2 id="why-should-you-migrate">Why should you migrate</h2><p>The Cloud Platform is a Kubernetes cluster deployed using a tool named kOps. When the Cloud Platform was conceived in 2017, Kubernetes management tools such as EKS (Elastic Kubernetes Service from AWS) and GKE (Google Kubernetes Engine) were in their infancy. An architecture decision record (ADR) was created with the understanding and acceptance of the extra management overhead and slightly slower release times. Since then, EKS has matured to a state where the benefits of running a multi-tenant cluster without the overhead of maintaining the control plane has become extremely attractive. If you wish to read more, please see this ADR.</p>
 <h2 id="what-are-you-migrating">What are you migrating</h2><p>You will be migrating your Cloud Platform namespace, all permissions and resources in your namespace <a href="#">directory</a>. This doesn&rsquo;t include AWS resources.</p>
@@ -225,10 +216,23 @@
     <span class="s">external-dns.alpha.kubernetes.io/aws-weight</span><span class="pi">:</span> <span class="s2">"</span><span class="s">50"</span>
 </code></pre></div><p>(Note - Please change the <code>ingress-name</code> and <code>environment-name</code> values in the above example, you can get the <code>environment-name</code> value from your namespace label &ldquo;cloud-platform.justice.gov.uk/environment-name&rdquo;. The <code>colour</code> should be <code>blue</code> for ingress in live-1 and <code>green</code> for ingress in EKS <code>live</code> cluster)</p>
 <p>The idea behind the annotation is to control where the traffic is going. Using the above example 50% of the traffic will be sent to the ingress in the &ldquo;Live-1&rdquo; cluster. In a later step, we will create another resource in the &ldquo;Live&rdquo; cluster that will weight the traffic between the two clusters.</p>
-<h2 id="step-3-copy-the-namespace-directory-from-quot-live-1-quot-to-quot-live-quot">Step 3 - Copy the namespace directory from &ldquo;Live-1&rdquo; to &ldquo;Live&rdquo;</h2><p>Copy the namespace directory i.e <code>/myapp-dev</code> from <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live-1.cloud-platform.service.justice.gov.uk">live-1 directory</a> to <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk">live directory</a>.</p>
-<p>This change will need to reviewed by the Cloud Platform team. Create a pull request and wait for approval. 
-An example can be seen <a href="https://github.com/ministryofjustice/cloud-platform-environments/pull/4983">here</a>.</p>
-<p>We have few resources that needs amending when migrating to EKS, please look at <a href="/documentation/other-topics/migrate-to-live.html#namespace-resource-changes">Namespace resource changes</a>, before raising a pull request.</p>
+<h2 id="step-3-migrate-your-namespace-environment-to-quot-live-quot">Step 3 - Migrate your namespace environment to &ldquo;live&rdquo;</h2><p>To migrate your namespace from &ldquo;live-1&rdquo; to &ldquo;live&rdquo; you&rsquo;ll need to copy your namespace directory to a new location in the <a href="https://github.com/ministryofjustice/cloud-platform-environments/">cloud-platform-environments</a> repository. To do this, ensure your <a href="https://github.com/ministryofjustice/cloud-platform-cli">cloud-platform-cli</a> is up to date. Then you perform the following:</p>
+
+<ul>
+<li><p>Clone a copy of the <a href="https://github.com/ministryofjustice/cloud-platform-environments/">cloud-platform-environments</a> repository and create a branch: <code>git clone git@github.com:ministryofjustice/cloud-platform-environments.git</code></p></li>
+<li><p>Change directory to your namespace in &ldquo;live-1&rdquo;: <code>cd namespaces/live-1.cloud-platform.service.justice.gov.uk/&lt;namespace&gt;</code></p></li>
+<li><p>Use the cloud-platform cli command: <code>cloud-platform environment migrate</code> to migrate your namespace.</p></li>
+<li><p>Commit changes and create a pull request.</p></li>
+</ul>
+<p>The migrate command checks a number of conditions before moving the namespace. If a condition returns true an error will be displayed pointing you to a user-guide entry.</p>
+<p>Conditions:</p>
+
+<ul>
+<li><p>If you have an Elasticsearch module: the <code>cloud-platform environment migrate</code> command will automatically make the change outlined in this article. No action is required.</p></li>
+<li><p>If you have a ServiceAccount module: Please get in touch with someone in the team at #ask-cloud-platform.</p></li>
+<li><p>If you use Kiam for <a href="https://github.com/ministryofjustice/cloud-platform-infrastructure/tree/main/terraform/cross-account-IAM">cross account IAM roles</a>: You&rsquo;ll need to use <a href="https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html">IRSA</a> in EKS. These <a href="https://github.com/ministryofjustice/cloud-platform-infrastructure/tree/main/terraform/cross-account-IAM">roles</a> need to be defined inside  the <a href="https://github.com/ministryofjustice/cloud-platform-environments/">environments repo</a> using the guidence <a href="/documentation/other-topics/access-cross-aws-resources-irsa-eks.html#use-iam-roles-for-service-accounts-to-access-resources-in-a-different-aws-account">here</a>.</p></li>
+</ul>
+<p>If you want to skip any warnings and continue anyway, the cli has a <code>--skip-warnings</code> flag you can enable.</p>
 <h2 id="step-4-authenticate-to-the-quot-live-quot-cluster">Step 4 - Authenticate to the &ldquo;Live&rdquo; cluster</h2><p>Grab a new set of credentials from <a href="https://login.live.cloud-platform.service.justice.gov.uk">login.live.cloud-platform.service.justice.gov.uk</a>.</p>
 <h2 id="step-5-add-a-new-ingress-resource">Step 5 - Add a new ingress resource</h2><p>Create a new Ingress from the copy of &ldquo;live-1&rdquo; Ingress. Amend the <code>aws-weight</code> annotation to &ldquo;0&rdquo;, this will not send any traffic to &ldquo;live&rdquo;. In the later step, we start sending real traffic by tweaking external-dns ingress annotation (<code>aws-weight</code>)</p>
 <div class="highlight"><pre class="highlight yaml" tabindex="0"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">networking.k8s.io/v1beta1</span>
@@ -256,20 +260,14 @@ you could send 100% of the traffic into live cluster and 0% into live-1 cluster.
 <h2 id="step-10-cleanup-old-quot-live-1-quot-namespace">Step 10 - Cleanup old &ldquo;Live-1&rdquo; namespace</h2><p>Once you have successfully migrated to the &ldquo;Live&rdquo; cluster you can remove your namespace from the<a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live-1.cloud-platform.service.justice.gov.uk">&ldquo;Live-1&rdquo; directory</a>.This is as simple as running the command :</p>
 <div class="highlight"><pre class="highlight shell" tabindex="0"><code><span class="nb">rm</span> <span class="nt">-rf</span> ./namespaces/live-1.cloud-platform.service.justice.gov.uk/&lt;my-namespace-name&gt;
 </code></pre></div><p>The deletion will need to be written back to the <code>main</code> branch. Please create a PR and have <code>Deletion of NS due to migration to live cluster</code> in the description.</p>
-<h2 id="namespace-resource-changes">Namespace resource changes</h2><p>We have a few resources that need amending when migrating to EKS.</p>
-<h3 id="elasticsearch-module">Elasticsearch module</h3><p>For users who use elasticsearch module, KIAM<a href="https://github.com/uswitch/kiam">kiam</a> is replaced with <a href="https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html">IRSA</a> in EKS cluster.</p>
-<p>When we migrate to EKS cluster, adding below in the <a href="https://github.com/ministryofjustice/cloud-platform-terraform-elasticsearch/blob/main/example/elasticsearch.tf#L34-L36">ES module</a> will enable to use IRSA instead of KIAM.</p>
-<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>irsa_enabled          = "true"
-assume_enabled        = "false"
-</code></pre></div><h3 id="cross-account-iam-roles">Cross account IAM roles</h3><p>For users who use KIAM for <a href="https://github.com/ministryofjustice/cloud-platform-infrastructure/tree/main/terraform/cross-account-IAM">cross account IAM roles</a>, will be using <a href="https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html">IRSA</a> in EKS, these <a href="https://github.com/ministryofjustice/cloud-platform-infrastructure/tree/main/terraform/cross-account-IAM">roles</a> needs to define inside <a href="https://github.com/ministryofjustice/cloud-platform-environments/">environments repo</a> using this guidence <a href="/documentation/other-topics/access-cross-aws-resources-irsa-eks.html#use-iam-roles-for-service-accounts-to-access-resources-in-a-different-aws-account">here</a>.</p>
-<h3 id="ttlsecondsafterfinished">ttlSecondsAfterFinished</h3><p>TTL Controller for Finished Resources(ttlSecondsAfterFinished) is not available in EKS yet. For users who use ttlSecondsAfterFinished to clear completed jobs, should setup <a href="https://kubernetes.io/docs/tasks/job/automated-tasks-with-cron-jobs/#jobs-history-limits">Jobs History Limits</a> using failedJobsHistoryLimit and successfulJobsHistoryLimit.</p>
 <h2 id="links-for-the-new-cluster">Links for the new cluster</h2><p>Prometheus: <a href="https://prometheus.live.cloud-platform.service.justice.gov.uk">https://prometheus.live.cloud-platform.service.justice.gov.uk</a></p>
 <p>AlertManager: <a href="https://alertmanager.live.cloud-platform.service.justice.gov.uk">https://alertmanager.live.cloud-platform.service.justice.gov.uk</a></p>
 <p>Grafana: <a href="https://grafana.live.cloud-platform.service.justice.gov.uk">https://grafana.live.cloud-platform.service.justice.gov.uk</a></p>
 <p>Kibana:
 <a href="https://kibana.cloud-platform.service.justice.gov.uk/_plugin/kibana/app/kibana#/home?_g=()">https://kibana.cloud-platform.service.justice.gov.uk/_plugin/kibana</a></p>
 <p>Authenticating to the Cluster: <a href="https://login.live.cloud-platform.service.justice.gov.uk">login.live.cloud-platform.service.justice.gov.uk</a></p>
-<h2 id="how-to-roll-back">How to roll back</h2><h2 id="troubleshooting">Troubleshooting</h2><h2 id="feedback-welcome">Feedback welcome</h2>
+<h2 id="how-to-roll-back">How to roll back</h2><h2 id="troubleshooting">Troubleshooting</h2><h3 id="ttlsecondsafterfinished">ttlSecondsAfterFinished</h3><p>TTL Controller for Finished Resources(ttlSecondsAfterFinished) is not available in EKS yet. For users who use ttlSecondsAfterFinished to clear completed jobs, should setup <a href="https://kubernetes.io/docs/tasks/job/automated-tasks-with-cron-jobs/#jobs-history-limits">Jobs History Limits</a> using failedJobsHistoryLimit and successfulJobsHistoryLimit.</p>
+<h2 id="feedback-welcome">Feedback welcome</h2>
 
               <div data-module='page-expiry' data-last-reviewed-on="2021-10-20">
     <div class='page-expiry--not-expired'>
