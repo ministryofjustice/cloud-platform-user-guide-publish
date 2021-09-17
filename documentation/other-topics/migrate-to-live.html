@@ -243,7 +243,13 @@
     <span class="s">external-dns.alpha.kubernetes.io/set-identifier</span><span class="pi">:</span> <span class="s">&lt;ingress-name&gt;-&lt;namespace-name&gt;-green</span>
     <span class="s">external-dns.alpha.kubernetes.io/aws-weight</span><span class="pi">:</span> <span class="s2">"</span><span class="s">0"</span>
 </code></pre></div><p>(Note - The <span style="color:green">green</span> is for ingress in &ldquo;live&rdquo;))</p>
-<h2 id="step-6-create-a-new-step-to-your-deployment-pipeline">Step 6 - Create a new step to your deployment pipeline</h2><p>There are multiple ways people are deploying their application. This guide will cover two of them:</p>
+<h2 id="step-6-create-a-new-step-to-your-deployment-pipeline">Step 6 - Create a new step to your deployment pipeline</h2><p>Your application&rsquo;s continuous deployment pipeline needs a couple of changes:</p>
+
+<ul>
+<li>deploy the app to both clusters, not just &ldquo;live-1&rdquo;</li>
+<li>store a second set of secrets, containing Kubernetes credentials for &ldquo;live&rdquo;, and use them when deploying to that cluster</li>
+</ul>
+<p>Below is guidance for making these changes, if you&rsquo;ve followed Cloud Platform CI/CD setup guides for CircleCI or GitHub Actions. However teams have been free to make other choices, so they should adapt these accordingly.</p>
 <h3 id="deploy-with-circleci">Deploy with CircleCI</h3><p>For teams who use CircleCI for continuous deployment, in Step 3 when you migrated your namespace environment to &ldquo;live&rdquo;, a new ServiceAccount was created in the &ldquo;live&rdquo; cluster, for you to use with CircleCI. This ServiceAccount is created by either the serviceaccount.yaml or serviceaccount.tf file in your namespace folder.</p>
 <p>You need to copy the ServiceAccount credentials to CircleCI secrets, so it can authenticate with the &ldquo;live&rdquo; cluster. Retrieve <a href="/documentation/deploying-an-app/using-circleci-for-continuous-deployment.html#retrieving-the-service-account-credentials">ca.crt, token and cluster_name</a>, making sure kubectl is talking to the &lsquo;live&rsquo; cluster. The <code>cluster_name</code> of the &ldquo;live&rdquo; cluster is <code>DF366E49809688A3B16EEC29707D8C09.gr7.eu-west-2.eks.amazonaws.com</code>. Paste these secrets into the CircleCI web console.</p>
 <p>To deploy to both &ldquo;live&rdquo; and &ldquo;live-1&rdquo; you can either:</p>
@@ -280,7 +286,49 @@ you could send 100% of the traffic into live cluster and 0% into live-1 cluster.
 <p>Kibana:
 <a href="https://kibana.cloud-platform.service.justice.gov.uk/_plugin/kibana/app/kibana#/home?_g=()">https://kibana.cloud-platform.service.justice.gov.uk/_plugin/kibana</a></p>
 <p>Authenticating to the Cluster: <a href="https://login.live.cloud-platform.service.justice.gov.uk">login.live.cloud-platform.service.justice.gov.uk</a></p>
-<h2 id="how-to-roll-back">How to roll back</h2><p>TODO</p>
+<h2 id="how-to-roll-back">How to roll back</h2><p>Easy roll back is a key feature of this migration process. At any point in this migration process you can revert to using your service on the original &ldquo;live-1&rdquo; cluster. This may be necessary if you encounter problems running the namespace on the new cluster, and post-pone the migration until that is resolved.</p>
+<p>To rollback, going through the process in reverse, depending on how far you got:</p>
+
+<ul>
+<li><p>Step 10 &ldquo;Clean-up old &quot;live-1&rdquo; namespace&quot; -
+Revert the pull request that deleted your <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live-1.cloud-platform.service.justice.gov.uk">live-1-folder</a>. It doesn&rsquo;t get applied yet, because of the skipfile.</p></li>
+<li><p>Step 9 - &ldquo;Start sending real traffic&rdquo; -
+Change the ingress weightings to 0 on &ldquo;live&rdquo;, and 100 on &ldquo;live-1&rdquo;. This directs all traffic to the live-1 cluster. There may be a lag, as users&rsquo; DNS caches update.</p></li>
+</ul>
+<p><strong>At this point your application is running as it was pre-migration</strong></p>
+
+<ul>
+<li><p>Step 8 - Test your application -
+It&rsquo;s a good idea to check it works fine.</p></li>
+<li><p>(Step 7 - Trigger your pipeline -
+Not needed - your app is deployed still on the old cluster)</p></li>
+<li><p>Step 6 - &ldquo;Create a new step to your deployment pipeline&rdquo; -
+You need to ensure your application&rsquo;s CI/CD deploys:</p>
+
+<ul>
+<li>just to the old cluster &ldquo;live-1&rdquo;</li>
+<li>using the old names of credentials (not with the &ldquo;_live1&rsquo; suffix)</li>
+</ul></li>
+<li><p>(Step 5 - Add a new ingress resource -
+Not needed - you can leave this ingress in place)</p></li>
+<li><p>(Step 4 - Authenticate to the “live” cluster -
+Not needed - you can keep your kubectl context for the new cluster)</p></li>
+<li><p>Step 3 - &quot;Migrate your namespace environment to &quot;live&rdquo;&ldquo; -
+Move the &lsquo;skip file&rsquo; from your namespace under the <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk">&quot;live&rdquo; folder</a> into your namespace under the <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live-1.cloud-platform.service.justice.gov.uk">&ldquo;live-1&rdquo; folder</a>:</p></li>
+</ul>
+<div class="highlight"><pre class="highlight shell" tabindex="0"><code>  <span class="nb">cd </span>namespaces
+  <span class="nb">mv </span>live-1.cloud-platform.service.justice.gov.uk/&lt;namespace&gt;/APPLY_PIPELINE_SKIP_THIS_NAMESPACE live.cloud-platform.service.justice.gov.uk/&lt;namespace&gt;/
+</code></pre></div><p>Once merged to <code>main</code>, the Apply Pipeline will be configured to apply your namespace settings that are in your &ldquo;live-1&rdquo; folder, rather than you &ldquo;live&rdquo; folder. (You must have the skip file in one of the folders, otherwise there will be errors on every terraform apply, because the terraform state is shared between the Apply pipelines for live and live-1, will conflict on every apply have both since the terraform is slightly different - IRSA etc)</p>
+<p><strong>Important</strong>: The ServiceAccount credentials used by your application CI/CD will have been rotated by the Apply Pipeline, within a couple minutes of merging the skip file change. So your application&rsquo;s CI/CD will need its secrets updating. If you use GitHub Actions then the ServiceAccount terraform module will automatically update the GHA secrets. However if you use CircleCI or any other way of deployment, then you&rsquo;ll need to obtain the fresh token from &ldquo;live-1&rdquo; and provide it to your CI, replacing the existing token secret with this new value.</p>
+<p><strong>At this point your application can be re-deployed again normally</strong></p>
+<p><strong>At this point you are also free to make changes to your environment under the <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live-1.cloud-platform.service.justice.gov.uk">&ldquo;live-1&rdquo; folder</a></strong></p>
+
+<ul>
+<li><p>(Step 2 - Amend your ingress resource -
+Not needed - you can leave the annotation in - it won&rsquo;t change anything)</p></li>
+<li><p>(Step 1 - Agree a time to perform the migration -
+You can let your team know that they are no longer restricted from changing the environment config)</p></li>
+</ul>
 <h2 id="questions">Questions</h2><p>If you have questions, please ask us on Slack:</p>
 
 <ul>
