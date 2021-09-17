@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en" class="govuk-template no-js">
+  <head>
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+    <title>Migrating serviceaccount module for GitHub actions to the "Live" cluster - Cloud Platform User Guide</title>
+
+    <link href="/stylesheets/manifest.css" rel="stylesheet" />
+
+    <link rel="canonical" href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/migrate-to-live-sa-github-actions.html">
+
+      <meta name="robots" content="noindex" />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:domain" content="user-guide.cloud-platform.service.justice.gov.uk" />
+      <meta name="twitter:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
+      <meta name="twitter:title" content="Migrating serviceaccount module for GitHub actions to the &quot;Live&quot; cluster - Cloud Platform User Guide" />
+      <meta name="twitter:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/migrate-to-live-sa-github-actions.html" />
+
+      <meta property="og:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
+      <meta property="og:site_name" content="Cloud Platform User Guide" />
+      <meta property="og:title" content="Migrating serviceaccount module for GitHub actions to the &quot;Live&quot; cluster" />
+      <meta property="og:type" content="object" />
+      <meta property="og:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/migrate-to-live-sa-github-actions.html" />
+
+    
+  </head>
+
+  <body class="govuk-template__body">
+    <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
+
+    <div class="app-pane">
+      <div class="app-pane__header toc-open-disabled">
+        <a href="#content" class="govuk-skip-link">Skip to main content</a>
+
+        <header class="govuk-header app-header" role="banner" data-module="govuk-header">
+  <div class="govuk-header__container govuk-header__container--full-width">
+    <div class="govuk-header__logo">
+      <a href="/" class="govuk-header__link govuk-header__link--homepage">
+        <span class="govuk-header__product-name">
+          Cloud Platform User Guide
+        </span>
+      </a>
+    </div>
+    <div class="govuk-header__content">
+      <button type="button" class="govuk-header__menu-button govuk-js-header-toggle" aria-controls="navigation" aria-label="Show or hide Top Level Navigation">Menu</button>
+      <nav>
+        <ul id="navigation" class="govuk-header__navigation govuk-header__navigation--end" aria-label="Top Level Navigation">
+            <li class="govuk-header__navigation-item">
+              <a class="govuk-header__link" href="mailto:platforms+user-guide@digital.justice.gov.uk?subject=User+guide+feedback">Feedback / Report a problem</a>
+            </li>
+            <li class="govuk-header__navigation-item">
+              <a class="govuk-header__link" href="/">Documentation</a>
+            </li>
+            <li class="govuk-header__navigation-item">
+              <a class="govuk-header__link" href="https://github.com/ministryofjustice/cloud-platform-user-guide">GitHub</a>
+            </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>
+
+      </div>
+
+        <div id="toc-heading" class="toc-show fixedsticky">
+          <button type="button" class="toc-show__label js-toc-show" aria-controls="toc">
+            Table of contents <span class="toc-show__icon"></span>
+          </button>
+        </div>
+
+      <div class="app-pane__body" data-module="in-page-navigation">
+          <div class="app-pane__toc">
+            <div class="toc" data-module="table-of-contents" tabindex="-1" aria-label="Table of contents" role="dialog">
+              <div class="search" data-module="search">
+  <form action="https://www.google.co.uk/search" method="get" role="search" class="search__form govuk-!-margin-bottom-4">
+    <input type="hidden" name="as_sitesearch" value="https://user-guide.cloud-platform.service.justice.gov.uk"/>
+    <label class="govuk-label search__label" for="search" aria-hidden="true">
+      Search (via Google)
+    </label>
+    <input
+      type="text"
+      id="search" name="q"
+      class="govuk-input govuk-!-margin-bottom-0 search__input"
+      aria-controls="search-results"
+      placeholder="Search">
+    <button type="submit" class="search__button">Search</button>
+  </form>
+  <div id="search-results" class="search-results" aria-hidden="true" role="dialog" aria-labelledby="search-results-title">
+    <div class="search-results__inner">
+      <button class="search-results__close">Close<span class="search-results__close-label"> search results</span></button>
+      <h2 id="search-results-title" class="search-results__title" aria-live="assertive" role="alert">Results</h2>
+      <div class="search-results__content"></div>
+    </div>
+  </div>
+</div>
+
+              <button type="button" class="toc__close js-toc-close" aria-controls="toc" aria-label="Hide table of contents"></button>
+              <nav id="toc" class="js-toc-list toc__list" aria-labelledby="toc-heading">
+                      <ul>
+  <li>
+    <a href="#migrating-serviceaccount-module-for-github-actions-to-the-quot-live-quot-cluster"><span>Migrating serviceaccount module for GitHub actions to the “Live” cluster</span></a>
+    <ul>
+      <li>
+        <a href="#migrating-service-account-module"><span>Migrating service account module</span></a>
+        <ul>
+          <li>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+
+              </nav>
+            </div>
+          </div>
+
+        <div class="app-pane__content toc-open-disabled">
+          <main id="content" class="technical-documentation" data-module="anchored-headings">
+              <h1 id="migrating-serviceaccount-module-for-github-actions-to-the-quot-live-quot-cluster">Migrating serviceaccount module for GitHub actions to the &ldquo;Live&rdquo; cluster</h1><h2 id="migrating-service-account-module">Migrating service account module</h2><h4 id="pre-requisites">Pre-requisites</h4>
+<ul>
+<li>You have <a href="/documentation/other-topics/long-running-env-operations.html">skip your namespace</a> file in your &ldquo;live-1&rdquo; namespace.</li>
+</ul>
+<p>This will allow the Apply Pipeline to skip live-1 namespace during migration.</p>
+<h4 id="continuous-deployment-of-an-application-using-github-actions-in-live">Continuous Deployment of an application using Github actions in live</h4><p>For teams who use <a href="/documentation/deploying-an-app/github-actions-continuous-deployment.html#continuous-deployment-of-an-application-using-github-actions">github actions</a> for continuous deployment, you will see a new cd-serviceaccount created in “live” cluster after the namespace directory is copied from “Live”-1. This will replace below GitHub Actions Secrets in your repository using new serviceaccount details created in &ldquo;live&rdquo; cluster.</p>
+
+<ul>
+<li>KUBE_CERT</li>
+<li>KUBE_TOKEN</li>
+<li>KUBE_CLUSTER</li>
+<li>KUBE_NAMESPACE</li>
+</ul>
+<p>Using these secrets, you can create a separate pipeline to deploy in “live” or amend the existing pipeline to add additional steps to authenticate and deploy to “live”.
+Use this example <a href="https://github.com/ministryofjustice/cloud-platform-reference-app-github-action/blob/main/.github/workflows/cd.yaml">githubaction config file</a> for continuous deployment of an application using Github actions that authenticate and deploys an application to both the “live-1” and “live” clusters in the same workflow.</p>
+<p>The application is deployed using <a href="https://github.com/ministryofjustice/cloud-platform-reference-app-github-action/tree/main/deploy/helm">HELM</a> and include a unique ingress identifier and a weighting for both <a href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/migrate-to-live.html#step-2-amend-your-ingress-resource">live-1</a> and <a href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/migrate-to-live.html#step-5-add-a-new-ingress-resource">live</a> cluster. Please make sure your new ingress resource for live have aws-weight as “0” as shown <a href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/migrate-to-live.html#step-5-add-a-new-ingress-resource">here</a>.</p>
+<p>Note: The server name used to setup <a href="https://github.com/ministryofjustice/cloud-platform-reference-app-github-action/blob/main/.github/workflows/cd.yaml#L64">kubectl config set-cluster</a> for &ldquo;Live&rdquo; is <code>https://DF366E49809688A3B16EEC29707D8C09.gr7.eu-west-2.eks.amazonaws.com</code></p>
+<h4 id="continuous-deployment-of-an-application-using-github-actions-in-live-1">Continuous Deployment of an application using Github actions in live-1</h4><p>After migrating to &ldquo;live&rdquo; cluster, the GitHub Actions Secrets for live-1 is no longer available in your repository. For teams to continue deploying to live-1, needs to manually create GitHub Actions Secrets with new names in your repository using the cd-serviceaccount secret in “live-1” cluster. This will be used to authenticate to your namespace and deploy your application in live-1.</p>
+<h5 id="retrieving-the-service-account-credentials">Retrieving the service account credentials</h5><p>You can grab the ca.crt and token from the live-1 service account using the following commands:</p>
+<div class="highlight"><pre class="highlight shell" tabindex="0"><code>cloud-platform decode-secret <span class="nt">-n</span> &lt;YOUR-NAMESPACE&gt; <span class="nt">-s</span> &lt;NAME-OF-GITHUBACTION-SERVICE-ACCOUNT-SECRET&gt; | <span class="nb">grep </span>ca.crt
+</code></pre></div><div class="highlight"><pre class="highlight shell" tabindex="0"><code>cloud-platform decode-secret <span class="nt">-n</span> &lt;YOUR-NAMESPACE&gt; <span class="nt">-s</span> &lt;NAME-OF-GITHUBACTION-SERVICE-ACCOUNT-SECRET&gt; | <span class="nb">grep </span>token
+</code></pre></div><p>Both the <code>ca.crt</code> and <code>token</code> should be added as new environment variables along with <code>kube_cluster</code> using different names for &ldquo;live-1&rdquo; as below in the Github secrets console.</p>
+
+<ul>
+<li>KUBE_CERT_LIVE_1</li>
+<li>KUBE_TOKEN_LIVE_1</li>
+<li>KUBE_CLUSTER_LIVE_1</li>
+</ul>
+<p><code>KUBE_CLUSTER_LIVE_1</code> environment variable value will be <code>live-1.cloud-platform.service.justice.gov.uk</code></p>
+<p><a href="/images/github-secrets.png" rel="noopener noreferrer"><img src="/images/github-secrets.png" alt="GitHub secrets" /></a></p>
+<p>Update the above 3 environment variable names in the GitHub action config file for live-1 as shown <a href="https://github.com/ministryofjustice/cloud-platform-reference-app-github-action/blob/main/.github/workflows/cd.yaml#L35-L38">here</a>. This will enable to authenticate and Continuous Deployment of an application using Github actions in &ldquo;Live-1&rdquo;.</p>
+<p>For reference use, this <a href="https://github.com/ministryofjustice/cloud-platform-reference-app-github-action/blob/main/.github/workflows/cd.yaml">githubaction config file</a> that builds an image, authenticates and deploys an application to both the &ldquo;live-1&rdquo; and &ldquo;live&rdquo; clusters.</p>
+
+
+              <div data-module='page-expiry' data-last-reviewed-on="2021-12-17">
+    <div class='page-expiry--not-expired'>
+      This page was last reviewed on 17 September 2021.
+
+        It needs to be reviewed again on 17 December 2021
+.
+    </div>
+
+    <div class='page-expiry--expired'>
+      This page was set to be reviewed before 17 December 2021.
+      This might mean the content is out of date.
+    </div>
+  </div>
+
+          </main>
+
+          <aside>
+              <ul class="contribution-banner">
+                <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide/blob/main/source/documentation/other-topics/migrate-to-live-sa-github-actions.html.md.erb">View source</a></li>
+                <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide/issues/new?labels=bug&amp;title=Re:%20'Migrating%20serviceaccount%20module%20for%20GitHub%20actions%20to%20the%20&quot;Live&quot;%20cluster'&amp;body=Problem%20with%20'Migrating%20serviceaccount%20module%20for%20GitHub%20actions%20to%20the%20&quot;Live&quot;%20cluster'%20(https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/migrate-to-live-sa-github-actions.html)">Report problem</a></li>
+                <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide">GitHub Repo</a></li>
+              </ul>
+          </aside>
+
+          <footer class="govuk-footer app-footer" role="contentinfo">
+  <div class="govuk-footer__meta">
+    <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
+
+
+      <svg
+        aria-hidden="true"
+        focusable="false"
+        class="govuk-footer__licence-logo"
+        xmlns="http://www.w3.org/2000/svg"
+        viewbox="0 0 483.2 195.7"
+        height="17"
+        width="41"
+      >
+        <path
+          fill="currentColor"
+          d="M421.5 142.8V.1l-50.7 32.3v161.1h112.4v-50.7zm-122.3-9.6A47.12 47.12 0 0 1 221 97.8c0-26 21.1-47.1 47.1-47.1 16.7 0 31.4 8.7 39.7 21.8l42.7-27.2A97.63 97.63 0 0 0 268.1 0c-36.5 0-68.3 20.1-85.1 49.7A98 98 0 0 0 97.8 0C43.9 0 0 43.9 0 97.8s43.9 97.8 97.8 97.8c36.5 0 68.3-20.1 85.1-49.7a97.76 97.76 0 0 0 149.6 25.4l19.4 22.2h3v-87.8h-80l24.3 27.5zM97.8 145c-26 0-47.1-21.1-47.1-47.1s21.1-47.1 47.1-47.1 47.2 21 47.2 47S123.8 145 97.8 145"
+        />
+      </svg>
+      <span class="govuk-footer__licence-description">
+        All content is available under the
+        <a
+          class="govuk-footer__link"
+          href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+          rel="license"
+        >Open Government Licence v3.0</a>, except where otherwise stated
+      </span>
+    </div>
+    <div class="govuk-footer__meta-item">
+      <a
+        class="govuk-footer__link govuk-footer__copyright-logo"
+        href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/"
+      >© Crown copyright</a>
+    </div>
+  </div>
+</footer>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <script src="/javascripts/application.js"></script>
+  </body>
+</html>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-138188246-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-138188246-1');
+</script>
+
+<script>
+  // Add the current window.location to the body of the
+  // feedback email message.
+  function sendFeedback(mailto, event) {
+    event.preventDefault();
+
+    var body = "Feedback/Problem on page: " + window.location + "\n";
+    var href = mailto + '&body=' + encodeURIComponent(body);
+
+    window.location = href;
+  }
+
+  $(document).ready(function() {
+    var feedbackLink = $('a[href^="mailto:"]:contains("Feedback")')[0];
+    var mailto = feedbackLink.href;
+    $(feedbackLink).on('click', function(event) { sendFeedback(mailto, event); });
+  });
+</script>
