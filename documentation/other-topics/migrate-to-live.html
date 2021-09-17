@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
-    <title>Migrate to the "Live" cluster - Cloud Platform User Guide</title>
+    <title>Migrate to the "live" cluster - Cloud Platform User Guide</title>
 
     <link href="/stylesheets/manifest.css" rel="stylesheet" />
 
@@ -15,12 +15,12 @@
       <meta name="twitter:card" content="summary" />
       <meta name="twitter:domain" content="user-guide.cloud-platform.service.justice.gov.uk" />
       <meta name="twitter:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
-      <meta name="twitter:title" content="Migrate to the &quot;Live&quot; cluster - Cloud Platform User Guide" />
+      <meta name="twitter:title" content="Migrate to the &quot;live&quot; cluster - Cloud Platform User Guide" />
       <meta name="twitter:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/migrate-to-live.html" />
 
       <meta property="og:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
       <meta property="og:site_name" content="Cloud Platform User Guide" />
-      <meta property="og:title" content="Migrate to the &quot;Live&quot; cluster" />
+      <meta property="og:title" content="Migrate to the &quot;live&quot; cluster" />
       <meta property="og:type" content="object" />
       <meta property="og:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/migrate-to-live.html" />
 
@@ -100,15 +100,10 @@
               <nav id="toc" class="js-toc-list toc__list" aria-labelledby="toc-heading">
                       <ul>
   <li>
-    <a href="#migrate-to-the-quot-live-quot-cluster"><span>Migrate to the “Live” cluster</span></a>
+    <a href="#migrate-to-the-quot-live-quot-cluster"><span>Migrate to the “live” cluster</span></a>
     <ul>
       <li>
         <a href="#introduction"><span>Introduction</span></a>
-        <ul>
-          <li>
-            <a href="#terms-used-in-this-document"><span>Terms used in this document</span></a>
-          </li>
-        </ul>
       </li>
       <li>
         <a href="#why-should-you-migrate"><span>Why should you migrate</span></a>
@@ -132,7 +127,7 @@
         <a href="#step-3-migrate-your-namespace-environment-to-quot-live-quot"><span>Step 3 - Migrate your namespace environment to “live”</span></a>
       </li>
       <li>
-        <a href="#step-4-authenticate-to-the-quot-live-quot-cluster"><span>Step 4 - Authenticate to the “Live” cluster</span></a>
+        <a href="#step-4-authenticate-to-the-quot-live-quot-cluster"><span>Step 4 - Authenticate to the “live” cluster</span></a>
       </li>
       <li>
         <a href="#step-5-add-a-new-ingress-resource"><span>Step 5 - Add a new ingress resource</span></a>
@@ -158,7 +153,7 @@
         <a href="#step-9-start-sending-real-traffic"><span>Step 9 - Start sending real traffic</span></a>
       </li>
       <li>
-        <a href="#step-10-cleanup-old-quot-live-1-quot-namespace"><span>Step 10 - Cleanup old “Live-1” namespace</span></a>
+        <a href="#step-10-cleanup-old-quot-live-1-quot-namespace"><span>Step 10 - Cleanup old “live-1” namespace</span></a>
       </li>
       <li>
         <a href="#links-for-the-new-cluster"><span>Links for the new cluster</span></a>
@@ -170,9 +165,12 @@
         <a href="#troubleshooting"><span>Troubleshooting</span></a>
         <ul>
           <li>
-            <a href="#ttlsecondsafterfinished"><span>ttlSecondsAfterFinished</span></a>
+            <a href="#jobs-cleanup-ttlsecondsafterfinished"><span>Jobs cleanup - ttlSecondsAfterFinished</span></a>
           </li>
         </ul>
+      </li>
+      <li>
+        <a href="#questions"><span>Questions</span></a>
       </li>
       <li>
         <a href="#feedback-welcome"><span>Feedback welcome</span></a>
@@ -188,24 +186,24 @@
 
         <div class="app-pane__content toc-open-disabled">
           <main id="content" class="technical-documentation" data-module="anchored-headings">
-              <h1 id="migrate-to-the-quot-live-quot-cluster">Migrate to the &ldquo;Live&rdquo; cluster</h1><h2 id="introduction">Introduction</h2><p>This document intends to act as a guide to help you migrate your namespace from &ldquo;Live-1&rdquo; to &ldquo;Live&rdquo;.</p>
-<h3 id="terms-used-in-this-document">Terms used in this document</h3><p>There are some confusing names and terms used in this document. Here are a few:</p>
+              <h1 id="migrate-to-the-quot-live-quot-cluster">Migrate to the &ldquo;live&rdquo; cluster</h1><h2 id="introduction">Introduction</h2><p>This is a guide for Cloud Platform users to migrate a namespace from &ldquo;live-1&rdquo; to &ldquo;live&rdquo;.</p>
+<p>Explanation of terms:</p>
 
 <ul>
-<li><p>&ldquo;Live-1&rdquo; = The name of the current Cloud Platform (Kubernetes) cluster your namespace is deployed to.</p></li>
-<li><p>&ldquo;Live&rdquo; = The name of a new Cloud Platform (EKS) cluster that you&rsquo;ll need to migrate to.</p></li>
+<li><p>&ldquo;live-1&rdquo; = The name of the existing Cloud Platform (Kubernetes) cluster, that all namespaces have been on during 2018-2021</p></li>
+<li><p>&ldquo;live&rdquo; = The name of a new Cloud Platform (EKS) cluster, that all namespaces need to be migrated to, during Autumn 2021</p></li>
 </ul>
 <h2 id="why-should-you-migrate">Why should you migrate</h2><p>The Cloud Platform is a Kubernetes cluster deployed using a tool named kOps. When the Cloud Platform was conceived in 2017, Kubernetes management tools such as EKS (Elastic Kubernetes Service from AWS) and GKE (Google Kubernetes Engine) were in their infancy. An architecture decision record (ADR) was created with the understanding and acceptance of the extra management overhead and slightly slower release times. Since then, EKS has matured to a state where the benefits of running a multi-tenant cluster without the overhead of maintaining the control plane has become extremely attractive. If you wish to read more, please see this ADR.</p>
-<h2 id="what-are-you-migrating">What are you migrating</h2><p>You will be migrating your Cloud Platform namespace, all permissions and resources in your namespace <a href="#">directory</a>. This doesn&rsquo;t include AWS resources.</p>
-<h2 id="prerequisites-for-migration">Prerequisites for migration</h2><p>There are just a few things you need to ensure before you migrate between clusters.</p>
+<h2 id="what-are-you-migrating">What are you migrating</h2><p>You will be migrating your Cloud Platform namespace of Kubernetes resources. This includes all permissions and resources defined in the .yaml and .tf files in your namespace <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live-1.cloud-platform.service.justice.gov.uk">directory</a>. Your AWS resources, such as RDS and ECR don&rsquo;t move or change during this migration.</p>
+<h2 id="prerequisites-for-migration">Prerequisites for migration</h2><p>There are just a few things you need to ensure before you start the migration.</p>
 
 <ul>
-<li><p>Ensure your containers are &ldquo;stateless&rdquo;. During the transition between clusters, your pods will be running simultaneously between &ldquo;Live&rdquo; and &ldquo;Live-1&rdquo;. Any state that your containers (inside the pod) store on disk or persistent volume (such as EBS) will not be copied to the new cluster. Using Elasticache for session variables storage will avoid web users being logged off when traffic gets routed to the other cluster.</p></li>
-<li><p>Check that multiple copies of your app can communicate simultaneously with AWS resources. These AWS resources will be shared between clusters. For example, your RDS instance will accept connections from pods in &ldquo;Live&rdquo; and &ldquo;Live-1&rdquo;.</p></li>
+<li><p>Ensure your containers are &ldquo;stateless&rdquo;. During the transition between clusters, your pods will be running simultaneously on both &ldquo;live&rdquo; and &ldquo;live-1&rdquo;. Any state that is in the containers (or inside the pod), such as the ephemeral disk or persistent volume (such as EBS), will not be copied to the new cluster. For example if you store user session data on disk, then moving it to Elasticache will avoid web users being logged off when traffic gets routed to the other cluster.</p></li>
+<li><p>Check that multiple copies of your app are ok to communicate simultaneously with AWS resources. These AWS resources will be shared between clusters. For example, your RDS instance will accept connections from pods in &ldquo;live&rdquo; and &ldquo;live-1&rdquo;.</p></li>
 </ul>
-<p>If this is a concern or you&rsquo;d like to check in advance, please feel free to contact the Cloud Platform team.</p>
-<h2 id="how-to-migrate">How to migrate</h2><p>The rest of this document contains the steps required to perform the migration. This is very much a work in progress, so please leave feedback if you&rsquo;ve either struggled to understand a step or feel it could be clarified further.</p>
-<h2 id="step-1-agree-a-time-to-perform-the-migration">Step 1 - Agree a time to perform the migration</h2><p>During the process of migration high velocity apps will be unable to deploy to &ldquo;Live-1&rdquo;. You should speak to your team and agree a time and date to attempt to migrate your namespace. It&rsquo;s also recommended that you get familiar with migrating a non-production namespace before attempting prod.</p>
+<p>If any of these are a concern or you&rsquo;d like to check in advance, please <a href="#questions">contact the Cloud Platform team</a>.</p>
+<h2 id="how-to-migrate">How to migrate</h2><p>These steps describe how to migrate. We&rsquo;d love to make these as clear and simple as possible, so please leave <a href="#feedback-welcome">feedback</a> if you&rsquo;ve either struggled to understand a step or feel it could be clarified further.</p>
+<h2 id="step-1-agree-a-time-to-perform-the-migration">Step 1 - Agree a time to perform the migration</h2><p>During the process of migration high velocity apps will be unable to deploy to &ldquo;live-1&rdquo;. You should speak to your team and agree a time and date to attempt to migrate your namespace. It&rsquo;s also recommended that you get familiar with migrating a non-production namespace before attempting prod.</p>
 <h2 id="step-2-amend-your-ingress-resource">Step 2 - Amend your ingress resource</h2><p>To ensure that you can send traffic to both clusters simultaneously you must add an annotation to your <code>ingress</code> resource to allow traffic weighting.</p>
 <p>This looks as follows:</p>
 <div class="highlight"><pre class="highlight yaml" tabindex="0"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">networking.k8s.io/v1beta1</span>
@@ -215,8 +213,9 @@
     <span class="s">external-dns.alpha.kubernetes.io/set-identifier</span><span class="pi">:</span> <span class="s">&lt;ingress-name&gt;-&lt;environment-name&gt;-&lt;colour&gt;</span>
     <span class="s">external-dns.alpha.kubernetes.io/aws-weight</span><span class="pi">:</span> <span class="s2">"</span><span class="s">50"</span>
 </code></pre></div><p>(Note - Please change the <code>ingress-name</code> and <code>environment-name</code> values in the above example, you can get the <code>environment-name</code> value from your namespace label &ldquo;cloud-platform.justice.gov.uk/environment-name&rdquo;. The <code>colour</code> should be <code>blue</code> for ingress in live-1 and <code>green</code> for ingress in EKS <code>live</code> cluster)</p>
-<p>The idea behind the annotation is to control where the traffic is going. Using the above example 50% of the traffic will be sent to the ingress in the &ldquo;Live-1&rdquo; cluster. In a later step, we will create another resource in the &ldquo;Live&rdquo; cluster that will weight the traffic between the two clusters.</p>
-<h2 id="step-3-migrate-your-namespace-environment-to-quot-live-quot">Step 3 - Migrate your namespace environment to &ldquo;live&rdquo;</h2><p>To migrate your namespace from &ldquo;live-1&rdquo; to &ldquo;live&rdquo; you&rsquo;ll need to copy your namespace directory to a new location in the <a href="https://github.com/ministryofjustice/cloud-platform-environments/">cloud-platform-environments</a> repository. To do this, ensure your <a href="https://github.com/ministryofjustice/cloud-platform-cli">cloud-platform-cli</a> is up to date. Then you perform the following:</p>
+<p>The idea behind the annotation is to control where traffic is directed to. The addition of <code>aws-weight: 50</code> against this ingress to the &ldquo;live-1&rdquo; cluster changes nothing initially - all of the internet traffic to this domain still goes to your service. But in a later step we&rsquo;ll add a second ingress for your domain, on the new &ldquo;live&rdquo; cluster. And when you increase the <code>aws-weight</code> on that one from 0 upwards, a proportion of the traffic will be directed to your service running on that cluster too.</p>
+<h2 id="step-3-migrate-your-namespace-environment-to-quot-live-quot">Step 3 - Migrate your namespace environment to &ldquo;live&rdquo;</h2><p>To migrate your namespace from &ldquo;live-1&rdquo; to &ldquo;live&rdquo; you&rsquo;ll need to copy your namespace directory to a new location in the <a href="https://github.com/ministryofjustice/cloud-platform-environments/">cloud-platform-environments</a> repository.</p>
+<p>To do this, ensure your <a href="https://github.com/ministryofjustice/cloud-platform-cli">cloud-platform-cli</a> is up to date. Then you perform the following:</p>
 
 <ul>
 <li><p>Clone a copy of the <a href="https://github.com/ministryofjustice/cloud-platform-environments/">cloud-platform-environments</a> repository and create a branch: <code>git clone git@github.com:ministryofjustice/cloud-platform-environments.git</code></p></li>
@@ -233,7 +232,7 @@
 <li><p>If you use Kiam for <a href="https://github.com/ministryofjustice/cloud-platform-infrastructure/tree/main/terraform/cross-account-IAM">cross account IAM roles</a>: You&rsquo;ll need to use <a href="https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html">IRSA</a> in EKS. These <a href="https://github.com/ministryofjustice/cloud-platform-infrastructure/tree/main/terraform/cross-account-IAM">roles</a> need to be defined inside  the <a href="https://github.com/ministryofjustice/cloud-platform-environments/">environments repo</a> using the guidence <a href="/documentation/other-topics/access-cross-aws-resources-irsa-eks.html#use-iam-roles-for-service-accounts-to-access-resources-in-a-different-aws-account">here</a>.</p></li>
 </ul>
 <p>If you want to skip any warnings and continue anyway, the cli has a <code>--skip-warnings</code> flag you can enable.</p>
-<h2 id="step-4-authenticate-to-the-quot-live-quot-cluster">Step 4 - Authenticate to the &ldquo;Live&rdquo; cluster</h2><p>Grab a new set of credentials from <a href="https://login.live.cloud-platform.service.justice.gov.uk">login.live.cloud-platform.service.justice.gov.uk</a>.</p>
+<h2 id="step-4-authenticate-to-the-quot-live-quot-cluster">Step 4 - Authenticate to the &ldquo;live&rdquo; cluster</h2><p>Grab a new set of credentials from <a href="https://login.live.cloud-platform.service.justice.gov.uk">login.live.cloud-platform.service.justice.gov.uk</a>.</p>
 <h2 id="step-5-add-a-new-ingress-resource">Step 5 - Add a new ingress resource</h2><p>Create a new Ingress from the copy of &ldquo;live-1&rdquo; Ingress. Amend the <code>aws-weight</code> annotation to &ldquo;0&rdquo;, this will not send any traffic to &ldquo;live&rdquo;. In the later step, we start sending real traffic by tweaking external-dns ingress annotation (<code>aws-weight</code>)</p>
 <div class="highlight"><pre class="highlight yaml" tabindex="0"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">networking.k8s.io/v1beta1</span>
 <span class="na">kind</span><span class="pi">:</span> <span class="s">Ingress</span>
@@ -244,7 +243,7 @@
 </code></pre></div><p>(Note - Please change the <code>colour</code> to <code>green</code> for ingress in live)</p>
 <h2 id="step-6-create-a-new-step-to-your-deployment-pipeline">Step 6 - Create a new step to your deployment pipeline</h2><p>There are multi ways people are deploying their application, this guide will cover two of them:</p>
 <h3 id="deploy-with-github-actions">Deploy with GitHub Actions</h3><p>For teams using Github Actions as continuous deployment following <a href="/documentation/deploying-an-app/github-actions-continuous-deployment.html#continuous-deployment-of-an-application-using-github-actions">user guide</a>, update your service account module in the “cloud-platform-environments” repo to push secrets with different names for <a href="https://github.com/ministryofjustice/cloud-platform-environments/blob/main/namespaces/live-1.cloud-platform.service.justice.gov.uk/justicedata-prod/resources/serviceaccount.tf#L4-L7">example</a>. Use the new secrets to authenticate to the &ldquo;live&rdquo; cluster. You can either create separate GitHub action or add additional steps to your existing GitHub action to deploy in the &ldquo;live&rdquo; cluster</p>
-<h3 id="deploy-with-circleci">Deploy with CircleCI</h3><p>For teams who use circleci for continuous deployment, you will see a new CircleCI service account created in &ldquo;live&rdquo; cluster after the namespace directory is copied from &ldquo;Live&rdquo;-1. This serviceaccount is created by either the serviceaccount.yaml or serviceaccount.tf file in your namespace folder.</p>
+<h3 id="deploy-with-circleci">Deploy with CircleCI</h3><p>For teams who use CircleCI for continuous deployment, when you have copied the namespace directory from &ldquo;live-1&rdquo;, a new ServiceAccount is created in the &ldquo;live&rdquo; cluster, for you to use with CircleCI. This ServiceAccount is created by either the serviceaccount.yaml or serviceaccount.tf file in your namespace folder.</p>
 <p>Once the service account is created, you can grab the ca.crt, token and cluster_name, to authenticate to the &ldquo;live&rdquo; cluster.</p>
 <p>You can use a separate pipeline to deploy in &ldquo;live&rdquo; or amend the existing pipeline to add additional steps to authenticate and deploy to &ldquo;live&rdquo;</p>
 <p>Click <a href="https://github.com/ministryofjustice/cloud-platform-reference-app/blob/main/.circleci/config.yml">HERE</a> for an example of a circleci config.yml file that builds an image, authenticates and deploys an application to both the &ldquo;live-1&rdquo; and &ldquo;live&rdquo; clusters in the same workflow. The application is deployed using <a href="https://github.com/ministryofjustice/cloud-platform-reference-app/tree/main/deploy/kubectl">Kubernetes manifest files</a> and include a <a href="https://github.com/ministryofjustice/cloud-platform-reference-app/blob/73b021b36a0cfee9b7363a119db92597e398641c/deploy/kubectl/live-1/ingress.yaml#L6">unique ingress identifier</a> for each cluster and a <a href="https://github.com/ministryofjustice/cloud-platform-reference-app/blob/73b021b36a0cfee9b7363a119db92597e398641c/deploy/kubectl/live-1/ingress.yaml#L7">weighting</a> of 50/50 as mentioned in <code>Step 2 - Amend your ingress resource</code> of this document.</p>
@@ -257,7 +256,7 @@ For example, by setting this value to 5, route53 will send 5% of real traffic to
 <p>It is advised to send between 1-10% of the traffic to the live cluster. Once the traffic flows into the live cluster and the application behaves as expected, 
 you could send 100% of the traffic into live cluster and 0% into live-1 cluster.</p>
 <p>NOTE: If results are not successful within the live cluster, rollback the annotations to their initial state (0% weight).</p>
-<h2 id="step-10-cleanup-old-quot-live-1-quot-namespace">Step 10 - Cleanup old &ldquo;Live-1&rdquo; namespace</h2><p>Once you have successfully migrated to the &ldquo;Live&rdquo; cluster you can remove your namespace from the<a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live-1.cloud-platform.service.justice.gov.uk">&ldquo;Live-1&rdquo; directory</a>.This is as simple as running the command :</p>
+<h2 id="step-10-cleanup-old-quot-live-1-quot-namespace">Step 10 - Cleanup old &ldquo;live-1&rdquo; namespace</h2><p>Once you have successfully migrated to the &ldquo;live&rdquo; cluster you can remove your namespace from the<a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live-1.cloud-platform.service.justice.gov.uk">&ldquo;live-1&rdquo; directory</a>.This is as simple as running the command :</p>
 <div class="highlight"><pre class="highlight shell" tabindex="0"><code><span class="nb">rm</span> <span class="nt">-rf</span> ./namespaces/live-1.cloud-platform.service.justice.gov.uk/&lt;my-namespace-name&gt;
 </code></pre></div><p>The deletion will need to be written back to the <code>main</code> branch. Please create a PR and have <code>Deletion of NS due to migration to live cluster</code> in the description.</p>
 <h2 id="links-for-the-new-cluster">Links for the new cluster</h2><p>Prometheus: <a href="https://prometheus.live.cloud-platform.service.justice.gov.uk">https://prometheus.live.cloud-platform.service.justice.gov.uk</a></p>
@@ -266,8 +265,21 @@ you could send 100% of the traffic into live cluster and 0% into live-1 cluster.
 <p>Kibana:
 <a href="https://kibana.cloud-platform.service.justice.gov.uk/_plugin/kibana/app/kibana#/home?_g=()">https://kibana.cloud-platform.service.justice.gov.uk/_plugin/kibana</a></p>
 <p>Authenticating to the Cluster: <a href="https://login.live.cloud-platform.service.justice.gov.uk">login.live.cloud-platform.service.justice.gov.uk</a></p>
-<h2 id="how-to-roll-back">How to roll back</h2><h2 id="troubleshooting">Troubleshooting</h2><h3 id="ttlsecondsafterfinished">ttlSecondsAfterFinished</h3><p>TTL Controller for Finished Resources(ttlSecondsAfterFinished) is not available in EKS yet. For users who use ttlSecondsAfterFinished to clear completed jobs, should setup <a href="https://kubernetes.io/docs/tasks/job/automated-tasks-with-cron-jobs/#jobs-history-limits">Jobs History Limits</a> using failedJobsHistoryLimit and successfulJobsHistoryLimit.</p>
-<h2 id="feedback-welcome">Feedback welcome</h2>
+<h2 id="how-to-roll-back">How to roll back</h2><p>TODO</p>
+<h2 id="troubleshooting">Troubleshooting</h2><h3 id="jobs-cleanup-ttlsecondsafterfinished">Jobs cleanup - ttlSecondsAfterFinished</h3><p>TTL Controller for Finished Resources(ttlSecondsAfterFinished) is not available in EKS yet. For users who use ttlSecondsAfterFinished to clear completed jobs, should setup <a href="https://kubernetes.io/docs/tasks/job/automated-tasks-with-cron-jobs/#jobs-history-limits">Jobs History Limits</a> using failedJobsHistoryLimit and successfulJobsHistoryLimit.</p>
+<h2 id="questions">Questions</h2><p>If you have questions, please ask us on Slack:</p>
+
+<ul>
+<li>#cloud-platform-eks-migration-plan-testing if you&rsquo;re in this group</li>
+<li>#ask-cloud-platform</li>
+</ul>
+<h2 id="feedback-welcome">Feedback welcome</h2><p>We&rsquo;d love to receive feedback on this process, to make it as low friction as possible. Please drop us a message on Slack:</p>
+
+<ul>
+<li>#cloud-platform-eks-migration-plan-testing if you&rsquo;re in this group</li>
+<li>DM to @antony.bishop</li>
+</ul>
+
 
               <div data-module='page-expiry' data-last-reviewed-on="2021-10-20">
     <div class='page-expiry--not-expired'>
@@ -288,7 +300,7 @@ you could send 100% of the traffic into live cluster and 0% into live-1 cluster.
           <aside>
               <ul class="contribution-banner">
                 <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide/blob/main/source/documentation/other-topics/migrate-to-live.html.md.erb">View source</a></li>
-                <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide/issues/new?labels=bug&amp;title=Re:%20'Migrate%20to%20the%20&quot;Live&quot;%20cluster'&amp;body=Problem%20with%20'Migrate%20to%20the%20&quot;Live&quot;%20cluster'%20(https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/migrate-to-live.html)">Report problem</a></li>
+                <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide/issues/new?labels=bug&amp;title=Re:%20'Migrate%20to%20the%20&quot;live&quot;%20cluster'&amp;body=Problem%20with%20'Migrate%20to%20the%20&quot;live&quot;%20cluster'%20(https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/migrate-to-live.html)">Report problem</a></li>
                 <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide">GitHub Repo</a></li>
               </ul>
           </aside>
