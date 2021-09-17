@@ -203,9 +203,9 @@
 <span class="na">kind</span><span class="pi">:</span> <span class="s">Ingress</span>
 <span class="na">metadata</span><span class="pi">:</span>
   <span class="na">annotations</span><span class="pi">:</span>
-    <span class="s">external-dns.alpha.kubernetes.io/set-identifier</span><span class="pi">:</span> <span class="s">&lt;ingress-name&gt;-&lt;environment-name&gt;-blue</span>
+    <span class="s">external-dns.alpha.kubernetes.io/set-identifier</span><span class="pi">:</span> <span class="s">&lt;ingress-name&gt;-&lt;namespace-name&gt;-blue</span>
     <span class="s">external-dns.alpha.kubernetes.io/aws-weight</span><span class="pi">:</span> <span class="s2">"</span><span class="s">100"</span>
-</code></pre></div><p>(Note - Please change the <code>ingress-name</code> and <code>environment-name</code> values in the above example, you can get the <code>environment-name</code> value from your namespace label &ldquo;cloud-platform.justice.gov.uk/environment-name&rdquo;. The <code>colour</code> should be <code>blue</code> for ingress in live-1 and <code>green</code> for ingress in EKS <code>live</code> cluster)</p>
+</code></pre></div><p>(Note - Please change the <code>ingress-name</code> and <code>namespace-name</code> values in the above example. The <span style="color:blue">blue</span> is for ingress in &ldquo;live-1&rdquo;)</p>
 <p>The idea behind the annotation is to control where traffic is directed to. The addition of <code>aws-weight: 100</code> against this ingress to the &ldquo;live-1&rdquo; cluster changes nothing initially - all of the internet traffic to this domain still goes to your service on the existing cluster. But in a later step we&rsquo;ll add a second ingress for your domain, on the new &ldquo;live&rdquo; cluster. And when you increase the <code>aws-weight</code> on that one from 0 upwards, a proportion of the traffic will be directed to your service running on that cluster too.</p>
 <h2 id="step-3-migrate-your-namespace-environment-to-quot-live-quot">Step 3 - Migrate your namespace environment to &ldquo;live&rdquo;</h2><p>To migrate your namespace from &ldquo;live-1&rdquo; to &ldquo;live&rdquo; you&rsquo;ll need to copy your namespace directory to a new location in the <a href="https://github.com/ministryofjustice/cloud-platform-environments/">cloud-platform-environments</a> repository.</p>
 
@@ -240,9 +240,9 @@
 <span class="na">kind</span><span class="pi">:</span> <span class="s">Ingress</span>
 <span class="na">metadata</span><span class="pi">:</span>
   <span class="na">annotations</span><span class="pi">:</span>
-    <span class="s">external-dns.alpha.kubernetes.io/set-identifier</span><span class="pi">:</span> <span class="s">&lt;ingress-name&gt;-&lt;environment-name&gt;-&lt;colour&gt;</span>
+    <span class="s">external-dns.alpha.kubernetes.io/set-identifier</span><span class="pi">:</span> <span class="s">&lt;ingress-name&gt;-&lt;namespace-name&gt;-green</span>
     <span class="s">external-dns.alpha.kubernetes.io/aws-weight</span><span class="pi">:</span> <span class="s2">"</span><span class="s">0"</span>
-</code></pre></div><p>(Note - Please change the <code>colour</code> to <code>green</code> for ingress in live)</p>
+</code></pre></div><p>(Note - The <span style="color:green">green</span> is for ingress in &ldquo;live&rdquo;))</p>
 <h2 id="step-6-create-a-new-step-to-your-deployment-pipeline">Step 6 - Create a new step to your deployment pipeline</h2><p>There are multiple ways people are deploying their application. This guide will cover two of them:</p>
 <h3 id="deploy-with-circleci">Deploy with CircleCI</h3><p>For teams who use CircleCI for continuous deployment, in Step 3 when you migrated your namespace environment to &ldquo;live&rdquo;, a new ServiceAccount was created in the &ldquo;live&rdquo; cluster, for you to use with CircleCI. This ServiceAccount is created by either the serviceaccount.yaml or serviceaccount.tf file in your namespace folder.</p>
 <p>You need to copy the ServiceAccount credentials to CircleCI secrets, so it can authenticate with the &ldquo;live&rdquo; cluster. Retrieve <a href="/documentation/deploying-an-app/using-circleci-for-continuous-deployment.html#retrieving-the-service-account-credentials">ca.crt, token and cluster_name</a>, making sure kubectl is talking to the &lsquo;live&rsquo; cluster. The <code>cluster_name</code> of the &ldquo;live&rdquo; cluster is <code>DF366E49809688A3B16EEC29707D8C09.gr7.eu-west-2.eks.amazonaws.com</code>. Paste these secrets into the CircleCI web console.</p>
