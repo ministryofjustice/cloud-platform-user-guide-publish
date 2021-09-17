@@ -200,7 +200,7 @@
 <h2 id="prerequisites-for-migration">Prerequisites for migration</h2><p>There are just a few things you need to ensure before you migrate between clusters.</p>
 
 <ul>
-<li><p>Ensure your containers are &ldquo;stateless&rdquo;. During the transition between clusters, your pods will be running simultaneously between &ldquo;Live&rdquo; and &ldquo;Live-1&rdquo;. Any state that your containers (inside the pod) store on disk or persistent volume (such as EBS) will not be copied to the new cluster.</p></li>
+<li><p>Ensure your containers are &ldquo;stateless&rdquo;. During the transition between clusters, your pods will be running simultaneously between &ldquo;Live&rdquo; and &ldquo;Live-1&rdquo;. Any state that your containers (inside the pod) store on disk or persistent volume (such as EBS) will not be copied to the new cluster. Using Elasticache for session variables storage will avoid web users being logged off when traffic gets routed to the other cluster.</p></li>
 <li><p>Check that multiple copies of your app can communicate simultaneously with AWS resources. These AWS resources will be shared between clusters. For example, your RDS instance will accept connections from pods in &ldquo;Live&rdquo; and &ldquo;Live-1&rdquo;.</p></li>
 </ul>
 <p>If this is a concern or you&rsquo;d like to check in advance, please feel free to contact the Cloud Platform team.</p>
