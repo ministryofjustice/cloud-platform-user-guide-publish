@@ -106,10 +106,21 @@
         <a href="#introduction"><span>Introduction</span></a>
       </li>
       <li>
-        <a href="#why-should-you-migrate"><span>Why should you migrate</span></a>
-      </li>
-      <li>
-        <a href="#what-are-you-migrating"><span>What are you migrating</span></a>
+        <a href="#migration-overview"><span>Migration overview</span></a>
+        <ul>
+          <li>
+            <a href="#what-is-eks-and-why-is-cloud-platform-adopting-it"><span>What is EKS and why is Cloud Platform adopting it?</span></a>
+          </li>
+          <li>
+            <a href="#why-should-we-migrate-our-services-to-the-new-cluster"><span>Why should we migrate our services to the new cluster?</span></a>
+          </li>
+          <li>
+            <a href="#why-call-the-new-cluster-quot-live-quot"><span>Why call the new cluster “live”?</span></a>
+          </li>
+          <li>
+            <a href="#what-are-you-migrating"><span>What are you migrating</span></a>
+          </li>
+        </ul>
       </li>
       <li>
         <a href="#prerequisites-for-migration"><span>Prerequisites for migration</span></a>
@@ -159,6 +170,9 @@
         <a href="#links-for-the-new-cluster"><span>Links for the new cluster</span></a>
       </li>
       <li>
+        <a href="#cluster-differences"><span>Cluster differences</span></a>
+      </li>
+      <li>
         <a href="#how-to-roll-back"><span>How to roll back</span></a>
       </li>
       <li>
@@ -178,15 +192,38 @@
 
         <div class="app-pane__content toc-open-disabled">
           <main id="content" class="technical-documentation" data-module="anchored-headings">
-              <h1 id="migrate-to-the-quot-live-quot-cluster">Migrate to the &ldquo;live&rdquo; cluster</h1><h2 id="introduction">Introduction</h2><p>This is a guide for Cloud Platform users to migrate a namespace from &ldquo;live-1&rdquo; to &ldquo;live&rdquo;.</p>
-<p>Explanation of terms:</p>
+              <h1 id="migrate-to-the-quot-live-quot-cluster">Migrate to the &ldquo;live&rdquo; cluster</h1><h2 id="introduction">Introduction</h2><p>This is a guide about the Cloud Platform&rsquo;s EKS Migration for Cloud Platform users.</p>
+<p>Cloud Platform team is asking all teams with services on Cloud Platform to migrate their services to a new cluster this Autumn. This migration is needed to improve the platform&rsquo;s maintainability, so that the team can deliver more user facing functionality.</p>
+<p>The expected time for a migration is <strong>two hours</strong>, but this is dependent on dealing with occasional edge cases. <a href="#questions">Support</a> is on hand during the process from the Cloud Platform team.</p>
+<h2 id="migration-overview">Migration overview</h2><p>The migration is between Kubernetes clusters:</p>
 
 <ul>
-<li><p>&ldquo;live-1&rdquo; = The name of the existing Cloud Platform (Kubernetes) cluster, that all namespaces have been on during 2018-2021</p></li>
-<li><p>&ldquo;live&rdquo; = The name of a new Cloud Platform (EKS) cluster, that all namespaces need to be migrated to, during Autumn 2021</p></li>
+<li>from &ldquo;live-1&rdquo;, which all namespaces have been running on during 2018-2021</li>
+<li>to &ldquo;live&rdquo;, a new cluster based on AWS&rsquo;s EKS managed service</li>
 </ul>
-<h2 id="why-should-you-migrate">Why should you migrate</h2><p>The Cloud Platform is a Kubernetes cluster deployed using a tool named kOps. When the Cloud Platform was conceived in 2017, Kubernetes management tools such as EKS (Elastic Kubernetes Service from AWS) and GKE (Google Kubernetes Engine) were in their infancy. An architecture decision record (ADR) was created with the understanding and acceptance of the extra management overhead and slightly slower release times. Since then, EKS has matured to a state where the benefits of running a multi-tenant cluster without the overhead of maintaining the control plane has become extremely attractive. If you wish to read more, please see this <a href="https://github.com/ministryofjustice/cloud-platform/blob/main/architecture-decision-record/014-Why-we-build-our-own-kubernetes-cluster.md">ADR</a>.</p>
-<h2 id="what-are-you-migrating">What are you migrating</h2><p>You will be migrating your Cloud Platform namespace of Kubernetes resources. This includes all permissions and resources defined in the .yaml and .tf files in your namespace <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live-1.cloud-platform.service.justice.gov.uk">directory</a>. The new Kubernetes cluster is in the same AWS account and VPC, so that already running AWS resources such as RDS and ECR don&rsquo;t change during this migration.</p>
+<p>There are only <a href="#cluster-differences">minor differences</a> in the setup of the new cluster.</p>
+<p>Each environment or &lsquo;namespace&rsquo; is migrated separately. Initially we will invite teams to migrate their &lsquo;development&rsquo; namespace, so that any issues can be ironed out before affecting the production service. Exactly the same steps</p>
+<p>Schedule (rough):</p>
+
+<ul>
+<li>20/9/21 - 31/9/21 Pilot - A small invited group will migrate their dev namespaces to iron out teething problems with the process</li>
+<li>October &lsquo;21 - widespread migration of dev namespaces - to understand get a handle on any challenges for teams</li>
+<li>November-ish &#39;21 - widespread migration of remaining namespaces</li>
+<li>Then: live-1 cluster is switched off</li>
+</ul>
+<h3 id="what-is-eks-and-why-is-cloud-platform-adopting-it">What is EKS and why is Cloud Platform adopting it?</h3><p>Elastic Kubernetes Service (EKS) is a managed Kubernetes service offered by AWS. Back when we started building the Cloud Platform we made the decision to build our clusters using kOps. This was a self-managed service that enabled us to start building the platform.</p>
+<p>Since then EKS has matured as a product and we are now in a position to switch to this solution which will enable us to better meet user needs, and continue to grow the platform. More info: <a href="https://github.com/ministryofjustice/cloud-platform/blob/main/architecture-decision-record/022-EKS.md#reasoning">ADR#22</a></p>
+<h3 id="why-should-we-migrate-our-services-to-the-new-cluster">Why should we migrate our services to the new cluster?</h3><p>Benefits to users of the Cloud Platform:</p>
+
+<ul>
+<li>Reduced operational overhead of EKS compared to kOps means the Cloud Platform team can spend more time working on the needs of our users, and improving the platform.</li>
+<li>Smoother upgrades of Kubernetes reduces the potential for downtime.</li>
+<li>The move to EKS is an enabler to adopting a multi-cluster architecture, which will enable the platform scale, offer better separation between non-production and production services, and reduce the “blast radius” of unforeseen outages.</li>
+<li>It also mitigates a number of risks that will improve resilience and security on the platform.</li>
+</ul>
+<h3 id="why-call-the-new-cluster-quot-live-quot">Why call the new cluster &ldquo;live&rdquo;?</h3><p>We didn&rsquo;t call it &ldquo;live-2&rdquo; because we plan to make this the last name change. We&rsquo;d rather abstract away from users the identity of the cluster, to allow the platform team to shift workloads onto new cluster when doing a blue-green upgrade or disaster recovery. So we plan for this migration to be the last visible name change. Inevitably we will clusters again some time in future, but in URLs the new cluster should be called &ldquo;live&rdquo; as well.</p>
+<p>We continue use the word &ldquo;live&rdquo; to indicate that it is suitable for environments from dev to production. And that it is live to the public, not just internally accessible.</p>
+<h3 id="what-are-you-migrating">What are you migrating</h3><p>You will be migrating your Cloud Platform namespace of Kubernetes resources. This includes all permissions and resources defined in the .yaml and .tf files in your namespace <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live-1.cloud-platform.service.justice.gov.uk">directory</a>. The new Kubernetes cluster is in the same AWS account and VPC, so that already running AWS resources such as RDS and ECR don&rsquo;t change during this migration.</p>
 <h2 id="prerequisites-for-migration">Prerequisites for migration</h2><p>There are just a few things you need to ensure before you start the migration.</p>
 
 <ul>
@@ -251,7 +288,7 @@
 </ul>
 <p>Below is guidance for making these changes, if you&rsquo;ve followed Cloud Platform CI/CD setup guides for CircleCI or GitHub Actions. However teams have been free to make other choices, so they should adapt these accordingly.</p>
 <h3 id="deploy-with-circleci">Deploy with CircleCI</h3><p>For teams who use CircleCI for continuous deployment, in Step 3 when you migrated your namespace environment to &ldquo;live&rdquo;, a new ServiceAccount was created in the &ldquo;live&rdquo; cluster, for you to use with CircleCI. This ServiceAccount is created by either the serviceaccount.yaml or serviceaccount.tf file in your namespace folder.</p>
-<p>You need to copy the ServiceAccount credentials to CircleCI secrets, so it can authenticate with the &ldquo;live&rdquo; cluster. Retrieve <a href="/documentation/deploying-an-app/using-circleci-for-continuous-deployment.html#retrieving-the-service-account-credentials">ca.crt, token and cluster_name</a>, making sure kubectl is talking to the &lsquo;live&rsquo; cluster. The <code>cluster_name</code> of the &ldquo;live&rdquo; cluster is <code>DF366E49809688A3B16EEC29707D8C09.gr7.eu-west-2.eks.amazonaws.com</code>. Paste these secrets into the CircleCI web console.</p>
+<p>You need to copy the ServiceAccount credentials to CircleCI secrets, so it can authenticate with the &ldquo;live&rdquo; cluster. Retrieve <a href="/documentation/deploying-an-app/using-circleci-for-continuous-deployment.html#retrieving-the-service-account-credentials">ca.crt, token and cluster_name</a>, making sure kubectl is talking to the &#39;live&rsquo; cluster. The <code>cluster_name</code> of the &ldquo;live&rdquo; cluster is <code>DF366E49809688A3B16EEC29707D8C09.gr7.eu-west-2.eks.amazonaws.com</code>. Paste these secrets into the CircleCI web console.</p>
 <p>To deploy to both &ldquo;live&rdquo; and &ldquo;live-1&rdquo; you can either:</p>
 
 <ul>
@@ -286,6 +323,20 @@ you could send 100% of the traffic into live cluster and 0% into live-1 cluster.
 <p>Kibana:
 <a href="https://kibana.cloud-platform.service.justice.gov.uk/_plugin/kibana/app/kibana#/home?_g=()">https://kibana.cloud-platform.service.justice.gov.uk/_plugin/kibana</a></p>
 <p>Authenticating to the Cluster: <a href="https://login.live.cloud-platform.service.justice.gov.uk">login.live.cloud-platform.service.justice.gov.uk</a></p>
+<h2 id="cluster-differences">Cluster differences</h2><p>Aside from the main change, from a kOps to a EKS managed Kubernetes cluster, we&rsquo;ve minimized the differences between the two clusters, to smooth migrations. In case the minor differences do affect services in some way, we&rsquo;ve summarized the differences in this list.</p>
+<p>The migration process takes account of differences that will affect services:</p>
+
+<ul>
+<li><p>Pods that need to make calls to AWS will need to authenticate differently - they now need to use <a href="https://aws.amazon.com/blogs/opensource/introducing-fine-grained-iam-roles-service-accounts/">IRSA</a>, rather than kiam. Terraform modules have been adapted to take account of this.</p></li>
+<li><p>Kubernetes jobs don&rsquo;t get cleaned after a TTL. TTL Controller for Finished Resources(ttlSecondsAfterFinished) is not available in EKS yet. For users who use ttlSecondsAfterFinished to clear completed jobs, should setup <a href="https://kubernetes.io/docs/tasks/job/automated-tasks-with-cron-jobs/#jobs-history-limits">Jobs History Limits</a> using failedJobsHistoryLimit and successfulJobsHistoryLimit.</p></li>
+</ul>
+<p>Other differences which we think will not affect services:</p>
+
+<ul>
+<li><p>EKS manages the control plane (master) nodes instead of kOps.</p></li>
+<li><p>Kubernetes version is 1.19 instead of 1.18. No YAML needs to change because no k8s APIs have been removed in this upgrade.</p></li>
+<li><p>Pod networking is implemented by Amazon&rsquo;s <a href="https://docs.aws.amazon.com/eks/latest/userguide/pod-networking.html">VPC Container Network Interface (CNI) plugin for Kubernetes</a>. Pods are assigned IP addresses associated with Elastic Network Interfaces on worker nodes. The IPs come from the VPC network pool and therefore do not require NAT to access resources outside the Kubernetes cluster. This replaces the platform&rsquo;s use of Calico CNI, which uses an overlay network.</p></li>
+</ul>
 <h2 id="how-to-roll-back">How to roll back</h2><p>Easy roll back is a key feature of this migration process. At any point in this migration process you can revert to using your service on the original &ldquo;live-1&rdquo; cluster. This may be necessary if you encounter problems running the namespace on the new cluster, and post-pone the migration until that is resolved.</p>
 <p>To rollback, going through the process in reverse, depending on how far you got:</p>
 
