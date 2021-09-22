@@ -118,7 +118,13 @@
             <a href="#why-call-the-new-cluster-quot-live-quot"><span>Why call the new cluster “live”?</span></a>
           </li>
           <li>
-            <a href="#what-are-you-migrating"><span>What are you migrating</span></a>
+            <a href="#what-are-you-migrating"><span>What are you migrating?</span></a>
+          </li>
+          <li>
+            <a href="#why-are-we-doing-the-extra-work-of-a-39-gradual-39-cut-over"><span>Why are we doing the extra work of a 'gradual’ cut-over?</span></a>
+          </li>
+          <li>
+            <a href="#can-i-make-changes-to-my-service-during-migration"><span>Can I make changes to my service during migration?</span></a>
           </li>
         </ul>
       </li>
@@ -192,23 +198,25 @@
 
         <div class="app-pane__content toc-open-disabled">
           <main id="content" class="technical-documentation" data-module="anchored-headings">
-              <h1 id="migrate-to-the-quot-live-quot-cluster">Migrate to the &ldquo;live&rdquo; cluster</h1><h2 id="introduction">Introduction</h2><p>This is a guide about the Cloud Platform&rsquo;s EKS Migration for Cloud Platform users.</p>
-<p>Cloud Platform team is asking all teams with services on Cloud Platform to migrate their services to a new cluster this Autumn. This migration is needed to improve the platform&rsquo;s maintainability, so that the team can deliver more user facing functionality.</p>
-<p>The expected time for a migration is <strong>two hours</strong>, but this is dependent on dealing with occasional edge cases. <a href="#questions">Support</a> is on hand during the process from the Cloud Platform team.</p>
+              <h1 id="migrate-to-the-quot-live-quot-cluster">Migrate to the &ldquo;live&rdquo; cluster</h1><h2 id="introduction">Introduction</h2><p>This is guide to the EKS Migration, for users of the Cloud Platform.</p>
+<p>The Cloud Platform team is asking all teams with services running on the platform to migrate their services to a new cluster in the platform, during Autumn 2021. This migration is needed to improve the platform&rsquo;s maintainability, so that the team can deliver more user-facing functionality.</p>
+<p>The expected time for a migration is <strong>two hours</strong>. Some services may take longer, depending on the features used. <a href="#questions">Support</a> is on hand throughout the process.</p>
 <h2 id="migration-overview">Migration overview</h2><p>The migration is between Kubernetes clusters:</p>
 
 <ul>
-<li>from &ldquo;live-1&rdquo;, which all namespaces have been running on during 2018-2021</li>
+<li>from the &ldquo;live-1&rdquo; cluster, on which all namespaces have been running on during 2018-2021</li>
 <li>to &ldquo;live&rdquo;, a new cluster based on AWS&rsquo;s EKS managed service</li>
 </ul>
-<p>There are only <a href="#cluster-differences">minor differences</a> in the setup of the new cluster.</p>
-<p>Each environment or &lsquo;namespace&rsquo; is migrated separately. Initially we will invite teams to migrate their &lsquo;development&rsquo; namespace, so that any issues can be ironed out before affecting the production service. Exactly the same steps</p>
-<p>Schedule (rough):</p>
+<p>There are only <a href="#cluster-differences">minor differences</a> between the old and new clusters, so in most cases no changes are needed to the service.</p>
+<p>Migrate each of environment or &lsquo;namespace&rsquo; separately. Initially we will invite teams to migrate their &lsquo;development&rsquo; namespace, so that any issues can be ironed out before affecting the production service.</p>
+<p>During migration, you can continue to deploy your application to the namespace, however <a href="#can-i-make-changes-to-my-service-during-migration">you can&rsquo;t change your namespace configuration or terraform</a>.</p>
+<p>If you have any trouble during the migration then it is easy to <a href="#how-to-roll-back">roll back</a> at any point.</p>
+<p>Schedule (draft):</p>
 
 <ul>
-<li>20/9/21 - 31/9/21 Pilot - A small invited group will migrate their dev namespaces to iron out teething problems with the process</li>
+<li>20/9/21 - 31/9/21 Pilot - A small invited group will migrate their dev namespaces, to iron out teething problems with the process</li>
 <li>October &lsquo;21 - widespread migration of dev namespaces - to understand get a handle on any challenges for teams</li>
-<li>November-ish &#39;21 - widespread migration of remaining namespaces</li>
+<li>November-ish &#39;21 - widespread migration of remaining namespaces - e.g. staging, pre-prod and production</li>
 <li>Then: live-1 cluster is switched off</li>
 </ul>
 <h3 id="what-is-eks-and-why-is-cloud-platform-adopting-it">What is EKS and why is Cloud Platform adopting it?</h3><p>Elastic Kubernetes Service (EKS) is a managed Kubernetes service offered by AWS. Back when we started building the Cloud Platform we made the decision to build our clusters using kOps. This was a self-managed service that enabled us to start building the platform.</p>
@@ -223,7 +231,11 @@
 </ul>
 <h3 id="why-call-the-new-cluster-quot-live-quot">Why call the new cluster &ldquo;live&rdquo;?</h3><p>We didn&rsquo;t call it &ldquo;live-2&rdquo; because we plan to make this the last name change. We&rsquo;d rather abstract away from users the identity of the cluster, to allow the platform team to shift workloads onto new cluster when doing a blue-green upgrade or disaster recovery. So we plan for this migration to be the last visible name change. Inevitably we will clusters again some time in future, but in URLs the new cluster should be called &ldquo;live&rdquo; as well.</p>
 <p>We continue use the word &ldquo;live&rdquo; to indicate that it is suitable for environments from dev to production. And that it is live to the public, not just internally accessible.</p>
-<h3 id="what-are-you-migrating">What are you migrating</h3><p>You will be migrating your Cloud Platform namespace of Kubernetes resources. This includes all permissions and resources defined in the .yaml and .tf files in your namespace <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live-1.cloud-platform.service.justice.gov.uk">directory</a>. The new Kubernetes cluster is in the same AWS account and VPC, so that already running AWS resources such as RDS and ECR don&rsquo;t change during this migration.</p>
+<h3 id="what-are-you-migrating">What are you migrating?</h3><p>You will be migrating your Cloud Platform namespace of Kubernetes resources. This includes all permissions and resources defined in the .yaml and .tf files in your namespace <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live-1.cloud-platform.service.justice.gov.uk">directory</a>. The new Kubernetes cluster is in the same AWS account and VPC, so that already running AWS resources such as RDS and ECR don&rsquo;t change during this migration.</p>
+<h3 id="why-are-we-doing-the-extra-work-of-a-39-gradual-39-cut-over">Why are we doing the extra work of a &#39;gradual&rsquo; cut-over?</h3><p>Users of modern digital services <a href="https://www.gov.uk/service-manual/technology/uptime-and-availability-keeping-your-service-online">expect</a> government services to have no planned downtime, and good reliability. The Cloud Platform has the facility to move traffic to the new cluster gradually (&lsquo;canarying&rsquo;), using weighted DNS, so service teams are expected to make use of this. This is achieved by adding two lines of annotations to the ingress on each cluster and changing the weights. By initially directing only 1% of traffic onto the new cluster and building up, any issues with load, or edge case usage, can be caught early, and the migration can be rolled back. So this small change avoids planned downtime and reduces risk of unplanned downtime.</p>
+<p>We guide you to use the gradual process for all environments, not just production ones. This is because it is best to test the process works for the non-prod environments, and to familiarize yourself with the steps, before you run them on the production environment.</p>
+<h3 id="can-i-make-changes-to-my-service-during-migration">Can I make changes to my service during migration?</h3><p>Your <em>application</em> can be deployed as normal. This is because in Step 6 you will configure your application&rsquo;s CI/CD to deploy your application to both clusters, so they are the same.</p>
+<p><strong>However</strong> you shouldn&rsquo;t change your <em>namespace configuration</em>, including your terraform i.e. the .yaml and .tf files in your environment&rsquo;s folders under the <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live-1.cloud-platform.service.justice.gov.uk">live-1 folder</a> and <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk">live folder</a>. This is because the Apply Pipeline can only apply changes to one cluster or the other, not both (because they share the terraform state, which includes some ServiceAccount objects in the cluster, so applying to both clusters would recreate these k8s resources every time). So for the 2 hours (expected) of the migration you should not change this config. If you urgently need to change your namespace config, then you can <a href="#how-to-roll-back">roll back the migration</a>.</p>
 <h2 id="prerequisites-for-migration">Prerequisites for migration</h2><p>There are just a few things you need to ensure before you start the migration.</p>
 
 <ul>
@@ -266,11 +278,11 @@
 <p>If you want to skip any warnings and continue anyway, the cli has a <code>--skip-warnings</code> flag you can enable.</p>
 <h2 id="step-4-authenticate-to-the-quot-live-quot-cluster">Step 4 - Authenticate to the &ldquo;live&rdquo; cluster</h2><p>Grab a new set of credentials from <a href="https://login.live.cloud-platform.service.justice.gov.uk">login.live.cloud-platform.service.justice.gov.uk</a>.</p>
 <p>You&rsquo;ll download a new config.yaml. Copy that to your .kube folder:</p>
-<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>mv ~/Downloads/config.yaml ~/.kube/config-live
+<div class="highlight"><pre class="highlight shell" tabindex="0"><code>    <span class="nb">mv</span> ~/Downloads/config.yaml ~/.kube/config-live
 </code></pre></div><p>Copy your existing live-1 credentials into a separate file:</p>
-<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>cp ~/.kube/config ~/.kube/config-live-1
+<div class="highlight"><pre class="highlight shell" tabindex="0"><code>    <span class="nb">cp</span> ~/.kube/config ~/.kube/config-live-1
 </code></pre></div><p>To talk to the live cluster copy it into the default location that kubectl looks for credentials:</p>
-<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>cp ~/.kube/config-live ~/.kube/config
+<div class="highlight"><pre class="highlight shell" tabindex="0"><code>    <span class="nb">cp</span> ~/.kube/config-live ~/.kube/config
 </code></pre></div><h2 id="step-5-add-a-new-ingress-resource">Step 5 - Add a new ingress resource</h2><p>Create a new Ingress from the copy of &ldquo;live-1&rdquo; Ingress. Amend the <code>aws-weight</code> annotation to &ldquo;0&rdquo;, this will not send any traffic to &ldquo;live&rdquo;. In the later step, we start sending real traffic by tweaking external-dns ingress annotation (<code>aws-weight</code>)</p>
 <p>The annotations will look like this:</p>
 <div class="highlight"><pre class="highlight yaml" tabindex="0"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">networking.k8s.io/v1beta1</span>
@@ -279,7 +291,7 @@
   <span class="na">annotations</span><span class="pi">:</span>
     <span class="s">external-dns.alpha.kubernetes.io/set-identifier</span><span class="pi">:</span> <span class="s">&lt;ingress-name&gt;-&lt;namespace-name&gt;-green</span>
     <span class="s">external-dns.alpha.kubernetes.io/aws-weight</span><span class="pi">:</span> <span class="s2">"</span><span class="s">0"</span>
-</code></pre></div><p>(Note - The <span style="color:green">green</span> is for ingress in &ldquo;live&rdquo;))</p>
+</code></pre></div><p>(Note - The <span style="color:green">green</span> is for ingress in &ldquo;live&rdquo;)</p>
 <h2 id="step-6-create-a-new-step-to-your-deployment-pipeline">Step 6 - Create a new step to your deployment pipeline</h2><p>Your application&rsquo;s continuous deployment pipeline needs a couple of changes:</p>
 
 <ul>
@@ -288,7 +300,7 @@
 </ul>
 <p>Below is guidance for making these changes, if you&rsquo;ve followed Cloud Platform CI/CD setup guides for CircleCI or GitHub Actions. However teams have been free to make other choices, so they should adapt these accordingly.</p>
 <h3 id="deploy-with-circleci">Deploy with CircleCI</h3><p>For teams who use CircleCI for continuous deployment, in Step 3 when you migrated your namespace environment to &ldquo;live&rdquo;, a new ServiceAccount was created in the &ldquo;live&rdquo; cluster, for you to use with CircleCI. This ServiceAccount is created by either the serviceaccount.yaml or serviceaccount.tf file in your namespace folder.</p>
-<p>You need to copy the ServiceAccount credentials to CircleCI secrets, so it can authenticate with the &ldquo;live&rdquo; cluster. Retrieve <a href="/documentation/deploying-an-app/using-circleci-for-continuous-deployment.html#retrieving-the-service-account-credentials">ca.crt, token and cluster_name</a>, making sure kubectl is talking to the &#39;live&rsquo; cluster. The <code>cluster_name</code> of the &ldquo;live&rdquo; cluster is <code>DF366E49809688A3B16EEC29707D8C09.gr7.eu-west-2.eks.amazonaws.com</code>. Paste these secrets into the CircleCI web console.</p>
+<p>You need to copy the ServiceAccount credentials to CircleCI secrets, so it can authenticate with the &ldquo;live&rdquo; cluster. Retrieve <a href="/documentation/deploying-an-app/using-circleci-for-continuous-deployment.html#retrieving-the-service-account-credentials">ca.crt, token and cluster_name</a>, making sure kubectl is talking to the &lsquo;live&rsquo; cluster. The <code>cluster_name</code> of the &ldquo;live&rdquo; cluster is <code>DF366E49809688A3B16EEC29707D8C09.gr7.eu-west-2.eks.amazonaws.com</code>. Paste these secrets into the CircleCI web console.</p>
 <p>To deploy to both &ldquo;live&rdquo; and &ldquo;live-1&rdquo; you can either:</p>
 
 <ul>
@@ -313,7 +325,7 @@ For example, by setting this value to 5 on &ldquo;live&rdquo; and 95 on &ldquo;l
 <div class="highlight"><pre class="highlight shell" tabindex="0"><code>    kubectl edit ingress &lt;ingress-name&gt; <span class="nt">-n</span> &lt;namespace&gt;
 </code></pre></div><p>It is advised to send between 1-10% of the traffic to the live cluster initially. Once the traffic flows into the live cluster and the application behaves as expected, 
 you could send 100% of the traffic into live cluster and 0% into live-1 cluster.</p>
-<p>NOTE: If results are not successful within the live cluster, rollback the annotations to their initial weights (&lsquo;100&rsquo; on &ldquo;live-1&rdquo;, &lsquo;0&rsquo;  on &ldquo;live&rdquo;).</p>
+<p>NOTE: If results are not successful within the live cluster, roll back the annotations to their initial weights (&lsquo;100&rsquo; on &ldquo;live-1&rdquo;, &lsquo;0&rsquo;  on &ldquo;live&rdquo;).</p>
 <h2 id="step-10-cleanup-old-quot-live-1-quot-namespace">Step 10 - Cleanup old &ldquo;live-1&rdquo; namespace</h2><p>Once you have successfully migrated to the &ldquo;live&rdquo; cluster, you can tidy up by removing your (now unused) namespace from the <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live-1.cloud-platform.service.justice.gov.uk">&ldquo;live-1&rdquo; directory</a>:</p>
 <div class="highlight"><pre class="highlight shell" tabindex="0"><code><span class="nb">rm</span> <span class="nt">-rf</span> ./namespaces/live-1.cloud-platform.service.justice.gov.uk/&lt;my-namespace-name&gt;
 </code></pre></div><p>As usual, commit this change to a branch, create a PR with title <code>Deletion of NS due to migration to live cluster</code> and once approved merge to <code>main</code>.</p>
@@ -338,7 +350,7 @@ you could send 100% of the traffic into live cluster and 0% into live-1 cluster.
 <li><p>Pod networking is implemented by Amazon&rsquo;s <a href="https://docs.aws.amazon.com/eks/latest/userguide/pod-networking.html">VPC Container Network Interface (CNI) plugin for Kubernetes</a>. Pods are assigned IP addresses associated with Elastic Network Interfaces on worker nodes. The IPs come from the VPC network pool and therefore do not require NAT to access resources outside the Kubernetes cluster. This replaces the platform&rsquo;s use of Calico CNI, which uses an overlay network.</p></li>
 </ul>
 <h2 id="how-to-roll-back">How to roll back</h2><p>Easy roll back is a key feature of this migration process. At any point in this migration process you can revert to using your service on the original &ldquo;live-1&rdquo; cluster. This may be necessary if you encounter problems running the namespace on the new cluster, and post-pone the migration until that is resolved.</p>
-<p>To rollback, going through the process in reverse, depending on how far you got:</p>
+<p>To roll back, going through the process in reverse, depending on how far you got:</p>
 
 <ul>
 <li><p>Step 10 &ldquo;Clean-up old &quot;live-1&rdquo; namespace&quot; -
