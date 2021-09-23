@@ -283,7 +283,8 @@
 <div class="highlight"><pre class="highlight shell" tabindex="0"><code>    <span class="nb">cp</span> ~/.kube/config ~/.kube/config-live-1
 </code></pre></div><p>To talk to the live cluster copy it into the default location that kubectl looks for credentials:</p>
 <div class="highlight"><pre class="highlight shell" tabindex="0"><code>    <span class="nb">cp</span> ~/.kube/config-live ~/.kube/config
-</code></pre></div><h2 id="step-5-add-a-new-ingress-resource">Step 5 - Add a new ingress resource</h2><p>Create a new Ingress from the copy of &ldquo;live-1&rdquo; Ingress. Amend the <code>aws-weight</code> annotation to &ldquo;0&rdquo;, this will not send any traffic to &ldquo;live&rdquo;. In the later step, we start sending real traffic by tweaking external-dns ingress annotation (<code>aws-weight</code>)</p>
+</code></pre></div><p>To use multiple kubeconfigs at once, follow this guide <a href="/documentation/getting-started/kubectl-config.html#using-multiple-kubeconfigs">here</a></p>
+<h2 id="step-5-add-a-new-ingress-resource">Step 5 - Add a new ingress resource</h2><p>Create a new Ingress from the copy of &ldquo;live-1&rdquo; Ingress. Amend the <code>aws-weight</code> annotation to &ldquo;0&rdquo;, this will not send any traffic to &ldquo;live&rdquo;. In the later step, we start sending real traffic by tweaking external-dns ingress annotation (<code>aws-weight</code>)</p>
 <p>The annotations will look like this:</p>
 <div class="highlight"><pre class="highlight yaml" tabindex="0"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">networking.k8s.io/v1beta1</span>
 <span class="na">kind</span><span class="pi">:</span> <span class="s">Ingress</span>
