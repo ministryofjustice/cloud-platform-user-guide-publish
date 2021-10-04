@@ -239,8 +239,17 @@
 <ul>
 <li><p>Ensure your containers are &ldquo;stateless&rdquo;. During the transition between clusters, your pods will be running simultaneously on both &ldquo;live&rdquo; and &ldquo;live-1&rdquo;. Any state that is in the containers (or inside the pod), such as the ephemeral disk or EBS, will not be copied to the new cluster. For example if you store user session data on disk, then moving it to Elasticache will avoid web users being logged off when traffic gets routed to the other cluster.</p></li>
 <li><p>Check that multiple copies of your app are ok to communicate simultaneously with AWS resources. These AWS resources will be shared between clusters. For example, your RDS instance will accept connections from pods in &ldquo;live&rdquo; and &ldquo;live-1&rdquo;.</p></li>
-<li><p>If you use Kubernetes Jobs and option <code>ttlSecondsAfterFinished</code> then refer to this guide: <a href="/documentation/other-topics/migrate-to-live-k8s-jobs.html#migrating-kubernetes-jobs-to-the-quot-live-quot-cluster">ttlSecondsAfterFinished</a></p></li>
-<li><p>Ensure you have the latest version of <a href="/documentation/getting-started/cloud-platform-cli.html#the-cloud-platform-cli">cloud-platform cli</a></p></li>
+<li><p>If you use Kubernetes <a href="https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/">Cronjobs</a> and <a href="https://kubernetes.io/docs/concepts/workloads/controllers/job/">Jobs</a> with option <a href="https://kubernetes.io/docs/concepts/workloads/controllers/ttlafterfinished/"><code>ttlSecondsAfterFinished</code></a> then refer to this guide: <a href="/documentation/other-topics/migrate-to-live-k8s-jobs.html#migrating-kubernetes-jobs-to-the-quot-live-quot-cluster">ttlSecondsAfterFinished</a>, you can check that by running below commands in your namespace.</p></li>
+</ul>
+<div class="highlight"><pre class="highlight shell" tabindex="0"><code>  Cronjobs:
+  kubectl <span class="nt">-n</span> &lt;namespace-name&gt; get cronjobs <span class="nt">-ojson</span> | jq <span class="s1">'.items[] | select(.spec.jobTemplate.spec.ttlSecondsAfterFinished != null ) | .metadata.name'</span>
+
+  Jobs:
+  kubectl <span class="nt">-n</span> &lt;namespace-name&gt; get <span class="nb">jobs</span> <span class="nt">-ojson</span> | jq <span class="nt">-r</span> <span class="s1">'.items[] | select(.spec.ttlSecondsAfterFinished !=  null ) | .metadata.name'</span>
+
+</code></pre></div>
+<ul>
+<li>Ensure you have the latest version of <a href="/documentation/getting-started/cloud-platform-cli.html#the-cloud-platform-cli">cloud-platform cli</a></li>
 </ul>
 <p>If any of these are a concern or you&rsquo;d like to check in advance, please <a href="#questions">contact the Cloud Platform team</a>.</p>
 <h2 id="how-to-migrate">How to migrate</h2><p>These steps describe how to migrate. We&rsquo;d love to make these as clear and simple as possible, so please leave <a href="#feedback-welcome">feedback</a> if you&rsquo;ve either struggled to understand a step or feel it could be clarified further.</p>
@@ -274,7 +283,7 @@
 <ul>
 <li><p>If you have a ServiceAccount module for GitHub Actions: please follow <a href="/documentation/other-topics/migrate-to-live-sa-github-actions.html#migrating-serviceaccount-module-for-github-actions-to-the-quot-live-quot-cluster">this guide</a></p></li>
 <li><p>If you have an Elasticsearch module, it adds an IRSA change, needed for EKS.</p></li>
-<li><p>If you use Kiam for <a href="https://github.com/ministryofjustice/cloud-platform-infrastructure/tree/main/terraform/cross-account-IAM">cross account IAM roles</a>: You&rsquo;ll need to use <a href="https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html">IRSA</a> in EKS. These <a href="https://github.com/ministryofjustice/cloud-platform-infrastructure/tree/main/terraform/cross-account-IAM">roles</a> need to be defined inside  the <a href="https://github.com/ministryofjustice/cloud-platform-environments/">environments repo</a> using the guidence <a href="/documentation/other-topics/access-cross-aws-resources-irsa-eks.html#use-iam-roles-for-service-accounts-to-access-resources-in-a-different-aws-account">here</a>.</p></li>
+<li><p><code>Money to prisoners</code> and <code>Pathfinder to analytical platform</code> teams use kiam for <a href="https://github.com/ministryofjustice/cloud-platform-infrastructure/tree/main/terraform/cross-account-IAM">cross account IAM roles</a>: You&rsquo;ll need to use <a href="https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html">IRSA</a> in EKS. These <a href="https://github.com/ministryofjustice/cloud-platform-infrastructure/tree/main/terraform/cross-account-IAM">roles</a> need to be defined inside  the <a href="https://github.com/ministryofjustice/cloud-platform-environments/">environments repo</a> using the guidence <a href="/documentation/other-topics/access-cross-aws-resources-irsa-eks.html#use-iam-roles-for-service-accounts-to-access-resources-in-a-different-aws-account">here</a>.</p></li>
 </ul>
 <p>If you want to skip any warnings and continue anyway, the cli has a <code>--skip-warnings</code> flag you can enable.</p>
 <h2 id="step-4-authenticate-to-the-quot-live-quot-cluster">Step 4 - Authenticate to the &ldquo;live&rdquo; cluster</h2><p>Grab a new set of credentials from <a href="https://login.live.cloud-platform.service.justice.gov.uk">login.live.cloud-platform.service.justice.gov.uk</a>.</p>
