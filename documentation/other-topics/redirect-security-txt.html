@@ -114,13 +114,15 @@
               <h1 id="setup-ingress-to-redirect-security-txt">Setup Ingress to redirect security.txt</h1><p>Security has a requirement that all domains where the Ministry of Justice (MoJ) is primarily responsible 
 for cyber security must redirect the <code>/.well-known/security.txt</code> location to the central <a href="https://raw.githubusercontent.com/ministryofjustice/security-guidance/main/contact/vulnerability-disclosure-security.txt"><code>security.txt</code></a>. 
 Refer security guidance <a href="https://security-guidance.service.justice.gov.uk/implement-security-txt/#implementing-securitytxt">here</a>.</p>
+<p>The approach below is one way to handle these redirects, but you can handle those redirects yourself inside your
+application if you wish to.</p>
 <p>To setup a permanent redirect to the central <a href="https://raw.githubusercontent.com/ministryofjustice/security-guidance/main/contact/vulnerability-disclosure-security.txt"><code>security.txt</code></a>,</p>
 
 <ul>
 <li><p>create a <strong>new</strong> ingress-redirect.yaml with the annotation</p>
 <div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>metadata:
 annotations:
-nginx.ingress.kubernetes.io/permanent-redirect: https://raw.githubusercontent.com/ministryofjustice/security-guidance/main/contact/vulnerability-disclosure-security.txt
+    nginx.ingress.kubernetes.io/permanent-redirect: https://raw.githubusercontent.com/ministryofjustice/security-guidance/main/contact/vulnerability-disclosure-security.txt
 </code></pre></div><p>An example is shown below:</p>
 <div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>---
 apiVersion: networking.k8s.io/v1beta1
@@ -129,6 +131,8 @@ metadata:
 name: helloworld-rubyapp-ingress-security-txt-redirect
 annotations:
     kubernetes.io/ingress.class: nginx
+    external-dns.alpha.kubernetes.io/set-identifier: &lt;ingress-name&gt;-&lt;namespace-name&gt;-&lt;blue/green&gt;
+    external-dns.alpha.kubernetes.io/aws-weight: "100"
     nginx.ingress.kubernetes.io/permanent-redirect: https://raw.githubusercontent.com/ministryofjustice/security-guidance/main/contact/vulnerability-disclosure-security.txt
 spec:
 tls:
@@ -148,16 +152,16 @@ rules:
 <div class="highlight"><pre class="highlight shell" tabindex="0"><code>  kubectl <span class="nt">-n</span> &lt;my-namespace&gt; apply <span class="nt">-f</span> ingress-redirect.yaml
 </code></pre></div>
 
-              <div data-module='page-expiry' data-last-reviewed-on="2021-12-30">
+              <div data-module='page-expiry' data-last-reviewed-on="2022-01-04">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 30 September 2021.
+      This page was last reviewed on 4 October 2021.
 
-        It needs to be reviewed again on 30 December 2021
+        It needs to be reviewed again on 4 January 2022
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 30 December 2021.
+      This page was set to be reviewed before 4 January 2022.
       This might mean the content is out of date.
     </div>
   </div>
