@@ -130,9 +130,6 @@
         <a href="#step-5-add-a-new-ingress-resource-in-quot-live-quot-cluster"><span>Step 5 - Add a new ingress resource in “live” cluster</span></a>
       </li>
       <li>
-        <a href="#the-green-is-for-ingress-in-quot-live-quot"><span>The green is for ingress in “live”</span></a>
-      </li>
-      <li>
         <a href="#step-6-create-a-new-step-to-your-deployment-pipeline"><span>Step 6 - Create a new step to your deployment pipeline</span></a>
         <ul>
           <li>
@@ -297,18 +294,25 @@
 </code></pre></div><p>To talk to the live cluster copy it into the default location that kubectl looks for credentials:</p>
 <div class="highlight"><pre class="highlight shell" tabindex="0"><code>    <span class="nb">cp</span> ~/.kube/config-live ~/.kube/config
 </code></pre></div><p>To use multiple kubeconfigs at once, follow this guide <a href="/documentation/getting-started/kubectl-config.html#using-multiple-kubeconfigs">here</a></p>
-<h2 id="step-5-add-a-new-ingress-resource-in-quot-live-quot-cluster">Step 5 - Add a new ingress resource in &ldquo;live&rdquo; cluster</h2><p>Create a new Ingress from the copy of &ldquo;live-1&rdquo; Ingress. Amend the <code>aws-weight</code> annotation to &ldquo;0&rdquo;, this will not send any traffic to &ldquo;live&rdquo;. In the later step, we start sending real traffic by tweaking external-dns ingress annotation (<code>aws-weight</code>)</p>
-<p>The annotations will look like this:</p>
+<h2 id="step-5-add-a-new-ingress-resource-in-quot-live-quot-cluster">Step 5 - Add a new ingress resource in &ldquo;live&rdquo; cluster</h2><p>Create a new Ingress for &ldquo;live&rdquo;, which is almost the same as your existing &ldquo;live-1&rdquo; Ingress.</p>
+<p>To do this, it depends on how you manage your app&rsquo;s kubernetes config:</p>
+<p>Case 1: You have <strong>plain YAML files</strong>, one for each environment e.g. dev, staging, prod, which you apply using <code>kubectl apply</code> (either with CI/CD or manually on the command-line). Create a duplicate of your folder of YAML files. e.g. <code>cp -R deploy-dev deploy-dev-live</code>. Now change the annotations in the new live ingress.yaml, as described below.</p>
+<p>Case 2: You have a <strong>Helm chart</strong>, with templated YAML, with a different values.yaml file for each environment. In the ingress.yaml ensure you&rsquo;ve included the annotations below, and use variables for their values. Create a duplicate of the values.yaml for the environment you&rsquo;re migrating. In all of your values.yaml files (one for each environment), provide values for thse annotations, as described below. Every environment and cluster will have a unique value for <code>set-identifier</code>.</p>
+<p>Set the annotations in the new (live) ingress to have these two values:</p>
 <div class="highlight"><pre class="highlight yaml" tabindex="0"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">networking.k8s.io/v1beta1</span>
 <span class="na">kind</span><span class="pi">:</span> <span class="s">Ingress</span>
 <span class="na">metadata</span><span class="pi">:</span>
   <span class="na">annotations</span><span class="pi">:</span>
     <span class="s">external-dns.alpha.kubernetes.io/set-identifier</span><span class="pi">:</span> <span class="s">&lt;ingress-name&gt;-&lt;namespace-name&gt;-green</span>
     <span class="s">external-dns.alpha.kubernetes.io/aws-weight</span><span class="pi">:</span> <span class="s2">"</span><span class="s">0"</span>
-</code></pre></div>
-<hr>
-<p><strong>NOTE</strong></p>
-<h2 id="the-green-is-for-ingress-in-quot-live-quot">The <span style="color:green">green</span> is for ingress in &ldquo;live&rdquo;</h2><p>Once you have created a new live-ingress.yaml with the above two external-dns annotations, you can apply the ingress in the &ldquo;live&rdquo; cluster using this command:</p>
+</code></pre></div><p>Explanation:</p>
+
+<ul>
+<li><code>set-identifier</code> is set to a string that is unique. No two ingresses or namespaces or clusters can share the same value. This is achieved by you substituting in the ingress name, namespace name and a colour referring to the cluster.</li>
+<li><code>aws-weight</code> is set to <code>0</code>, so that initially no traffic will be sent to the copy of the app running on the &ldquo;live&rdquo; cluster. In the later step, we start sending real traffic by increasing this value. (The value for the equivalent environment on the live-1 cluster will be 100, as set in Step 2, so the existing app will continue to get all the traffic for now.)</li>
+</ul>
+<p><strong>NOTE</strong>: The <span style="color:green">green</span> is for ingress in &ldquo;live&rdquo;</p>
+<p>Once you have created a new live-ingress.yaml with the above two external-dns annotations, you can apply the ingress in the &ldquo;live&rdquo; cluster using this command:</p>
 <div class="highlight"><pre class="highlight shell" tabindex="0"><code>  kubectl <span class="nt">--context</span> live.cloud-platform.service.justice.gov.uk <span class="nt">-n</span> &lt;namespace-name&gt; apply <span class="nt">-f</span> live-ingress.yaml
 </code></pre></div><h2 id="step-6-create-a-new-step-to-your-deployment-pipeline">Step 6 - Create a new step to your deployment pipeline</h2><p>Your application&rsquo;s continuous deployment pipeline needs a couple of changes:</p>
 
