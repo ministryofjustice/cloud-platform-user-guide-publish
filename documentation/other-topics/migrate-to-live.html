@@ -121,9 +121,6 @@
         <a href="#step-2-amend-and-apply-your-quot-live-1-quot-ingress-resource"><span>Step 2 - Amend and apply your “live-1” ingress resource</span></a>
       </li>
       <li>
-        <a href="#please-change-the-ingress-name-and-namespace-name-values-in-the-above-example-the-blue-is-for-ingress-in-quot-live-1-quot"><span>Please change the ingress-name and namespace-name values in the above example. The blue is for ingress in “live-1”</span></a>
-      </li>
-      <li>
         <a href="#step-3-migrate-your-namespace-environment-to-quot-live-quot"><span>Step 3 - Migrate your namespace environment to “live”</span></a>
       </li>
       <li>
@@ -268,10 +265,8 @@
   <span class="na">annotations</span><span class="pi">:</span>
     <span class="s">external-dns.alpha.kubernetes.io/set-identifier</span><span class="pi">:</span> <span class="s">&lt;ingress-name&gt;-&lt;namespace-name&gt;-blue</span>
     <span class="s">external-dns.alpha.kubernetes.io/aws-weight</span><span class="pi">:</span> <span class="s2">"</span><span class="s">100"</span>
-</code></pre></div>
-<hr>
-<p><strong>NOTE</strong></p>
-<h2 id="please-change-the-ingress-name-and-namespace-name-values-in-the-above-example-the-blue-is-for-ingress-in-quot-live-1-quot">Please change the <code>ingress-name</code> and <code>namespace-name</code> values in the above example. The <span style="color:blue">blue</span> is for ingress in &ldquo;live-1&rdquo;</h2><p>Once you have added the above two external-dns annotations and saved your changes to the &ldquo;live-1&rdquo; ingress.yaml file, you can apply the ingress using this command:</p>
+</code></pre></div><p><strong>NOTE</strong>: Please change the <code>ingress-name</code> and <code>namespace-name</code> values in the above example. The <span style="color:blue">blue</span> is for ingress in &ldquo;live-1&rdquo;</p>
+<p>Once you have added the above two external-dns annotations and saved your changes to the &ldquo;live-1&rdquo; ingress.yaml file, you can apply the ingress using this command:</p>
 <div class="highlight"><pre class="highlight shell" tabindex="0"><code>  kubectl <span class="nt">-n</span> &lt;namespace-name&gt; apply <span class="nt">-f</span> ingress.yaml
 </code></pre></div><p>The idea behind the annotation is to control where traffic is directed to. The addition of <code>aws-weight: 100</code> against this ingress to the &ldquo;live-1&rdquo; cluster changes nothing initially - all of the internet traffic to this domain still goes to your service on the existing cluster. But in a later step we&rsquo;ll add a second ingress for your domain, on the new &ldquo;live&rdquo; cluster. And when you increase the <code>aws-weight</code> on that one from 0 upwards, a proportion of the traffic will be directed to your service running on that cluster too.</p>
 <h2 id="step-3-migrate-your-namespace-environment-to-quot-live-quot">Step 3 - Migrate your namespace environment to &ldquo;live&rdquo;</h2><p>To migrate your namespace from &ldquo;live-1&rdquo; to &ldquo;live&rdquo; you&rsquo;ll need to copy your namespace directory to a new location in the <a href="https://github.com/ministryofjustice/cloud-platform-environments/">cloud-platform-environments</a> repository.</p>
