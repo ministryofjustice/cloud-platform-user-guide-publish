@@ -272,7 +272,7 @@
 <hr>
 <p><strong>NOTE</strong></p>
 <h2 id="please-change-the-ingress-name-and-namespace-name-values-in-the-above-example-the-blue-is-for-ingress-in-quot-live-1-quot">Please change the <code>ingress-name</code> and <code>namespace-name</code> values in the above example. The <span style="color:blue">blue</span> is for ingress in &ldquo;live-1&rdquo;</h2><p>Once you have added the above two external-dns annotations and saved your changes to the &ldquo;live-1&rdquo; ingress.yaml file, you can apply the ingress using this command:</p>
-<div class="highlight"><pre class="highlight shell" tabindex="0"><code>  kubectl <span class="nt">-n</span> <span class="o">[</span>namespace name] apply <span class="nt">-f</span> ingress.yaml
+<div class="highlight"><pre class="highlight shell" tabindex="0"><code>  kubectl <span class="nt">-n</span> &lt;namespace-name&gt; apply <span class="nt">-f</span> ingress.yaml
 </code></pre></div><p>The idea behind the annotation is to control where traffic is directed to. The addition of <code>aws-weight: 100</code> against this ingress to the &ldquo;live-1&rdquo; cluster changes nothing initially - all of the internet traffic to this domain still goes to your service on the existing cluster. But in a later step we&rsquo;ll add a second ingress for your domain, on the new &ldquo;live&rdquo; cluster. And when you increase the <code>aws-weight</code> on that one from 0 upwards, a proportion of the traffic will be directed to your service running on that cluster too.</p>
 <h2 id="step-3-migrate-your-namespace-environment-to-quot-live-quot">Step 3 - Migrate your namespace environment to &ldquo;live&rdquo;</h2><p>To migrate your namespace from &ldquo;live-1&rdquo; to &ldquo;live&rdquo; you&rsquo;ll need to copy your namespace directory to a new location in the <a href="https://github.com/ministryofjustice/cloud-platform-environments/">cloud-platform-environments</a> repository.</p>
 
@@ -280,7 +280,7 @@
 <li><p>If you&rsquo;ve not already got a clone of <a href="https://github.com/ministryofjustice/cloud-platform-environments/">cloud-platform-environments</a> repository, do that now: <code>git clone git@github.com:ministryofjustice/cloud-platform-environments.git</code>. Create a branch.</p></li>
 <li><p>Run the cloud-platform cli command from your namespace directory to migrate your namespace:</p></li>
 </ul>
-<div class="highlight"><pre class="highlight shell" tabindex="0"><code>  <span class="nb">cd </span>namespaces/live-1.cloud-platform.service.justice.gov.uk/&lt;namespace&gt;
+<div class="highlight"><pre class="highlight shell" tabindex="0"><code>  <span class="nb">cd </span>namespaces/live-1.cloud-platform.service.justice.gov.uk/&lt;namespace-name&gt;
   cloud-platform environment migrate
 </code></pre></div>
 <ul>
@@ -314,7 +314,7 @@
 <hr>
 <p><strong>NOTE</strong></p>
 <h2 id="the-green-is-for-ingress-in-quot-live-quot">The <span style="color:green">green</span> is for ingress in &ldquo;live&rdquo;</h2><p>Once you have created a new live-ingress.yaml with the above two external-dns annotations, you can apply the ingress in the &ldquo;live&rdquo; cluster using this command:</p>
-<div class="highlight"><pre class="highlight shell" tabindex="0"><code>  kubectl <span class="nt">--context</span> live.cloud-platform.service.justice.gov.uk <span class="nt">-n</span> <span class="o">[</span>namespace name] apply <span class="nt">-f</span> live-ingress.yaml
+<div class="highlight"><pre class="highlight shell" tabindex="0"><code>  kubectl <span class="nt">--context</span> live.cloud-platform.service.justice.gov.uk <span class="nt">-n</span> &lt;namespace-name&gt; apply <span class="nt">-f</span> live-ingress.yaml
 </code></pre></div><h2 id="step-6-create-a-new-step-to-your-deployment-pipeline">Step 6 - Create a new step to your deployment pipeline</h2><p>Your application&rsquo;s continuous deployment pipeline needs a couple of changes:</p>
 
 <ul>
@@ -345,7 +345,7 @@
 Initially it is not expected to have any traffic because live’s ingresses have <code>external-dns.alpha.kubernetes.io/aws-weight: &quot;0&quot;</code>.
 For example, by setting this value to 5 on &ldquo;live&rdquo; and 95 on &ldquo;live-1&rdquo;, route53 will send 5% of real traffic to the application on &ldquo;live&rdquo;.</p>
 <p>To apply the changes to the ingress, as a quick alternative to running your application&rsquo;s CI/CD pipeline, you can edit them directly:</p>
-<div class="highlight"><pre class="highlight shell" tabindex="0"><code>    kubectl edit ingress &lt;ingress-name&gt; <span class="nt">-n</span> &lt;namespace&gt;
+<div class="highlight"><pre class="highlight shell" tabindex="0"><code>    kubectl edit ingress &lt;ingress-name&gt; <span class="nt">-n</span> &lt;namespace-name&gt;
 </code></pre></div><p>It is advised to send between 1-10% of the traffic to the live cluster initially. Once the traffic flows into the live cluster and the application behaves as expected, 
 you could send 100% of the traffic into live cluster and 0% into live-1 cluster.</p>
 <p>NOTE: If results are not successful within the live cluster, roll back the annotations to their initial weights (&lsquo;100&rsquo; on &ldquo;live-1&rdquo;, &lsquo;0&rsquo;  on &ldquo;live&rdquo;).</p>
@@ -403,7 +403,7 @@ Not needed - you can keep your kubectl context for the new cluster)</p></li>
 Move the &lsquo;skip file&rsquo; from your namespace under the <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk">&quot;live&rdquo; folder</a> into your namespace under the <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live-1.cloud-platform.service.justice.gov.uk">&ldquo;live-1&rdquo; folder</a>:</p></li>
 </ul>
 <div class="highlight"><pre class="highlight shell" tabindex="0"><code>  <span class="nb">cd </span>namespaces
-  <span class="nb">mv </span>live-1.cloud-platform.service.justice.gov.uk/&lt;namespace&gt;/APPLY_PIPELINE_SKIP_THIS_NAMESPACE live.cloud-platform.service.justice.gov.uk/&lt;namespace&gt;/
+  <span class="nb">mv </span>live-1.cloud-platform.service.justice.gov.uk/&lt;namespace-name&gt;/APPLY_PIPELINE_SKIP_THIS_NAMESPACE live.cloud-platform.service.justice.gov.uk/&lt;namespace-name&gt;/
 </code></pre></div><p>Once merged to <code>main</code>, the Apply Pipeline will be configured to apply your namespace settings that are in your &ldquo;live-1&rdquo; folder, rather than you &ldquo;live&rdquo; folder. (You must have the skip file in one of the folders, otherwise there will be errors on every terraform apply, because the terraform state is shared between the Apply pipelines for live and live-1, will conflict on every apply have both since the terraform is slightly different - IRSA etc)</p>
 <p><strong>Important</strong>: The ServiceAccount credentials used by your application CI/CD will have been rotated by the Apply Pipeline, within a couple minutes of merging the skip file change. So your application&rsquo;s CI/CD will need its secrets updating. If you use GitHub Actions then the ServiceAccount terraform module will automatically update the GHA secrets. However if you use CircleCI or any other way of deployment, then you&rsquo;ll need to obtain the fresh token from &ldquo;live-1&rdquo; and provide it to your CI, replacing the existing token secret with this new value.</p>
 <p><strong>At this point your application can be re-deployed again normally</strong></p>
