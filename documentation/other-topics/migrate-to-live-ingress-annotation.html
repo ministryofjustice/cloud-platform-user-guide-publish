@@ -157,22 +157,22 @@ metadata:
 <div class="highlight"><pre class="highlight shell" tabindex="0"><code>  kubectl <span class="nt">-n</span> &lt;namespace-name&gt; get ingress <span class="nt">-oyaml</span> | <span class="nb">grep </span>external-dns
 </code></pre></div><p>The idea behind the annotation is to control where traffic is directed to. The addition of aws-weight: 100 against this ingress to the “live-1&quot; cluster changes nothing - all of the internet traffic to this domain still goes to your service on the “live-1” cluster.</p>
 <p>Completing the above step in advance of your migrations means you will have less to do when it comes to your actual event (this covers <a href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/migrate-to-live.html#step-2-amend-and-apply-your-quot-live-1-quot-ingress-resource">step 2</a> of the migration process)</p>
-<p>This change will not impact how traffic is routed to your service until migration.</p>
 <p>Please add this annotation to all your ingress by 5th November 2021</p>
 <p>To make sure all the ingress in live-1 have that annotation we will apply an <a href="https://github.com/ministryofjustice/cloud-platform-terraform-opa/blob/main/resources/policies/external-dns-annotation/ingress_external_dns_identifier_format.rego">OPA policy</a> to reject all the ingress without the annotation on 8th November 2021.</p>
+<p><strong>Please note this change will not impact how traffic is routed to your service until migration. The OPA policy will not block traffic to your services and will only reject new ingress definitions without the annotations.</strong></p>
 <p>If you have any questions or concerns about these changes please contact us over at #ask-cloud-platform.</p>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2022-01-07">
+              <div data-module='page-expiry' data-last-reviewed-on="2022-01-08">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 7 October 2021.
+      This page was last reviewed on 8 October 2021.
 
-        It needs to be reviewed again on 7 January 2022
+        It needs to be reviewed again on 8 January 2022
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 7 January 2022.
+      This page was set to be reviewed before 8 January 2022.
       This might mean the content is out of date.
     </div>
   </div>
