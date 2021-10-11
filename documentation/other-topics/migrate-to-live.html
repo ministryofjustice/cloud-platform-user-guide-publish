@@ -249,9 +249,11 @@
 
 </code></pre></div>
 <ul>
-<li>Ensure you have the latest version of <a href="/documentation/getting-started/cloud-platform-cli.html#the-cloud-platform-cli">cloud-platform cli</a></li>
+<li>Ensure you have installed the <a href="/documentation/getting-started/cloud-platform-cli.html#the-cloud-platform-cli">cloud-platform cli</a> at the <a href="https://github.com/ministryofjustice/cloud-platform-cli/releases/latest">latest version</a>. To test:</li>
 </ul>
-<p>If any of these are a concern or you&rsquo;d like to check in advance, please <a href="#questions">contact the Cloud Platform team</a>.</p>
+<div class="highlight"><pre class="highlight shell" tabindex="0"><code>  cloud-platform version
+</code></pre></div><p>(Old versions try to auto-update, but this can fail. In this case, to upgrade, run <code>brew update &amp;&amp; brew upgrade cloud-platform-cli</code> or download the <a href="https://api.github.com/repos/ministryofjustice/cloud-platform-cli/releases/latest">latest release</a>)</p>
+<p>If any of these are a concern, or you&rsquo;d like to check in advance, please <a href="#questions">contact the Cloud Platform team</a>.</p>
 <h2 id="how-to-migrate">How to migrate</h2><p>These steps describe how to migrate. We&rsquo;d love to make these as clear and simple as possible, so please leave <a href="#feedback-welcome">feedback</a> if you&rsquo;ve either struggled to understand a step or feel it could be clarified further.</p>
 <h2 id="step-1-agree-a-time-to-perform-the-migration">Step 1 - Agree a time to perform the migration</h2><p>During the process of migration you can still deploy your app to both clusters together. However you will not be able to change your environment configuration, as defined in <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live-1.cloud-platform.service.justice.gov.uk">environments repo</a>, which may be an issue. You should speak to your team and agree a time and date to attempt to migrate your namespace. It&rsquo;s also strongly recommended that you get familiar with migrating a non-production namespace before attempting prod.</p>
 <h2 id="step-2-amend-and-apply-your-quot-live-1-quot-ingress-resource">Step 2 - Amend and apply your &ldquo;live-1&rdquo; ingress resource</h2><p>You must add two new annotations to your existing <code>ingress</code> resource in &ldquo;live-1&rdquo;, needed for load balancing using <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resource-record-sets-values-weighted.html#rrsets-values-weighted-weight">DNS weighting</a>. We&rsquo;ve designed this process to allow for moving traffic gradually to the new copy of your app on the new cluster, which also provides easy roll-back, if needed.</p>
