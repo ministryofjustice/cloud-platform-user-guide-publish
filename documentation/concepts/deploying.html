@@ -115,7 +115,7 @@
         <a href="#zero-downtime-deploys"><span>Zero Downtime Deploys</span></a>
       </li>
       <li>
-        <a href="#horizontal-pod-autoscaling"><span>Horizontal Pod Autoscaling</span></a>
+        <a href="#horizontal-pod-autoscaling-hpa"><span>Horizontal Pod Autoscaling (HPA)</span></a>
         <ul>
           <li>
           </li>
@@ -184,7 +184,7 @@ app. is always available to service web requests. But, for some types of
 workload, such as background job processing, it might make sense to ensure that
 you have zero or one instances, rather than one or more.</p>
 <p>An example of this
-would be a job processing tasks which <strong>must</strong> be handled in FIFO order -
+would be a job processing tasks which <strong>must</strong> be handled in First In, First Out (FIFO) order -
 running multiple replicas in this case could mean tasks get processed out
 of order. For workloads like this, consider a <a href="https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#recreate-deployment">Recreate</a> deployment strategy.</p>
 <h2 id="zero-downtime-deploys">Zero Downtime Deploys</h2><p>This is another feature you get &lsquo;for free&rsquo; from kubernetes.</p>
@@ -208,7 +208,7 @@ then take care of launching new pods and deleting old ones.</p>
 <p>More information about deployment strategies is available in the <a href="https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#creating-a-deployment">kubernetes
 documentation</a>, and there is more discussion of zero
 downtime deployments in <a href="/documentation/other-topics/zero-downtime-deployment.html">this article</a>.</p>
-<h2 id="horizontal-pod-autoscaling">Horizontal Pod Autoscaling</h2><p>The Horizontal Pod Autoscaler is a built-in Kubernetes feature that allows you to horizontally scale applications based on one or more monitored metrics such as cpu or memory usage.</p>
+<h2 id="horizontal-pod-autoscaling-hpa">Horizontal Pod Autoscaling (HPA)</h2><p>The Horizontal Pod Autoscaler is a built-in Kubernetes feature that allows you to horizontally scale applications based on one or more monitored metrics such as cpu or memory usage.</p>
 <p>The metrics you specify in the <code>HorizontalPodAutoscaler</code> manifest will determine the minimum and maximum number of pods needed, and set the thresholds at which pods should be created or removed.</p>
 <p>The Horizontal Pod Autoscaler can ensure that critical applications are elastic and can scale out to meet increasing demand as well scale down to ensure optimal resource usage, it is also a great tool in saving money by auto-scaling down non-production work loads when not in use, such as overnight or at the weekend.</p>
 <p>The HPA calculates the number of replicas by calculating the ratio between desired metric value and current metric value. Details on how the algorithm works is explained <a href="https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/">here</a></p>
@@ -273,16 +273,16 @@ Conditions:
 <p>Click <a href="https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough">here</a> for the official Kubernetes documentation on the horizontal pod autoscaler walkthrough.</p>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2021-10-15">
+              <div data-module='page-expiry' data-last-reviewed-on="2022-01-11">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 15 July 2021.
+      This page was last reviewed on 11 October 2021.
 
-        It needs to be reviewed again on 15 October 2021
+        It needs to be reviewed again on 11 January 2022
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 15 October 2021.
+      This page was set to be reviewed before 11 January 2022.
       This might mean the content is out of date.
     </div>
   </div>
