@@ -162,13 +162,9 @@ repository. Download whichever tarball is appropriate for your development
 environment, unpack it and put the <code>cloud-platform</code> binary somewhere on your
 <code>$PATH</code></p>
 <p>If you&rsquo;re on a Mac, you can do this by running the following commands:</p>
-<div class="highlight"><pre class="highlight shell" tabindex="0"><code><span class="nv">LATEST</span><span class="o">=</span><span class="si">$(</span>curl <span class="nt">--silent</span> https://github.com/ministryofjustice/cloud-platform-cli/releases/latest | <span class="nb">sed</span> <span class="s1">'s/.*releases.tag.\(.*\)".*/\1/'</span><span class="si">)</span>
-<span class="nv">TARBALL</span><span class="o">=</span><span class="s2">"cloud-platform-cli_</span><span class="k">${</span><span class="nv">LATEST</span><span class="k">}</span><span class="s2">_darwin_amd64.tar.gz"</span>
-wget https://github.com/ministryofjustice/cloud-platform-cli/releases/download/<span class="k">${</span><span class="nv">LATEST</span><span class="k">}</span>/<span class="k">${</span><span class="nv">TARBALL</span><span class="k">}</span>
-<span class="nb">tar </span>xzf <span class="k">${</span><span class="nv">TARBALL</span><span class="k">}</span>
-<span class="nb">mv </span>cloud-platform /usr/local/bin
-<span class="nb">rm</span> <span class="k">${</span><span class="nv">TARBALL</span><span class="k">}</span>
-</code></pre></div><p>or use Homebrew:</p>
+<div class="highlight"><pre class="highlight shell" tabindex="0"><code><span class="nv">$ </span><span class="nb">tar </span>xzv <span class="nt">-C</span> /usr/local/bin/ <span class="nt">-f</span> &lt;<span class="o">(</span>curl <span class="nt">-sL</span> <span class="si">$(</span>curl <span class="nt">-sL</span> https://api.github.com/repos/ministryofjustice/cloud-platform-cli/releases/latest | jq <span class="nt">-r</span> <span class="s1">'.assets[] | select(.browser_download_url | match("darwin_amd64")) | .browser_download_url'</span><span class="si">)</span><span class="o">)</span>
+</code></pre></div><p>(change amd64 to arm64 for Apple Silicon aka M1)</p>
+<p>or use Homebrew:</p>
 <div class="highlight"><pre class="highlight shell" tabindex="0"><code>brew <span class="nb">install </span>ministryofjustice/cloud-platform-tap/cloud-platform-cli
 </code></pre></div><p>After this, you should be able to run:</p>
 <div class="highlight"><pre class="highlight shell" tabindex="0"><code><span class="nv">$ </span>cloud-platform version
