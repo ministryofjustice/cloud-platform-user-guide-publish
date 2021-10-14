@@ -129,7 +129,7 @@
         <div class="app-pane__content toc-open-disabled">
           <main id="content" class="technical-documentation" data-module="anchored-headings">
               <h1 id="security-testing-and-ithc">Security testing and ITHC</h1><h2 id="introduction">Introduction</h2><p>MOJ systems typically have a range of security testing, covering the application and infrastructure. When applications are hosted on the Cloud Platform, it&rsquo;s important to be clear which areas are the responsibility of the platform to test and which are the responsibility of the service team who develop the app. Also, when testing using stress techniques or unusually high load, this page describes how we avoid affecting other tenants of the platform and stay within cloud provider rules.</p>
-<h2 id="it-health-check-ithc">IT Health Check (ITHC)</h2><p>An ITHC, is an independent security assessment, typically including a penetration test. Service teams likely need an ITHC for their applications. Cloud Platform also has its own ITHCs. Service teams should ensure that their ITHC has a scope that does not overlap into areas which are Cloud Platform&rsquo;s responsibilities, and equally doesn&rsquo;t assume Cloud Platform are responsible for things that is the service team&rsquo;s responsibilities. (During an application&rsquo;s ITHC, the Cloud Platform team will not normally provide testers with higher permissions to the AWS account or cluster, than what the service team already have access to.)</p>
+<h2 id="it-health-check-ithc">IT Health Check (ITHC)</h2><p>An <a href="https://security-guidance.service.justice.gov.uk/ost/ithc/#what-is-an-it-health-check-and-why-is-it-important">ITHC</a>, is an independent security assessment, typically including a penetration test. Service teams likely need an ITHC for their applications. Cloud Platform also has its own ITHCs. Service teams should ensure that their ITHC has a scope that does not overlap into areas which are Cloud Platform&rsquo;s responsibilities, and equally doesn&rsquo;t assume Cloud Platform are responsible for things that is the service team&rsquo;s responsibilities. (During an application&rsquo;s ITHC, the Cloud Platform team will not normally provide testers with higher permissions to the AWS account or cluster, than what the service team already have access to.)</p>
 <p>So an ITHC for an app hosted on the Cloud Platform should be: a web application test, plus any cloud infrastructure configuration you do as code, including your namespace/environment configuration.</p>
 <p>We&rsquo;ve written a guide based on one ITHC Scoping form, providing the division of responsibilities between Cloud Platform and Service Teams:</p>
 
@@ -155,16 +155,16 @@
 <p>See also the limitations on <a href="#load-stress-testing">load / stress testing</a></p>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2021-10-19">
+              <div data-module='page-expiry' data-last-reviewed-on="2022-01-14">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 19 July 2021.
+      This page was last reviewed on 14 October 2021.
 
-        It needs to be reviewed again on 19 October 2021
+        It needs to be reviewed again on 14 January 2022
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 19 October 2021.
+      This page was set to be reviewed before 14 January 2022.
       This might mean the content is out of date.
     </div>
   </div>
