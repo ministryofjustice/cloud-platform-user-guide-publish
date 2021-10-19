@@ -129,6 +129,9 @@
         <a href="#configuring-circleci"><span>Configuring CircleCI</span></a>
         <ul>
           <li>
+            <a href="#setup-kube-auth-is-deprecated"><span>setup-kube-auth is deprecated</span></a>
+          </li>
+          <li>
             <a href="#building-and-pushing-image-to-ecr"><span>Building and pushing image to ECR</span></a>
           </li>
           <li>
@@ -214,6 +217,7 @@
 - K8S_CLUSTER_CERT # The CA Certificate for the cluster, can be acquired from the `Secret` that is generated for the `serviceaccount` (as stated above)
 - K8S_TOKEN # The access token generated for the `serviceaccount`.
 </code></pre></div><h2 id="configuring-circleci">Configuring CircleCI</h2><p>This is a really simple example of adding a build and deploy section to your configuration. If you&rsquo;d rather see this in action, please checkout the <a href="https://github.com/ministryofjustice/cloud-platform-reference-app/blob/main/.circleci/config.yml">cloud-platform-reference-app</a></p>
+<h3 id="setup-kube-auth-is-deprecated">setup-kube-auth is deprecated</h3><p>Early on in our examples we used a custom image just for CircleCI and a wrapper script named <code>setup-kube-auth</code> that handled the kubeconfig generation; both are obsolete so if you have a reference to either <code>image: ${ECR_ENDPOINT}/cloud-platform/tools:circleci-internal</code> or <code>setup-kube-auth</code> in your <code>steps:</code> just remove and configure as described below.</p>
 <h3 id="building-and-pushing-image-to-ecr">Building and pushing image to ECR</h3><p>Below is an example how you can build and push an image to ECR:</p>
 <div class="highlight"><pre class="highlight yaml" tabindex="0"><code><span class="na">version</span><span class="pi">:</span> <span class="m">2</span>
 
