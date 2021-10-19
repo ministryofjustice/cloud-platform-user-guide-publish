@@ -130,11 +130,13 @@
               <h1 id="security-controls-on-the-cloud-platform">Security Controls on the Cloud Platform</h1><p>The purpose of this page is to explain some of the security issues which often
 come up during &ldquo;code of connection&rdquo; processes, when connecting to external
 systems.</p>
-<h2 id="network-architecture">Network architecture</h2><p>The Cloud Platform (CP) is hosted in <a href="https://aws.amazon.com/">Amazon AWS</a>, and consists of two <a href="https://kubernetes.io/">kubernetes</a> clusters:</p>
+<h2 id="network-architecture">Network architecture</h2><p>The Cloud Platform (CP) is hosted in <a href="https://aws.amazon.com/">Amazon AWS</a>, and consists of three <a href="https://kubernetes.io/">kubernetes</a> clusters:</p>
 
 <ul>
 <li>live-1 - the &ldquo;application&rdquo; cluster, managed via <a href="https://github.com/kubernetes/kops">Kops</a>, which runs all hosted services</li>
 <li>manager - an <a href="https://aws.amazon.com/eks/">EKS</a> cluster which runs shared services such as monitoring and CI/CD pipelines</li>
+<li>live - a newer &ldquo;application&rdquo; cluster, managed by EKS. Applications running on the live-1 cluster 
+will be <a href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/migrate-to-live.html">migrated to the &ldquo;live&rdquo; cluster</a> during Autumn 2021. </li>
 </ul>
 <p>&hellip;plus additional AWS managed services such as database instances, S3 buckets,
 etc.</p>
@@ -169,16 +171,16 @@ keys, which are usually made available to services via <a href="https://kubernet
 the namespaces in which the services run.</p>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2021-10-27">
+              <div data-module='page-expiry' data-last-reviewed-on="2022-01-18">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 27 July 2021.
+      This page was last reviewed on 18 October 2021.
 
-        It needs to be reviewed again on 27 October 2021
+        It needs to be reviewed again on 18 January 2022
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 27 October 2021.
+      This page was set to be reviewed before 18 January 2022.
       This might mean the content is out of date.
     </div>
   </div>
