@@ -148,6 +148,10 @@
       </li>
       <li>
         <a href="#step-9-start-sending-real-traffic"><span>Step 9 - Start sending real traffic</span></a>
+        <ul>
+          <li>
+          </li>
+        </ul>
       </li>
       <li>
         <a href="#step-10-cleanup-old-quot-live-1-quot-namespace"><span>Step 10 - Cleanup old “live-1” namespace</span></a>
@@ -351,6 +355,14 @@ For example, by setting this value to 5 on &ldquo;live&rdquo; and 95 on &ldquo;l
 <div class="highlight"><pre class="highlight shell" tabindex="0"><code>    kubectl edit ingress &lt;ingress-name&gt; <span class="nt">-n</span> &lt;namespace-name&gt;
 </code></pre></div><p>It is advised to send between 1-10% of the traffic to the live cluster initially. Once the traffic flows into the live cluster and the application behaves as expected, 
 you could send 100% of the traffic into live cluster and 0% into live-1 cluster.</p>
+<h4 id="verify-100-of-traffic-sent-to-the-service-on-quot-live-quot-cluster">Verify 100% of traffic sent to the service on &ldquo;live&rdquo; cluster</h4><p>After you have set <code>external-dns.alpha.kubernetes.io/aws-weight</code> value to &ldquo;100&rdquo; for the ingress in &ldquo;live&rdquo; and &ldquo;0&rdquo; for the ingress in &ldquo;live-1, you can verify all of the traffic sent into &quot;live&rdquo; cluster using <a href="https://kibana.cloud-platform.service.justice.gov.uk/_plugin/kibana/app/kibana#/discover?_g=()">kibana</a> and <a href="https://grafana.live.cloud-platform.service.justice.gov.uk/d/f1e13059dfd23fdcaf479f4fa833f92610c2dfa5/kubernetes-ingress-traffic?orgId=1">grafana</a></p>
+<p>Get the &ldquo;hostname&rdquo; used in your ingress for your namespace</p>
+<div class="highlight"><pre class="highlight shell" tabindex="0"><code>  kubectl get ingress &lt;ingress-name&gt; <span class="nt">-n</span> &lt;namespace-name&gt; <span class="nt">-o</span> json | jq <span class="nt">-r</span> <span class="s1">'.items[] | .spec.rules[].host'</span>
+</code></pre></div><p>Using the &ldquo;hostname&rdquo; from the above command, make a cURL call every 5 seconds to send traffic to your service</p>
+<div class="highlight"><pre class="highlight shell" tabindex="0"><code>  <span class="k">while </span><span class="nb">sleep </span>5<span class="p">;</span> <span class="k">do </span>curl <span class="nt">-I</span> https://&lt;host-name&gt;<span class="p">;</span> <span class="k">done</span>
+</code></pre></div><p>To view your ingress traffic, login to <a href="https://grafana.live.cloud-platform.service.justice.gov.uk/d/f1e13059dfd23fdcaf479f4fa833f92610c2dfa5/kubernetes-ingress-traffic?orgId=1">grafana-live</a>, in <code>Kubernetes-ingress traffic</code> dashboard, select your <code>ingress-name</code> and <code>namespace-name</code> from the drop-down and do a search, you will see traffic for your ingress from &ldquo;live&rdquo; cluster. Now login to <a href="https://grafana.live-1.cloud-platform.service.justice.gov.uk/d/f1e13059dfd23fdcaf479f4fa833f92610c2dfa5/kubernetes-ingress-traffic?orgId=1">grafana-live-1</a>, do the same search, you should not see any traffic for your ingress from &ldquo;live-1&rdquo; cluster.</p>
+<p>To view your ingress logs, login to <a href="https://kibana.cloud-platform.service.justice.gov.uk/_plugin/kibana/app/kibana#/discover?_g=()">kibana</a>, select index <code>live_kubernetes_ingress*</code>, and do a search using <code>&quot;host-name&quot;</code> , you will see new logs for &ldquo;host-name&rdquo; from &ldquo;live&rdquo; cluster. Now select index <code>live-1_kubernetes_ingress*</code> and do the same search, you should not see any new logs for &ldquo;host-name&rdquo; from &ldquo;live-1&rdquo; cluster.</p>
+<p>Your namespace is successfully migrated to &ldquo;live&rdquo; cluster, once all of the traffic send into &ldquo;live&rdquo; cluster.</p>
 <p>NOTE: If results are not successful within the live cluster, roll back the annotations to their initial weights (&lsquo;100&rsquo; on &ldquo;live-1&rdquo;, &lsquo;0&rsquo;  on &ldquo;live&rdquo;).</p>
 <h2 id="step-10-cleanup-old-quot-live-1-quot-namespace">Step 10 - Cleanup old &ldquo;live-1&rdquo; namespace</h2><p>Once you have successfully migrated to the &ldquo;live&rdquo; cluster, you can tidy up by removing your (now unused) namespace from the <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live-1.cloud-platform.service.justice.gov.uk">&ldquo;live-1&rdquo; directory</a>:</p>
 <div class="highlight"><pre class="highlight shell" tabindex="0"><code><span class="nb">rm</span> <span class="nt">-rf</span> ./namespaces/live-1.cloud-platform.service.justice.gov.uk/&lt;my-namespace-name&gt;
