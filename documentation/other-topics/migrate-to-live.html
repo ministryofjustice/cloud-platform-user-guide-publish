@@ -346,7 +346,11 @@
 <ul>
 <li>pingdom</li>
 <li>automated smoke tests - requests should be sent to the new load balancer IP (TOD) and add a &ldquo;Host: <hostname>&rdquo; header.</li>
-<li>manual browser testing - requires a new ingress with a test host name</li>
+<li><p>manual browser testing - duplicate your ingress with different host domain and test it.</p>
+<p>To create this ingress, set your env variable KUBECONFIG pointing to the kubeconfig file(if your config is not in ~/.kube/config) and run the cloud-platform cli command</p>
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>cloud-platform duplicate ingress &lt;ingress resource name&gt; -n &lt;namespace&gt;
+</code></pre></div><p>If your ingress name is <code>helloworld-ing</code> and host is <code>helloworld.service.justice.gov.uk</code>, then this command will create a duplicate ingress <code>helloworld-ing-duplicate</code> 
+with host <code>helloworld-duplicate.service.justice.gov.uk</code> in the given namespace.</p></li>
 </ul>
 <h2 id="step-9-start-sending-real-traffic">Step 9 - Start sending real traffic</h2><p>Traffic flow is controlled by tweaking external-dns ingress annotation (<code>aws-weight</code>), which is used to determine the proportion of traffic sent to that ingress.
 Initially it is not expected to have any traffic because live’s ingresses have <code>external-dns.alpha.kubernetes.io/aws-weight: &quot;0&quot;</code>.
