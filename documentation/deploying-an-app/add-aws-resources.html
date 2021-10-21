@@ -136,7 +136,16 @@
 
         <div class="app-pane__content toc-open-disabled">
           <main id="content" class="technical-documentation" data-module="anchored-headings">
-              <h1 id="adding-aws-resources-to-your-environment">Adding AWS resources to your environment</h1><p>Through the <a href="https://github.com/ministryofjustice/cloud-platform-environments/">cloud-platform-environments</a> repository, you can provision AWS resources for your environments. This is done using Terraform and more specifically, terraform modules the Cloud Platform team provides.</p>
+              <h1 id="adding-aws-resources-to-your-environment">Adding AWS resources to your environment</h1>
+<div class="govuk-warning-text">
+  <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+  <strong class="govuk-warning-text__text">
+    <span class="govuk-warning-text__assistive">Warning</span>
+    The Cloud Platform team are currently working on a migration of the Kubernetes hosting platform. Please be aware,
+we are updating all documentation and for a time there will be references to both the current “live-1 ” cluster and the new “live” cluster. For more information, click <a href="../../documentation/other-topics/migrate-to-live.html">here</a>
+  </strong>
+</div>
+<p>Through the <a href="https://github.com/ministryofjustice/cloud-platform-environments/">cloud-platform-environments</a> repository, you can provision AWS resources for your environments. This is done using Terraform and more specifically, terraform modules the Cloud Platform team provides.</p>
 <p>The documentation for the modules lives in each module&rsquo;s repository.</p>
 <h2 id="available-modules">Available modules</h2><p>The list of terraform modules provided by the Cloud Platform team is available here: <a href="https://github.com/ministryofjustice/cloud-platform#terraform-modules">Terraform Modules</a></p>
 <h2 id="usage">Usage</h2><p>There are two ways to create Terraform resources for your namespace:</p>
