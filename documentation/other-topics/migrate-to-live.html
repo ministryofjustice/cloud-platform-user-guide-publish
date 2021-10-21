@@ -166,6 +166,9 @@
         <a href="#how-to-roll-back"><span>How to roll back</span></a>
       </li>
       <li>
+        <a href="#frequently-asked-questions"><span>Frequently asked questions</span></a>
+      </li>
+      <li>
         <a href="#questions"><span>Questions</span></a>
       </li>
       <li>
@@ -434,6 +437,24 @@ Not needed - you can leave the annotation in - it won&rsquo;t change anything)</
 <li><p>(Step 1 - Agree a time to perform the migration -
 You can let your team know that they are no longer restricted from changing the environment config)</p></li>
 </ul>
+<h2 id="frequently-asked-questions">Frequently asked questions</h2><p><details></p>
+<p><summary><strong>How to ensure the alerts are migrated?</strong></summary></p>
+<p>When you migrate your namespace to <code>live</code> cluster in <a href="#step-3-migrate-your-namespace-environment-to-quot-live-quot">Step 3</a>, 
+  the namespace files related to monitoring and alerting such as ServiceMonitors, NetworkPolicy and prometheusRule in <a href="https://github.com/ministryofjustice/cloud-platform-environments/">the environments repo</a>
+  are copied and applied to the <code>live</code> cluster.</p>
+<p>You can confirm this using kubectl command. For example, to check the prometheusrules, do <code>kubectl get prometheusrules -n &lt;yournamespace&gt;</code> in the <code>live</code> cluster.</p>
+<p>After you deploy your application to the <code>live</code> cluster, in the <a href="https://prometheus.live.cloud-platform.service.justice.gov.uk/">Cloud Platform Prometheus</a> targets, Rules and Service Discovery pages, ensure your application is listed.
+  In the <a href="https://alertmanager.live.cloud-platform.service.justice.gov.uk">Cloud Platform Alertmanager</a> -&gt; Status, ensure your application severity, receiver and Channel information is added to the list.</p>
+<p></details></p>
+<p><details></p>
+<p><summary><strong>How to check the set-identifier and aws-weight annotations are set correctly</strong></summary></p>
+<p>Once you have the <code>set-identifier</code> and <code>aws-weight</code> annotations added to your <code>live-1</code> ingress and applied to <code>live-1</code> cluster, 
+  you can check this <a href="https://reports.cloud-platform.service.justice.gov.uk/ingress_weighting">reports page</a> and your ingress name should not be on the list.</p>
+<p></details></p>
+<p><details></p>
+<p><summary><strong>Do I need to update my ingress spec hosts for live?</strong></summary></p>
+<p>No, your current ingress hostname (i.e <code>XXX.apps.live-1.cloud-platform.service.justice.gov.uk</code> and your custom hostname) can remain in your deployment to the <code>live</code> cluster.</p>
+<p></details></p>
 <h2 id="questions">Questions</h2><p>If you have questions, please ask us on Slack:</p>
 
 <ul>
