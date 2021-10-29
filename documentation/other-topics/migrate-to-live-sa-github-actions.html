@@ -122,7 +122,7 @@
           <main id="content" class="technical-documentation" data-module="anchored-headings">
               <h1 id="migrating-serviceaccount-module-for-github-actions-to-the-quot-live-quot-cluster">Migrating serviceaccount module for GitHub actions to the &ldquo;Live&rdquo; cluster</h1><h2 id="migrating-service-account-module">Migrating service account module</h2><h4 id="pre-requisites">Pre-requisites</h4>
 <ul>
-<li>You have <a href="/documentation/other-topics/long-running-env-operations.html">skip your namespace</a> file in your &ldquo;live-1&rdquo; namespace.</li>
+<li>You have <a href="/documentation/other-topics/long-running-env-operations.html#skip-quot-live-1-quot-environments-during-migration">MIGRATED_SKIP_APPLY_THIS_NAMESPACE</a> file in your &ldquo;live-1&rdquo; namespace.</li>
 </ul>
 <p>This will allow the Apply Pipeline to skip live-1 namespace during migration.</p>
 <h4 id="continuous-deployment-of-an-application-using-github-actions-in-live">Continuous Deployment of an application using Github actions in live</h4><p>For teams who use <a href="/documentation/deploying-an-app/github-actions-continuous-deployment.html#continuous-deployment-of-an-application-using-github-actions">github actions</a> for continuous deployment, you will see a new cd-serviceaccount created in “live” cluster after the namespace directory is copied from “Live”-1. This will replace below GitHub Actions Secrets in your repository using new serviceaccount details created in &ldquo;live&rdquo; cluster.</p>

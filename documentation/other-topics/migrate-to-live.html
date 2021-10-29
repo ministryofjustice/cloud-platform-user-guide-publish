@@ -351,7 +351,9 @@
 <li>automated smoke tests - requests should be sent to the new load balancer IP (TOD) and add a &ldquo;Host: <hostname>&rdquo; header.</li>
 <li><p>manual browser testing - duplicate your ingress with different host domain and test it.</p>
 <p>To create this ingress, set your env variable KUBECONFIG pointing to the kubeconfig file(if your config is not in ~/.kube/config) and run the cloud-platform cli command</p>
-<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>cloud-platform duplicate ingress &lt;ingress resource name&gt; -n &lt;namespace&gt;
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>kubectl config use-context live.cloud-platform.service.justice.gov.uk
+
+cloud-platform duplicate ingress &lt;ingress resource name&gt; -n &lt;namespace&gt;
 </code></pre></div><p>If your ingress name is <code>helloworld-ing</code> and host is <code>helloworld.service.justice.gov.uk</code>, then this command will create a duplicate ingress <code>helloworld-ing-duplicate</code> 
 with host <code>helloworld-duplicate.service.justice.gov.uk</code> in the given namespace.</p></li>
 </ul>
@@ -423,11 +425,11 @@ You need to ensure your application&rsquo;s CI/CD deploys:</p>
 Not needed - you can leave this ingress in place)</p></li>
 <li><p>(Step 4 - Authenticate to the “live” cluster -
 Not needed - you can keep your kubectl context for the new cluster)</p></li>
-<li><p>Step 3 - &quot;Migrate your namespace environment to &quot;live&rdquo;&ldquo; -
-Move the &lsquo;skip file&rsquo; from your namespace under the <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk">&quot;live&rdquo; folder</a> into your namespace under the <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live-1.cloud-platform.service.justice.gov.uk">&ldquo;live-1&rdquo; folder</a>:</p></li>
+<li><p>Step 3 - &quot;Migrate your namespace environment to &quot;live&rdquo; -
+Move the &lsquo;skip file&rsquo; from your namespace under the <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live-1.cloud-platform.service.justice.gov.uk">&ldquo;live-1&rdquo; folder</a> into your namespace under the <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk">&ldquo;live&rdquo; folder</a>:</p></li>
 </ul>
 <div class="highlight"><pre class="highlight shell" tabindex="0"><code>  <span class="nb">cd </span>namespaces
-  <span class="nb">mv </span>live-1.cloud-platform.service.justice.gov.uk/&lt;namespace-name&gt;/APPLY_PIPELINE_SKIP_THIS_NAMESPACE live.cloud-platform.service.justice.gov.uk/&lt;namespace-name&gt;/
+  <span class="nb">mv </span>live-1.cloud-platform.service.justice.gov.uk/&lt;namespace-name&gt;/MIGRATED_SKIP_APPLY_THIS_NAMESPACE live.cloud-platform.service.justice.gov.uk/&lt;namespace-name&gt;/
 </code></pre></div><p>Once merged to <code>main</code>, the Apply Pipeline will be configured to apply your namespace settings that are in your &ldquo;live-1&rdquo; folder, rather than you &ldquo;live&rdquo; folder. (You must have the skip file in one of the folders, otherwise there will be errors on every terraform apply, because the terraform state is shared between the Apply pipelines for live and live-1, will conflict on every apply have both since the terraform is slightly different - IRSA etc)</p>
 <p><strong>Important</strong>: The ServiceAccount credentials used by your application CI/CD will have been rotated by the Apply Pipeline, within a couple minutes of merging the skip file change. So your application&rsquo;s CI/CD will need its secrets updating. If you use GitHub Actions then the ServiceAccount terraform module will automatically update the GHA secrets. However if you use CircleCI or any other way of deployment, then you&rsquo;ll need to obtain the fresh token from &ldquo;live-1&rdquo; and provide it to your CI, replacing the existing token secret with this new value.</p>
 <p><strong>At this point your application can be re-deployed again normally</strong></p>
