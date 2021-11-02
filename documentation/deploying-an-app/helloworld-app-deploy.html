@@ -208,7 +208,7 @@ deploying changes to the application:</p>
 <li>Kubectl is installed (<code>brew install kubectl</code> on a Mac with <a href="https://brew.sh">Homebrew</a> installed, or <a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/">follow these instructions</a>)</li>
 <li>You have <a href="/documentation/getting-started/kubectl-config.html">authenticated to the live-1 cluster</a></li>
 <li>AWS CLI is installed (<code>brew install awscli</code> on a Mac with <a href="https://brew.sh">Homebrew</a> installed)</li>
-<li>You have installed the <a href="/documentation/getting-started/cloud-platform-cli.html">Cloud Platform CLI</a></li>
+<li><a href="/documentation/getting-started/cloud-platform-cli.html#checking-your-install">Cloud Platform CLI</a> is installed</li>
 </ul>
 <h2 id="step-1-create-your-namespace">Step 1 - Create your namespace</h2><p>Follow <a href="/documentation/getting-started/env-create.html#creating-a-cloud-platform-environment">this guide</a> to create a namespace on the Cloud Platform
 (you don&rsquo;t need to do any of the &ldquo;Next steps&rdquo; from that guide).</p>
@@ -280,7 +280,7 @@ spec:
 <p>This tells the cluster that our ingress should accept web traffic to the hostname we
 defined, and should route that traffic to port 4567 of the &ldquo;service&rdquo; called
 <code>rubyapp-service</code>.</p>
-<h3 id="service-yaml">service.yaml</h3><div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>apiVersion: v1
+<h3 id="service-yaml"><code>service.yaml</code></h3><div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>apiVersion: v1
 kind: Service
 metadata:
   name: rubyapp-service
@@ -296,7 +296,7 @@ spec:
 </code></pre></div><p>This defines the service called <code>rubyapp-service</code> which listens on port 4567
 and forwards web traffic to port 4567 of any pods whose <code>app</code> label is
 <code>helloworld-rubyapp</code>.</p>
-<h3 id="deployment-yaml">deployment.yaml</h3><div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>apiVersion: apps/v1
+<h3 id="deployment-yaml"><code>deployment.yaml</code></h3><div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: helloworld-rubyapp

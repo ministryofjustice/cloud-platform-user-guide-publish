@@ -106,6 +106,9 @@
         <a href="#installation"><span>Installation</span></a>
         <ul>
           <li>
+            <a href="#checking-your-install"><span>Checking your install</span></a>
+          </li>
+          <li>
             <a href="#keeping-up-to-date"><span>Keeping up to date</span></a>
           </li>
         </ul>
@@ -156,27 +159,21 @@ platform.</p>
 always needing to craft your terraform or kubernetes yaml files by hand, and to
 simplify some common tasks (like checking the github teams in your kube config
 file).</p>
-<h2 id="installation">Installation</h2><p>The CLI tool is written in <a href="https://golang.org">golang</a>, and packaged as a single <code>cloud-platform</code>
-binary. You can get the latest version from the <a href="https://github.com/ministryofjustice/cloud-platform-cli#cloud-platform-tool-cli/releases">releases</a> page of the github
-repository. Download whichever tarball is appropriate for your development
-environment, unpack it and put the <code>cloud-platform</code> binary somewhere on your
-<code>$PATH</code></p>
+<h2 id="installation">Installation</h2><p>The CLI tool is a single binary: <code>cloud-platform</code>.</p>
 <p>If you&rsquo;re on a Mac, you can do this using homebrew:</p>
 <div class="highlight"><pre class="highlight shell" tabindex="0"><code>brew <span class="nb">install </span>ministryofjustice/cloud-platform-tap/cloud-platform-cli
-</code></pre></div><p>or by running the following commands</p>
+</code></pre></div><p>Alternatively, install the binary into your $PATH (downloaded from <a href="https://github.com/ministryofjustice/cloud-platform-cli#cloud-platform-tool-cli/releases">GitHub releases</a>):</p>
 <div class="highlight"><pre class="highlight shell" tabindex="0"><code><span class="nv">$ </span><span class="nb">tar </span>xzv <span class="nt">-C</span> /usr/local/bin/ <span class="nt">-f</span> &lt;<span class="o">(</span>curl <span class="nt">-sL</span> <span class="si">$(</span>curl <span class="nt">-sL</span> https://api.github.com/repos/ministryofjustice/cloud-platform-cli/releases/latest | jq <span class="nt">-r</span> <span class="s1">'.assets[] | select(.browser_download_url | match("darwin_amd64")) | .browser_download_url'</span><span class="si">)</span><span class="o">)</span>
-</code></pre></div><p>(change amd64 to arm64 for Apple Silicon aka M1)</p>
-<p>After this, you should be able to run:</p>
+</code></pre></div><p>(for Apple Silicon - M1 etc - change <code>amd64</code> to <code>arm64</code>)</p>
+<h3 id="checking-your-install">Checking your install</h3><p>To check the CLI is installed, see if this runs successfully:</p>
 <div class="highlight"><pre class="highlight shell" tabindex="0"><code><span class="nv">$ </span>cloud-platform version
-</code></pre></div><p>&hellip;to confirm that your installation is working.</p>
-<h3 id="keeping-up-to-date">Keeping up to date</h3><p>To check if you are on latest version, run the command <code>cloud-platform version</code>. This will display the below message if your have the old cli version</p>
+</code></pre></div><h3 id="keeping-up-to-date">Keeping up to date</h3><p>You should always use the latest version. To check, run:</p>
+<div class="highlight"><pre class="highlight shell" tabindex="0"><code><span class="nv">$ </span>cloud-platform version
+</code></pre></div><p>If you&rsquo;re <em>not</em> on the latest version, you&rsquo;ll see this message:</p>
 <div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>Update required. Current version: 1.XX.X, Latest version: 1.YY.Y
-
-To upgrade the cloud platform cli, run `brew update &amp;&amp; brew upgrade cloud-platform-cli` or grab the
-latest version from
-https://api.github.com/repos/ministryofjustice/cloud-platform-cli/releases/latest
-</code></pre></div><p>If you installed it via brew then it&rsquo;ll be updated when you run <code>brew update &amp;&amp; brew upgrade cloud-platform-cli</code>. Otherwise you can download the 
-<a href="https://api.github.com/repos/ministryofjustice/cloud-platform-cli/releases/latest">latest release</a>.</p>
+</code></pre></div><p>To upgrade the cloud platform cli, if you installed it with homebrew:</p>
+<div class="highlight"><pre class="highlight shell" tabindex="0"><code>brew update <span class="o">&amp;&amp;</span> brew upgrade cloud-platform-cli
+</code></pre></div><p>Or if you installed the binary directly, for example at <code>/usr/local/bin/cloud-platform</code>, replace it with the latest binary by doing another <a href="#installation">install</a></p>
 <h2 id="functions">Functions</h2><p>This describes the current capabilities of the CLI tool.</p>
 
 <ul>
