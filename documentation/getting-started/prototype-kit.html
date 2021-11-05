@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
-    <title>Create a GOV.UK Prototype Kit site - Cloud Platform User Guide</title>
+    <title>Publish prototypes on the web - Cloud Platform User Guide</title>
 
     <link href="/stylesheets/manifest.css" rel="stylesheet" />
 
@@ -15,12 +15,12 @@
       <meta name="twitter:card" content="summary" />
       <meta name="twitter:domain" content="user-guide.cloud-platform.service.justice.gov.uk" />
       <meta name="twitter:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
-      <meta name="twitter:title" content="Create a GOV.UK Prototype Kit site - Cloud Platform User Guide" />
+      <meta name="twitter:title" content="Publish prototypes on the web - Cloud Platform User Guide" />
       <meta name="twitter:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/prototype-kit.html" />
 
       <meta property="og:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
       <meta property="og:site_name" content="Cloud Platform User Guide" />
-      <meta property="og:title" content="Create a GOV.UK Prototype Kit site" />
+      <meta property="og:title" content="Publish prototypes on the web" />
       <meta property="og:type" content="object" />
       <meta property="og:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/prototype-kit.html" />
 
@@ -100,13 +100,13 @@
               <nav id="toc" class="js-toc-list toc__list" aria-labelledby="toc-heading">
                       <ul>
   <li>
-    <a href="#create-a-gov-uk-prototype-kit-site"><span>Create a GOV.UK Prototype Kit site</span></a>
+    <a href="#publish-prototypes-on-the-web"><span>Publish prototypes on the web</span></a>
     <ul>
       <li>
         <a href="#before-you-start"><span>Before you start</span></a>
       </li>
       <li>
-        <a href="#1-clone-the-environments-repository"><span>1. Clone the environments repository</span></a>
+        <a href="#1-copy-clone-the-environments-repository"><span>1. Copy (Clone) the environments repository</span></a>
       </li>
       <li>
         <a href="#2-create-your-prototype-kit-site"><span>2. Create your prototype kit site</span></a>
@@ -115,10 +115,10 @@
         <a href="#3-raise-a-pr"><span>3. Raise a PR</span></a>
       </li>
       <li>
-        <a href="#caveats"><span>Caveats</span></a>
+        <a href="#seeing-your-published-prototype"><span>Seeing your published prototype</span></a>
       </li>
       <li>
-        <a href="#deleting-your-prototype-kit-site"><span>Deleting your Prototype Kit site</span></a>
+        <a href="#deleting-your-published-prototype"><span>Deleting your published prototype</span></a>
       </li>
     </ul>
   </li>
@@ -131,32 +131,29 @@
 
         <div class="app-pane__content toc-open-disabled">
           <main id="content" class="technical-documentation" data-module="anchored-headings">
-              <h1 id="create-a-gov-uk-prototype-kit-site">Create a GOV.UK Prototype Kit site</h1><p>The cloud platform makes it easy to set up and host a <a href="https://govuk-prototype-kit.herokuapp.com/docs">GOV.UK Prototype Kit</a>
-website.</p>
-<p>This guide will walk you through the process.</p>
-<h2 id="before-you-start">Before you start</h2><p>To complete the steps in this guide, you will need:</p>
+              <h1 id="publish-prototypes-on-the-web">Publish prototypes on the web</h1><p>You can share prototypes made with the <a href="https://govuk-prototype-kit.herokuapp.com/docs">GOV.UK Prototype Kit</a> by publishing them on the web using a service called Cloud Platform.</p>
+<h2 id="before-you-start">Before you start</h2><p>To publish a prototype you&rsquo;ll need:</p>
 
 <ul>
-<li>To be a member of at least one GitHub team in the <a href="https://github.com/ministryofjustice/">MoJ GitHub Organisation</a></li>
-<li>The <a href="/documentation/getting-started/cloud-platform-cli.html">Cloud Platform CLI</a> installed</li>
-<li>A local development environment including a terminal and a git client</li>
+<li>to be a member of at least one GitHub team in the <a href="https://github.com/orgs/ministryofjustice/teams">MoJ GitHub Organisation</a></li>
+<li>to have the <a href="/documentation/getting-started/cloud-platform-cli.html">Cloud Platform CLI</a> installed</li>
+<li>to have a local development environment including a terminal and a git client</li>
 </ul>
-<h2 id="1-clone-the-environments-repository">1. Clone the <code>environments</code> repository</h2><p>To create resources on the Cloud Platform, you need to raise a pull request
+<h2 id="1-copy-clone-the-environments-repository">1. Copy (Clone) the <code>environments</code> repository</h2><p>To create resources on the Cloud Platform, you need to raise a pull request
 against the <a href="https://github.com/ministryofjustice/cloud-platform-environments">cloud-platform-environments</a> repository.</p>
-<p>Start by checking out a copy of the repository:</p>
+<p>Create a copy of the <a href="https://github.com/ministryofjustice/cloud-platform-environments">cloud-platform-environments</a> repository:</p>
 <div class="highlight"><pre class="highlight shell" tabindex="0"><code><span class="nv">$ </span>git clone git@github.com:ministryofjustice/cloud-platform-environments.git
 <span class="nv">$ </span><span class="nb">cd </span>cloud-platform-environments
-</code></pre></div><h2 id="2-create-your-prototype-kit-site">2. Create your prototype kit site</h2><p>To create your prototype kit site, run:</p>
+</code></pre></div><h2 id="2-create-your-prototype-kit-site">2. Create your prototype kit site</h2><p>In the Cloud Platform CLI run:</p>
 <div class="highlight"><pre class="highlight shell" tabindex="0"><code><span class="nv">$ </span>cloud-platform environment prototype create
-</code></pre></div><p>You will be asked several questions, the most important of which is the name of
-your prototype kit project.</p>
+</code></pre></div><p>You&rsquo;ll be asked to name your prototype.</p>
 <p>This name will be used as:</p>
 
 <ul>
-<li>The name of the <a href="/documentation/getting-started/env-create.html">namespace</a> which will be created on the cloud platform</li>
-<li>The name of the GitHub repository which will be created, and which will
-contain your prototype kit source code</li>
-<li>The hostname of your prototype kit website</li>
+<li>the <a href="/documentation/getting-started/env-create.html">namespace</a> which will be created on the Cloud Platform</li>
+<li>the name of the GitHub repository which will be created, and which will
+contain your code</li>
+<li>the domain name your prototype kit will be published to</li>
 </ul>
 
 <blockquote>
@@ -166,30 +163,24 @@ with this name</p>
 <p>For example, if you choose <code>my-prototype</code> as the name, you will create:</p>
 
 <ul>
-<li>A namespace on the Cloud Platform called <code>my-prototype</code></li>
-<li>The github repository <code>https://github.com/ministryofjustice/my-prototype</code></li>
+<li>a namespace on the Cloud Platform called <code>my-prototype</code></li>
+<li>the GitHub repository <code>https://github.com/ministryofjustice/my-prototype</code></li>
 </ul>
 <p>&hellip;and your prototype kit website will be available at the URL:</p>
 <div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>https://my-prototype.apps.live.cloud-platform.service.justice.gov.uk
 </code></pre></div><h2 id="3-raise-a-pr">3. Raise a PR</h2><p>After you have answered all the questions, the cloud-platform CLI will create
 several files in a folder called:</p>
 <div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>namespaces/live.cloud-platform.service.justice.gov.uk/[name you chose]
-</code></pre></div><p>Create a new branch, <code>git add</code> the new folder and then raise a pull request.</p>
+</code></pre></div><p>Create a new branch, <code>git add</code> the new folder and then raise a pull request (PR).</p>
 <p>Once a member of the Cloud Platform team has approved your PR, merge it.</p>
 <p>When you merge the PR, the <a href="/documentation/other-topics/apply-pipeline.html">Apply Pipeline</a>
-will create your namespace and github repository. The github repository has a
-deployment workflow, implemented as a <a href="https://github.com/features/actions">GitHub Actions</a> workflow, which will
-continuously deploy any changes made to the <code>main</code> branch of the repository.</p>
-<h2 id="caveats">Caveats</h2><p>There are a few things to be aware of, concerning your prototype kit site:</p>
+will create your namespace and GitHub repository.</p>
+<h2 id="seeing-your-published-prototype">Seeing your published prototype</h2><p>There are a few things to be aware of, concerning your prototype kit site:</p>
 
 <ul>
-<li><p>The deployment workflow usually takes around 5 minutes to run</p></li>
-<li><p>The very first run of the deployment workflow will fail. This is because the
-github repository (and its deployment workflow) has to be created before some
-of the resources the workflow depends on.  You can use the &ldquo;re-run&rdquo; button in
-the GitHub web interface, and the action should succeed.</p></li>
+<li><p>It can take around 5 minutes for your protoype to be published</p></li>
+<li><p>The first time it tries to publish it will fail. You’ll need to publish a second time to complete the set up.</p></li>
 </ul>
-<p><a href="/images/github-actions-rerun-button.png" rel="noopener noreferrer"><img src="/images/github-actions-rerun-button.png" alt="GitHub Actions re-run button" /></a></p>
 
 <blockquote>
 <p>You don&rsquo;t have to do this - when you push changes to the repository, they
@@ -215,36 +206,33 @@ stanza:</li>
 <p>The only way to permanently disable it is to remove it from the terraform
 source code.</p>
 </blockquote>
-<h2 id="deleting-your-prototype-kit-site">Deleting your Prototype Kit site</h2><p>When you no longer need your prototype kit site, you can delete it as follows:</p>
-
-<ol>
-<li><p>Raise a PR removing your namespace folder from the
-<code>cloud-platform-environments</code> repository, and wait for it to be approved by a
-member of the Cloud Platform team</p></li>
-<li><p><strong>Immediately before you merge the PR</strong> use the GitHub web interface to
-delete your repository</p></li>
-<li><p>Merge the PR</p></li>
-</ol>
+<h2 id="deleting-your-published-prototype">Deleting your published prototype</h2><p>When you no longer need your prototype to be published:</p>
 
 <blockquote>
-<p>The <a href="/documentation/other-topics/apply-pipeline.html">Apply Pipeline</a> has the GitHub privileges required to
-<strong>create</strong> repositories, but not to <strong>delete</strong> them. This is a deliberate
-safety feature.</p>
+<p>Note - These steps are to decommission the hosting infrastructure that your prototype is running on. This will <strong>not</strong> delete your prototype source code.</p>
 </blockquote>
-<p>Shortly after you merge the PR, your namespace will be removed from the Cloud
-Platform.</p>
+
+<ol>
+<li><p>raise a PR removing your namespace folder from the
+<code>cloud-platform-environments</code> repository, and wait for it to be approved by a
+member of the Cloud Platform team</p></li>
+<li><p><strong>immediately before you merge the PR</strong> use the GitHub web interface to
+delete your repository</p></li>
+<li><p>merge the PR</p></li>
+</ol>
+<p>Your namespace will be removed from the Cloud Platform.</p>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2022-02-04">
+              <div data-module='page-expiry' data-last-reviewed-on="2022-02-05">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 4 November 2021.
+      This page was last reviewed on 5 November 2021.
 
-        It needs to be reviewed again on 4 February 2022
+        It needs to be reviewed again on 5 February 2022
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 4 February 2022.
+      This page was set to be reviewed before 5 February 2022.
       This might mean the content is out of date.
     </div>
   </div>
@@ -254,7 +242,7 @@ Platform.</p>
           <aside>
               <ul class="contribution-banner">
                 <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide/blob/main/source/documentation/getting-started/prototype-kit.html.md.erb">View source</a></li>
-                <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide/issues/new?labels=bug&amp;title=Re:%20'Create%20a%20GOV.UK%20Prototype%20Kit%20site'&amp;body=Problem%20with%20'Create%20a%20GOV.UK%20Prototype%20Kit%20site'%20(https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/prototype-kit.html)">Report problem</a></li>
+                <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide/issues/new?labels=bug&amp;title=Re:%20'Publish%20prototypes%20on%20the%20web'&amp;body=Problem%20with%20'Publish%20prototypes%20on%20the%20web'%20(https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/prototype-kit.html)">Report problem</a></li>
                 <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide">GitHub Repo</a></li>
               </ul>
           </aside>
