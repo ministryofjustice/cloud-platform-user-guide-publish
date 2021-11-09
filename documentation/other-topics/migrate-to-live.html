@@ -285,7 +285,7 @@
   cloud-platform environment migrate
 </code></pre></div>
 <ul>
-<li>Commit changes to your branch, and create a pull request.</li>
+<li>Commit changes to your branch, and create a pull request. This will create your namespace in &ldquo;live&rdquo;.</li>
 </ul>
 <p>The migrate command copies the folder. In some cases it makes minor changes to the terraform or alerts to you changes you need to make manually, as described in these points:</p>
 
@@ -293,6 +293,7 @@
 <li><p>If you have a ServiceAccount module for GitHub Actions: please follow <a href="/documentation/other-topics/migrate-to-live-sa-github-actions.html#migrating-serviceaccount-module-for-github-actions-to-the-quot-live-quot-cluster">this guide</a></p></li>
 <li><p>If you have an Elasticsearch module, it adds an IRSA change, needed for EKS.</p></li>
 <li><p><code>Money to prisoners</code> and <code>Pathfinder to analytical platform</code> teams use kiam for <a href="https://github.com/ministryofjustice/cloud-platform-infrastructure/tree/main/terraform/cross-account-IAM">cross account IAM roles</a>: You&rsquo;ll need to use <a href="https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html">IRSA</a> in EKS. These <a href="https://github.com/ministryofjustice/cloud-platform-infrastructure/tree/main/terraform/cross-account-IAM">roles</a> need to be defined inside  the <a href="https://github.com/ministryofjustice/cloud-platform-environments/">environments repo</a> using the guidence <a href="/documentation/other-topics/access-cross-aws-resources-irsa-eks.html#use-iam-roles-for-service-accounts-to-access-resources-in-a-different-aws-account">here</a>.</p></li>
+<li><p>If your namespace has dependencies on another namespace (e.g. terraform in one namespace creates k8s resources in another namespace), please ask the CP team for advice about resolving it for your circumstance.</p></li>
 </ul>
 <p>If you want to skip any warnings and continue anyway, the cli has a <code>--skip-warnings</code> flag you can enable.</p>
 <h2 id="step-4-authenticate-to-the-quot-live-quot-cluster">Step 4 - Authenticate to the &ldquo;live&rdquo; cluster</h2><p>Grab a new set of credentials from <a href="https://login.live.cloud-platform.service.justice.gov.uk">login.live.cloud-platform.service.justice.gov.uk</a>.</p>
