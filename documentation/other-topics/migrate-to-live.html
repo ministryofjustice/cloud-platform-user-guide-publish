@@ -141,20 +141,23 @@
         </ul>
       </li>
       <li>
-        <a href="#step-7-trigger-your-pipeline"><span>Step 7 - Trigger your pipeline</span></a>
+        <a href="#step-7-copy-secrets-that-are-manual"><span>Step 7 - Copy secrets that are manual</span></a>
       </li>
       <li>
-        <a href="#step-8-test-your-application"><span>Step 8 - Test your application</span></a>
+        <a href="#step-8-trigger-your-pipeline"><span>Step 8 - Trigger your pipeline</span></a>
       </li>
       <li>
-        <a href="#step-9-start-sending-real-traffic"><span>Step 9 - Start sending real traffic</span></a>
+        <a href="#step-9-test-your-application"><span>Step 9 - Test your application</span></a>
+      </li>
+      <li>
+        <a href="#step-10-start-sending-real-traffic"><span>Step 10 - Start sending real traffic</span></a>
         <ul>
           <li>
           </li>
         </ul>
       </li>
       <li>
-        <a href="#step-10-cleanup-old-quot-live-1-quot-namespace"><span>Step 10 - Cleanup old “live-1” namespace</span></a>
+        <a href="#step-11-cleanup-old-quot-live-1-quot-namespace"><span>Step 11 - Cleanup old “live-1” namespace</span></a>
       </li>
       <li>
         <a href="#links-for-the-new-cluster"><span>Links for the new cluster</span></a>
@@ -343,8 +346,14 @@
 <p><strong>NOTE</strong>: Make sure you use current versions of the tools image and Circle config, as mentioned in <a href="/documentation/deploying-an-app/using-circleci-for-continuous-deployment.html#setup-kube-auth-is-deprecated">Using CircleCI for Continuous Deployment - setup-kube-auth is deprecated</a>.</p>
 <h3 id="deploy-with-github-actions">Deploy with GitHub Actions</h3><p>Earlier on in this migration you will have <a href="/documentation/other-topics/migrate-to-live-sa-github-actions.html#migrating-serviceaccount-module-for-github-actions-to-the-quot-live-quot-cluster">migrated the ServiceAccount module</a>, leading to GitHub Action secrets differentiated by the cluster e.g. <code>KUBE_CLUSTER_LIVE_1</code>.</p>
 <p>An example of GitHub Actions config is provided in this repo: https://github.com/ministryofjustice/cloud-platform-reference-app-github-action. It deploys the app to both the live-1 and live clusters.</p>
-<h2 id="step-7-trigger-your-pipeline">Step 7 - Trigger your pipeline</h2><p>Trigger your application pipeline. This is normally done manually or by a push to branch.</p>
-<h2 id="step-8-test-your-application">Step 8 - Test your application</h2><p>Test your application is working on the new cluster.</p>
+<h2 id="step-7-copy-secrets-that-are-manual">Step 7 - Copy secrets that are manual</h2><p>If you have kubernetes secrets that were manually created (not deployed automatically by your application CI/CD or terraform) in <code>live-1</code>, you&rsquo;ll now need to copy the secrets from <code>live-1</code> to <code>live</code>, as follows.</p>
+<p>It is hard to tell if a secret was created manually, but you can see all the kubernetes secrets in your namespaces on both clusters, in case this helps to identify them:</p>
+<div class="highlight"><pre class="highlight shell" tabindex="0"><code>kubectl <span class="nt">--context</span> live-1.cloud-platform.service.justice.gov.uk <span class="nt">-n</span> &lt;namespace&gt; get secrets
+kubectl <span class="nt">--context</span> live.cloud-platform.service.justice.gov.uk <span class="nt">-n</span> &lt;namespace&gt; get secrets
+</code></pre></div><p>To copy a secret (including its value) into the new cluster:</p>
+<div class="highlight"><pre class="highlight shell" tabindex="0"><code>kubectl <span class="nt">--context</span> live-1.cloud-platform.service.justice.gov.uk <span class="nt">-n</span> &lt;namespace&gt; get secret &lt;secret name&gt; <span class="nt">-o</span> json | jq <span class="nt">-r</span> <span class="s1">'. | {apiVersion, kind, metadata, data, type} | del(.metadata.annotations."kubectl.kubernetes.io/last-applied-configuration", .metadata.namespace, .metadata.creationTimestamp, .metadata.resourceVersion, .metadata.selfLink, .metadata.uid)'</span> | kubectl <span class="nt">--context</span> live.cloud-platform.service.justice.gov.uk <span class="nt">-n</span> &lt;namespace&gt; create <span class="nt">-f</span> -
+</code></pre></div><h2 id="step-8-trigger-your-pipeline">Step 8 - Trigger your pipeline</h2><p>Trigger your application pipeline. This is normally done manually or by a push to branch.</p>
+<h2 id="step-9-test-your-application">Step 9 - Test your application</h2><p>Test your application is working on the new cluster.</p>
 <p>This could include:</p>
 
 <ul>
@@ -358,7 +367,7 @@ cloud-platform duplicate ingress &lt;ingress resource name&gt; -n &lt;namespace&
 </code></pre></div><p>If your ingress name is <code>helloworld-ing</code> and host is <code>helloworld.service.justice.gov.uk</code>, then this command will create a duplicate ingress <code>helloworld-ing-duplicate</code> 
 with host <code>helloworld-duplicate.service.justice.gov.uk</code> in the given namespace.</p></li>
 </ul>
-<h2 id="step-9-start-sending-real-traffic">Step 9 - Start sending real traffic</h2><p>Traffic flow is controlled by tweaking external-dns ingress annotation (<code>aws-weight</code>), which is used to determine the proportion of traffic sent to that ingress.
+<h2 id="step-10-start-sending-real-traffic">Step 10 - Start sending real traffic</h2><p>Traffic flow is controlled by tweaking external-dns ingress annotation (<code>aws-weight</code>), which is used to determine the proportion of traffic sent to that ingress.
 Initially it is not expected to have any traffic because live’s ingresses have <code>external-dns.alpha.kubernetes.io/aws-weight: &quot;0&quot;</code>.
 For example, by setting this value to 5 on &ldquo;live&rdquo; and 95 on &ldquo;live-1&rdquo;, route53 will send 5% of real traffic to the application on &ldquo;live&rdquo;.</p>
 <p>To apply the changes to the ingress, as a quick alternative to running your application&rsquo;s CI/CD pipeline, you can edit them directly:</p>
@@ -374,7 +383,7 @@ you could send 100% of the traffic into live cluster and 0% into live-1 cluster.
 <p>To view your ingress logs, login to <a href="https://kibana.cloud-platform.service.justice.gov.uk/_plugin/kibana/app/kibana#/discover?_g=()">kibana</a>, select index <code>live_kubernetes_ingress*</code>, and do a search using <code>&quot;host-name&quot;</code> , you will see new logs for &ldquo;host-name&rdquo; from &ldquo;live&rdquo; cluster. Now select index <code>live-1_kubernetes_ingress*</code> and do the same search, you should not see any new logs for &ldquo;host-name&rdquo; from &ldquo;live-1&rdquo; cluster.</p>
 <p>Your namespace is successfully migrated to &ldquo;live&rdquo; cluster, once all of the traffic send into &ldquo;live&rdquo; cluster.</p>
 <p>NOTE: If results are not successful within the live cluster, roll back the annotations to their initial weights (&lsquo;100&rsquo; on &ldquo;live-1&rdquo;, &lsquo;0&rsquo;  on &ldquo;live&rdquo;).</p>
-<h2 id="step-10-cleanup-old-quot-live-1-quot-namespace">Step 10 - Cleanup old &ldquo;live-1&rdquo; namespace</h2><p>Once you have successfully migrated to the &ldquo;live&rdquo; cluster, you can tidy up by scaling down your deployment replica to 0 and stop your CI pipeline/job that deploys
+<h2 id="step-11-cleanup-old-quot-live-1-quot-namespace">Step 11 - Cleanup old &ldquo;live-1&rdquo; namespace</h2><p>Once you have successfully migrated to the &ldquo;live&rdquo; cluster, you can tidy up by scaling down your deployment replica to 0 and stop your CI pipeline/job that deploys
 to the <code>live-1</code> cluster.</p>
 <p>Then, removing your (now unused) namespace from the <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live-1.cloud-platform.service.justice.gov.uk">&ldquo;live-1&rdquo; directory</a>:</p>
 <div class="highlight"><pre class="highlight shell" tabindex="0"><code><span class="nb">rm</span> <span class="nt">-rf</span> ./namespaces/live-1.cloud-platform.service.justice.gov.uk/&lt;my-namespace-name&gt;
@@ -403,18 +412,20 @@ to the <code>live-1</code> cluster.</p>
 <p>To roll back, going through the process in reverse, depending on how far you got:</p>
 
 <ul>
-<li><p>Step 10 &ldquo;Clean-up old &quot;live-1&rdquo; namespace&quot; -
+<li><p>Step 11 &ldquo;Clean-up old &quot;live-1&rdquo; namespace&quot; -
 Revert the pull request that deleted your <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live-1.cloud-platform.service.justice.gov.uk">live-1-folder</a>. It doesn&rsquo;t get applied yet, because of the skipfile.</p></li>
-<li><p>Step 9 - &ldquo;Start sending real traffic&rdquo; -
+<li><p>Step 10 - &ldquo;Start sending real traffic&rdquo; -
 Change the ingress weightings to 0 on &ldquo;live&rdquo;, and 100 on &ldquo;live-1&rdquo;. This directs all traffic to the live-1 cluster. There may be a lag, as users&rsquo; DNS caches update.</p></li>
 </ul>
 <p><strong>At this point your application is running as it was pre-migration</strong></p>
 
 <ul>
-<li><p>Step 8 - Test your application -
+<li><p>Step 9 - Test your application -
 It&rsquo;s a good idea to check it works fine.</p></li>
-<li><p>(Step 7 - Trigger your pipeline -
+<li><p>(Step 8 - Trigger your pipeline -
 Not needed - your app is deployed still on the old cluster)</p></li>
+<li><p>Step 7 - Copy manually created secrets -
+Not needed - The secrets still exists in <code>live-1</code>. Revert PRs if any raised for secrets mentioned on other namespaces in <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live-1.cloud-platform.service.justice.gov.uk">live-1-folder</a></p></li>
 <li><p>Step 6 - &ldquo;Create a new step to your deployment pipeline&rdquo; -
 You need to ensure your application&rsquo;s CI/CD deploys:</p>
 
