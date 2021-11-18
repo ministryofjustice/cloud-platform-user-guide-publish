@@ -108,6 +108,12 @@
             <a href="#introduction"><span>Introduction</span></a>
           </li>
           <li>
+            <a href="#helm-overview"><span>Helm overview</span></a>
+          </li>
+          <li>
+            <a href="#requirements"><span>Requirements</span></a>
+          </li>
+          <li>
             <a href="#deploy-the-app"><span>Deploy the app</span></a>
           </li>
           <li>
@@ -146,20 +152,22 @@
 
         <div class="app-pane__content toc-open-disabled">
           <main id="content" class="technical-documentation" data-module="anchored-headings">
-              <h1 id="deploying-an-application-to-the-cloud-platform-with-helm">Deploying an application to the Cloud Platform with Helm</h1><h3 id="introduction">Introduction</h3><p>The intention of this document is to walk you through the process of deploying an application into the Cloud Platform using the <a href="https://helm.sh/">Helm tool</a>. In simple terms, Helm is a package manager for Kubernetes equivalent to yum or apt, that allows you to deploy charts (which you can think of as packaged applications) into your namespace.</p>
+              <h1 id="deploying-an-application-to-the-cloud-platform-with-helm">Deploying an application to the Cloud Platform with Helm</h1><h3 id="introduction">Introduction</h3><p>This is a guide to deploying an application into the Cloud Platform using the <a href="https://helm.sh/">Helm tool</a>. Helm is a <a href="#helm-overview">package manager for Kubernetes YAML config</a>.</p>
 <p>At the end of this document, you will have deployed a <a href="https://github.com/ministryofjustice/cloud-platform-multi-container-demo-app/">Multi-container demo app</a> to your namespace and now have the ability to scale the app using the Helm tool. If you have any questions or ways to improve this document, please feel free to post a message in the #ask-cloud-platform slack channel/</p>
 <p><em>Disclaimer: You&rsquo;ll see fairly quickly that the application is not fit for production. A perfect example of this is the <a href="https://github.com/ministryofjustice/cloud-platform-multi-container-demo-app/blob/master/helm_deploy/multi-container-app/container-postgres-secrets.yaml">plaintext secrets file</a>. For the demo application we&rsquo;ve left this file in plaintext but it <strong>must</strong> be encrypted when writing your own manifests for production/non-production work in the MoJ.</em></p>
-<h4 id="requirements">Requirements</h4><p>It is assumed you have the following:</p>
+<h3 id="helm-overview">Helm overview</h3><p>Your app&rsquo;s Kubernetes config needs to be in YAML format. The simplest way is to store YAML files in your application, and your CI/CD deploys them using <code>kubectl apply -f deployment.yaml</code>.</p>
+<p>However when you want to deploy this config to multiple environments, it needs to vary slightly between environments. This is where <a href="https://helm.sh/docs/topics/charts/">Helm</a> helps - it allows you to use YAML <em>templates</em>, with variables in. Helm packages up YAML files and calls it a &lsquo;chart&rsquo;. So you store this chart directory in your repo, with a values file that specifies what variables it has and defaults. And your CI/CD deploys it to the cluster with <code>helm install --set name=prod my_app_chart</code>, supplying the values on the commandline or as a file.</p>
+<h3 id="requirements">Requirements</h3><p>It is assumed you have the following:</p>
 
 <ul>
-<li>You have <a href="/documentation/getting-started/env-create.html#creating-a-cloud-platform-environment">created an environment for your application</a></li>
+<li>You have <a href="/documentation/getting-started/env-create.html#creating-a-cloud-platform-environment">created an environment/namespace for your application</a></li>
 <li>You have installed <a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/">Kubectl</a> on your local machine.</li>
-<li>You have <a href="/documentation/getting-started/kubectl-config.html#authentication">authenticated</a> to the cloud-platform-live-1 cluster.</li>
+<li>You have <a href="/documentation/getting-started/kubectl-config.html#authentication">kubectl connected</a> to the cluster which your environment is on - either <code>live</code> or <code>live-1</code>. You will need to have authenticated and possibly also switch context, if you have multiple contexts. Check your environment is listed when you do: <code>kubectl get namespaces</code></li>
 </ul>
 <h3 id="deploy-the-app">Deploy the app</h3><p>The multi-container demo application we&rsquo;re going to use is a very simple Ruby application with an on-cluster Postgresql database.</p>
 
 <blockquote>
-<p>Note: The default installation include all components (API server, postgres, worker, rails app) of this application. 
+<p>Note: The default installation include all components (API server, postgres, worker, rails app) of this application.
 Even though the postgresql database will be installed within the Kubernetes cluster, when deploying to <a href="https://github.com/ministryofjustice/cloud-platform">cloud platform</a>, this can be disabled and setup a RDS instance using the <a href="https://github.com/ministryofjustice/cloud-platform-terraform-rds-instance">terraform module</a> which is recommended if running in production.</p>
 </blockquote>
 <p>The Helm deployment manifests have been pre-written for this exercise. But if you wish to know more about these files and what they do have a quick browse of the <a href="https://github.com/ministryofjustice/cloud-platform-multi-container-demo-app/blob/master/helm_deploy/multi-container-app/README.md">README</a>.</p>
@@ -186,28 +194,30 @@ We&rsquo;ve chosen to use Helm as the default way to deploy applications to the 
 
 <ol>
 <li>apply the secrets required for the posgres database by modifying and applying <a href="https://github.com/ministryofjustice/cloud-platform-multi-container-demo-app/blob/master/helm_deploy/multi-container-app/container-postgres-secrets.yaml">this file</a></li>
-<li><p>create another <a href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/deploying-an-app/add-secrets-to-deployment.html#creating-the-secret">secret file</a> secrets.yaml to store the database url with key called <code>url</code>. 
-The database url should be in the format</p>
+<li><p>create another <a href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/deploying-an-app/add-secrets-to-deployment.html#creating-the-secret">secret file</a> secrets.yaml to store the database url with key called <code>url</code>.
+The database url should be in the format:</p>
 <div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>postgres://&lt;USERNAME&gt;:&lt;ADD-PASSWORD-HERE&gt;@&lt;DB-SERVICE-NAME&gt;:5432/&lt;DATABASE_NAME&gt;
 </code></pre></div><p>For this helm deployment, the url will look like this:</p>
 <div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>postgres://postgres:&lt;ADD-PASSWORD-HERE&gt;@multi-container-app-postgresql:5432/multi_container_demo_app
 </code></pre></div><p>Update the <code>&lt;ADD-PASSWORD-HERE&gt;</code> with the password you mentioned in <a href="https://github.com/ministryofjustice/cloud-platform-multi-container-demo-app/blob/master/helm_deploy/multi-container-app/container-postgres-secrets.yaml">this secret file</a></p></li>
-<li><p>Encode the secret</p>
+<li><p>Encode the secret:</p>
 <div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>echo -n 'postgres://postgres:&lt;ADD-PASSWORD-HERE&gt;@multi-container-app-postgresql:5432/multi_container_demo_app' | base64 -b0
 </code></pre></div></li>
-<li><p>Apply the secret file to your environment</p></li>
+<li><p>Apply the secret file to your environment:
+<code>
+kubectl apply -f secrets.yaml -n &lt;namespace-name&gt;
+</code></p></li>
 </ol>
-<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>  kubectl apply -f secrets.yaml -n &lt;namespace-name&gt;
-</code></pre></div><p>Update the values.yaml file for</p>
+<p>Update the values.yaml file for:</p>
 
 <ul>
 <li><code>&lt;DATABASE-URL-SECRET-NAME&gt;</code> with the name of the secret where you stored the database url</li>
 <li><code>&lt;DNS-PREFIX&gt;</code> with the your own name.</li>
 </ul>
 <p>Run the following (replacing <code>&lt;namespace-name&gt;</code> with your environment name:</p>
-<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>helm install multi-container-app . \
---values values.yaml \
---namespace &lt;namespace-name&gt; 
+<div class="highlight"><pre class="highlight shell" tabindex="0"><code>helm <span class="nb">install </span>multi-container-app <span class="nb">.</span> <span class="se">\</span>
+<span class="nt">--values</span> values.yaml <span class="se">\</span>
+<span class="nt">--namespace</span> &lt;namespace-name&gt; 
 </code></pre></div>
 <blockquote>
 <p>Note: We&rsquo;re naming it like this as app names and host names have to be unique on the cluster.</p>
@@ -311,8 +321,8 @@ stable      https://kubernetes-charts.storage.googleapis.com
 <p>It will clean:</p>
 
 <ul>
-<li>Configuration (Helm home directory) </li>
-<li>v2 release data </li>
+<li>Configuration (Helm home directory)</li>
+<li>v2 release data</li>
 <li>Tiller deployment</li>
 </ul>
 <div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>helm3 2to3 cleanup --tiller-ns &lt;namespace-name&gt; --dry-run
