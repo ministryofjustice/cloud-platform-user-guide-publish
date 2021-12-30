@@ -327,7 +327,10 @@
 </ul>
 <p>Once you have created a new live-ingress.yaml with the above two external-dns annotations, you can apply the ingress in the &ldquo;live&rdquo; cluster using this command:</p>
 <div class="highlight"><pre class="highlight shell" tabindex="0"><code>  kubectl <span class="nt">--context</span> live.cloud-platform.service.justice.gov.uk <span class="nt">-n</span> &lt;namespace-name&gt; apply <span class="nt">-f</span> live-ingress.yaml
-</code></pre></div><h2 id="step-6-create-a-new-step-to-your-deployment-pipeline">Step 6 - Create a new step to your deployment pipeline</h2><p>Your application&rsquo;s continuous deployment pipeline needs a couple of changes:</p>
+</code></pre></div><p><strong>NOTE</strong>: You will see the below warning when you create new ingress in &ldquo;live&rdquo; cluster, please ignore this warning for now.</p>
+<div class="highlight"><pre class="highlight shell" tabindex="0"><code>Warning: networking.k8s.io/v1beta1 Ingress is deprecated <span class="k">in </span>v1.19+, unavailable <span class="k">in </span>v1.22+<span class="p">;</span> use networking.k8s.io/v1 Ingress
+</code></pre></div><p>The &ldquo;live-1&rdquo; cluster is running Kubernetes version &ldquo;1.18&rdquo;, live&quot; cluster is upgraded to Kubernetes version &ldquo;1.20&rdquo;, the networking.k8s.io/v1 API version, available since v1.19, and the networking.k8s.io/v1beta1 API version of IngressClass is no longer served as of v1.22. We will make sure everyone has migrated over to the new API version before we move to v1.22. There are quite a few changes to a number of different APIs on v1.22 of which we will communicate and give clear instructions on what needs to change, to what and by when.</p>
+<h2 id="step-6-create-a-new-step-to-your-deployment-pipeline">Step 6 - Create a new step to your deployment pipeline</h2><p>Your application&rsquo;s continuous deployment pipeline needs a couple of changes:</p>
 
 <ul>
 <li>deploy the app to both clusters, not just &ldquo;live-1&rdquo;</li>
