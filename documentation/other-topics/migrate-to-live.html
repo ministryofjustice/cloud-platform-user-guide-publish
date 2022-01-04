@@ -475,8 +475,12 @@ You can let your team know that they are no longer restricted from changing the 
 <p>No, your current ingress hostname (i.e <code>XXX.apps.live-1.cloud-platform.service.justice.gov.uk</code> and your custom hostname) can remain in your deployment to the <code>live</code> cluster.</p>
 <p></details></p>
 <p><details></p>
-<p><summary><strong>Does the new EKS cluster have different external IP addresses</strong></summary></p>
-<p>No, the new EKS cluster is in the same VPC of the existing <code>live-1</code> cluster. Hence there is no change in the IP address from which the traffic will be sent.</p>
+<p><summary><strong>Does the new EKS cluster have different external IP addresses?</strong></summary></p>
+
+<ul>
+<li><p>Inbound traffic - Yes. Traffic to the new EKS cluster comes into <code>live</code> via ingress NLBs which are dedicated to the cluster. So the domain name for your service will point at these new IP addresses when you start to redirect traffic during: &lsquo;Step 10 - Start sending real traffic&rsquo;.</p></li>
+<li><p>Outbound traffic - No. The new EKS cluster is in the same VPC of the existing <code>live-1</code> cluster. Requests leave the VPC using the same three NAT instances. Hence there is no change in the <a href="/documentation/other-topics/ip-filtering.html#outbound-ip-filtering">IP addresses from which the traffic will be sent</a>.</p></li>
+</ul>
 <p></details></p>
 <h2 id="questions">Questions</h2><p>If you have questions, please ask us on Slack:</p>
 
