@@ -393,7 +393,7 @@ cluster using the serviceaccount credentials.</p>
     <span class="na">KUBE_CLUSTER</span><span class="pi">:</span> <span class="s">${{ secrets.KUBE_CLUSTER }}</span>
   <span class="na">run</span><span class="pi">:</span> <span class="pi">|</span>
     <span class="s">echo "${{ secrets.KUBE_CERT }}" &gt; ca.crt</span>
-    <span class="s">kubectl config set-cluster ${KUBE_CLUSTER} --certificate-authority=./ca.crt --server=https://api.${KUBE_CLUSTER}</span>
+    <span class="s">kubectl config set-cluster ${KUBE_CLUSTER} --certificate-authority=./ca.crt --server=https://${KUBE_CLUSTER}</span>
     <span class="s">kubectl config set-credentials deploy-user --token=${{ secrets.KUBE_TOKEN }}</span>
     <span class="s">kubectl config set-context ${KUBE_CLUSTER} --cluster=${KUBE_CLUSTER} --user=deploy-user --namespace=${{ secrets.KUBE_NAMESPACE }}</span>
     <span class="s">kubectl config use-context ${KUBE_CLUSTER}</span>

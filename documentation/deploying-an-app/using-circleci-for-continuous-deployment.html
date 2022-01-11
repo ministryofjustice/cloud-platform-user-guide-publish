@@ -176,7 +176,7 @@
 
 <ul>
 <li>Download the <a href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/cloud-platform-cli.html#the-cloud-platform-cli">cloud-platform-cli tool</a></li>
-<li>Run the command <code>cloud-platform environment serviceaccount create</code> in your <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live-1.cloud-platform.service.justice.gov.uk">namespace</a> as outlined in the <a href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/cloud-platform-cli.html#the-cloud-platform-cli">instructions</a></li>
+<li>Run the command <code>cloud-platform environment serviceaccount create</code> in your <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk">namespace</a> as outlined in the <a href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/cloud-platform-cli.html#the-cloud-platform-cli">instructions</a></li>
 <li>Add a <code>serviceaccount_name</code> variable called <code>circleci</code> (This doesn&rsquo;t have to be circleci, it&rsquo;s just easier for reference)</li>
 <li>Ensure <code>github_owner</code> and <code>github_token</code> variables are defined in variables.tf. This is added by default if you created the environment using the [cloud-platform-cli tool]</li>
 <li>Ensure github provider block is added to versions.tf and main.tf. This is added by default if you created the environment using the [cloud-platform-cli tool]</li>
@@ -196,8 +196,10 @@
   - name: circleci-token-prlkp
 </code></pre></div><p>To access the credentials of the service account, a <code>ca.crt</code> and a <code>token</code> are generated and stored in a <a href="https://kubernetes.io/docs/concepts/configuration/secret/">Kubernetes secret</a> in your namespace. This will be used to authenticate to your namespace and deploy your application via CircleCI.</p>
 <h2 id="retrieving-the-service-account-credentials">Retrieving the service account credentials</h2><p>Once the service account is created, you can grab the ca.crt and token using the following commands:</p>
-<div class="highlight"><pre class="highlight shell" tabindex="0"><code>cloud-platform decode-secret <span class="nt">-n</span> &lt;YOUR-NAMESPACE&gt; <span class="nt">-s</span> &lt;NAME-OF-CIRCLECI-SERVICE-ACCOUNT-SECRET&gt; | jq <span class="nt">-r</span> <span class="s1">'.data."ca.crt"'</span>
-</code></pre></div><div class="highlight"><pre class="highlight shell" tabindex="0"><code>cloud-platform decode-secret <span class="nt">-n</span> &lt;YOUR-NAMESPACE&gt; <span class="nt">-s</span> &lt;NAME-OF-CIRCLECI-SERVICE-ACCOUNT-SECRET&gt; | jq <span class="nt">-r</span> <span class="s1">'.data."token" | @base64'</span>
+<div class="highlight"><pre class="highlight shell" tabindex="0"><code>kubectl <span class="nt">-n</span> &lt;YOUR-NAMESPACE&gt; get secrets &lt;NAME-OF-CIRCLECI-SERVICE-ACCOUNT-SECRET&gt; <span class="nt">-o</span> json | jq <span class="nt">-r</span> <span class="s1">'.data."ca.crt"'</span>
+</code></pre></div><p>Note - CircleCI does not seem to accept the &ldquo;ca.crt&rdquo; @base64 decoded value as an environment variable, so run the above command to get the encoded &ldquo;ca.crt&rdquo; value and do the decode later at runtime as shown <a href="https://github.com/ministryofjustice/cloud-platform-reference-app/blob/main/.circleci/config.yml#L62">here</a>.</p>
+<p>Use the <code>cloud-platform decode-secret</code> CLI tool to view and Base64-decode the token:</p>
+<div class="highlight"><pre class="highlight shell" tabindex="0"><code>cloud-platform decode-secret <span class="nt">-n</span> &lt;YOUR-NAMESPACE&gt; <span class="nt">-s</span> &lt;NAME-OF-CIRCLECI-SERVICE-ACCOUNT-SECRET&gt; | jq <span class="nt">-r</span> <span class="s1">'.data."token"'</span>
 </code></pre></div><p>Both the ca.crt and token will be added as environment variables in the CircleCI console later in this document.</p>
 <h2 id="setting-up-circleci">Setting up CircleCI</h2><p>MoJ Digital have an account with CircleCI, to <a href="https://circle.com">login</a> you must be a member of the <code>ministryofjustice</code> GitHub organisation. Use the GitHub integration and enter your credentials if required.</p>
 <p>To setup your repository, simply go to &ldquo;Projects&rdquo;, enter your repository name and select &ldquo;Set Up Project&rdquo;. You&rsquo;ll be presented with a default <code>.circleci/config.yml</code> file, copy the contents of this file and create it in the root of your repository. An example of this can be found <a href="https://github.com/ministryofjustice/cloud-platform-reference-app/tree/main/.circleci">here</a></p>
@@ -212,7 +214,7 @@
 
 - ECR_ENDPOINT # This should be the ECR name your intend to push your images to e.g. `738437979232.dkr.ecr.eu-west-2.amazonaws.com/webops/cloud-platform-reference-app-ecr`
 
-- K8S_CLUSTER_NAME # The full name of the cluster e.g. `live-1.cloud-platform.service.justice.gov.uk`
+- K8S_CLUSTER_NAME # The full name of the "live" cluster `https://DF366E49809688A3B16EEC29707D8C09.gr7.eu-west-2.eks.amazonaws.com`
 - K8S_NAMESPACE # The name of the namespace/environment (see [Create a namespace][env-create])
 - K8S_CLUSTER_CERT # The CA Certificate for the cluster, can be acquired from the `Secret` that is generated for the `serviceaccount` (as stated above)
 - K8S_TOKEN # The access token generated for the `serviceaccount`.
@@ -245,12 +247,13 @@
             <span class="s">docker tag app "${ECR_ENDPOINT}:latest"</span>
             <span class="s">docker push "${ECR_ENDPOINT}:latest"</span>
           <span class="s">fi</span>
-</code></pre></div><h3 id="deploy-to-kubernetes">Deploy to Kubernetes</h3><p>Below is example of how you can first authenticate and then deploy to Kubernetes:</p>
+</code></pre></div><p>Note - Update the aws ecr login command above if you are using AWS version 2.0. Click <a href="/documentation/deploying-an-app/helloworld-app-deploy.html#login-to-the-repository">here</a> for reference.</p>
+<h3 id="deploy-to-kubernetes">Deploy to Kubernetes</h3><p>Below is example of how you can first authenticate and then deploy to Kubernetes:</p>
 <div class="highlight"><pre class="highlight yaml" tabindex="0"><code>      <span class="pi">-</span> <span class="na">run</span><span class="pi">:</span>
           <span class="na">name</span><span class="pi">:</span> <span class="s">Authenticate with cluster</span>
           <span class="na">command</span><span class="pi">:</span> <span class="pi">|</span>
             <span class="s">echo -n ${K8S_CLUSTER_CERT} | base64 -d &gt; ./ca.crt</span>
-            <span class="s">kubectl config set-cluster ${K8S_CLUSTER_NAME} --certificate-authority=./ca.crt --server=https://api.${K8S_CLUSTER_NAME}</span>
+            <span class="s">kubectl config set-cluster ${K8S_CLUSTER_NAME} --certificate-authority=./ca.crt --server=https://${K8S_CLUSTER_NAME}</span>
             <span class="s">kubectl config set-credentials circleci --token=${K8S_TOKEN}</span>
             <span class="s">kubectl config set-context ${K8S_CLUSTER_NAME} --cluster=${K8S_CLUSTER_NAME} --user=circleci --namespace=${K8S_NAMESPACE}</span>
             <span class="s">kubectl config use-context ${K8S_CLUSTER_NAME}</span>
