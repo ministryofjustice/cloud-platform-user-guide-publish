@@ -146,10 +146,10 @@
 <p>You can check the current cluster versions here:</p>
 
 <ul>
-<li>[live-1][https://github.com/ministryofjustice/cloud-platform-infrastructure/blob/main/kops/live-1.yaml#L254]</li>
-<li>[live][https://github.com/ministryofjustice/cloud-platform-infrastructure/blob/main/terraform/aws-accounts/cloud-platform-aws/vpc/eks/cluster.tf#L107]</li>
+<li><a href="https://github.com/ministryofjustice/cloud-platform-infrastructure/blob/main/kops/live-1.yaml#L254">live-1 Kubernetes version</a></li>
+<li><a href="https://github.com/ministryofjustice/cloud-platform-infrastructure/blob/main/terraform/aws-accounts/cloud-platform-aws/vpc/eks/cluster.tf#L30">live Kubernetes version</a></li>
 </ul>
-<p>During [migration to <code>live</code> cluster], or if you want to be able to switch between <code>live-1</code> and <code>live</code> cluster, use kubectl version <code>v1.19</code></p>
+<p>During <a href="/documentation/other-topics/migrate-to-live.html">migration to <code>live</code> cluster</a>, or if you want to be able to switch between <code>live-1</code> and <code>live</code> cluster, use kubectl version <code>v1.19</code></p>
 <h2 id="authentication">Authentication</h2><p>Next you&rsquo;ll need to ensure your GitHub user is in the right organization and team, and then do authentication.</p>
 <h3 id="github-setup">GitHub setup</h3><p>The Cloud Platform uses GitHub for authentication and authorisation:</p>
 
@@ -161,43 +161,36 @@
 <p>For those interested in how it works: GitHub is being used as an OIDC provider. Once you&rsquo;ve logged in to GitHub, it provides a token, which is a signed JWT containing your GitHub username and list of teams you&rsquo;re in. GitHub passes it to Auth0 (OIDC broker), which passes it to Cloud Platform&rsquo;s login/Kuberos app, which provides it to you in a &lsquo;kubeconfig&rsquo; file, containing the cluster API URL and token. This kubeconfig will be used when you run kubectl, to authenticate with the Kubernetes cluster in Cloud Platform.</p>
 
 <ol>
-<li>Browse to the login URL - choose the one corresponding to the cluster where your environment is:</li>
-</ol>
-<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>* `live` cluster: &lt;https://login.live.cloud-platform.service.justice.gov.uk/&gt;
-* `live-1` cluster: &lt;https://login.cloud-platform.service.justice.gov.uk/&gt;
-</code></pre></div>
-<ol>
+<li><p>Browse to the login URL - choose the one corresponding to the cluster where your environment is:</p>
+
+<ul>
+<li><code>live</code> cluster: <a href="https://login.live.cloud-platform.service.justice.gov.uk/">https://login.live.cloud-platform.service.justice.gov.uk/</a></li>
+<li><code>live-1</code> cluster: <a href="https://login.cloud-platform.service.justice.gov.uk/">https://login.cloud-platform.service.justice.gov.uk/</a></li>
+</ul></li>
 <li><p>Select &lsquo;Sign in with GitHub&rsquo;. (This page is hosted by Auth0.com)</p></li>
 <li><p>You&rsquo;re redirected to github.com and will need to login, if you&rsquo;ve not done so already.</p></li>
 <li><p>GitHub asks if &lsquo;MOJ Cloud Platforms Auth0&rsquo; may access your GitHub user details. Select &ldquo;Authorize&rdquo;.</p>
 <p><a href="/images/github-authorize-moj-new.png" rel="noopener noreferrer"><img src="/images/github-authorize-moj-new.png" alt="GitHub Authorize MoJ" /></a></p></li>
 <li><p>Auth0.com asks if &lsquo;live:kubernetes&rsquo; app may access &lsquo;justice-cloud-platform account&rsquo;. Select &ldquo;Accept&rdquo;.</p></li>
 <li><p>Select &lsquo;Download Config File&rsquo;.</p></li>
-<li><p>Move the downloaded file to <code>~/.kube/config</code>:</p></li>
+<li><p>Move the downloaded file to <code>~/.kube/config</code>:</p>
+<div class="highlight"><pre class="highlight shell" tabindex="0"><code><span class="nb">mv </span>kubecfg.yaml ~/.kube/config
+</code></pre></div><p>If you&rsquo;ve already got a kubeconfig, you may want to replace it, or merge with it - see <a href="#using-multiple-kubeconfigs">Using multiple kubeconfigs</a>.</p></li>
+<li><p>Minimize the permissions on the file:</p>
+<div class="highlight"><pre class="highlight shell" tabindex="0"><code><span class="nb">chmod </span>600 ~/.kube/config
+</code></pre></div></li>
+<li><p>Tell kubectl to use this config. Pick the cluster, the same as you selected in Step 1:</p>
+
+<ul>
+<li><p><code>live</code> cluster:</p>
+<div class="highlight"><pre class="highlight shell" tabindex="0"><code>kubectl config use-context live.cloud-platform.service.justice.gov.uk
+</code></pre></div></li>
+<li><p><code>live-1</code> cluster:</p>
+<div class="highlight"><pre class="highlight shell" tabindex="0"><code>kubectl config use-context live-1.cloud-platform.service.justice.gov.uk
+</code></pre></div></li>
+</ul></li>
 </ol>
-<div class="highlight"><pre class="highlight shell" tabindex="0"><code>   <span class="nb">mv </span>kubecfg.yaml ~/.kube/config
-</code></pre></div><p>If you&rsquo;ve already got a kubeconfig, you may want to replace it, or merge with it - see <a href="#using-multiple-kubeconfigs">Using multiple kubeconfigs</a>.</p>
-
-<ol>
-<li>Minimize the permissions on the file:</li>
-</ol>
-<div class="highlight"><pre class="highlight shell" tabindex="0"><code>   <span class="nb">chmod </span>600 ~/.kube/config
-</code></pre></div>
-<ol>
-<li>Tell kubectl to use this config. Pick the cluster, the same as you selected in Step 1:</li>
-</ol>
-<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>* `live` cluster:
-
-  ```bash
-  kubectl config use-context live.cloud-platform.service.justice.gov.uk
-  ```
-
-* `live-1` cluster:
-
-  ```bash
-  kubectl config use-context live-1.cloud-platform.service.justice.gov.uk
-  ```
-</code></pre></div><p>You should now be able to run <code>kubectl</code> commands. Try running <code>kubectl get namespaces</code> to list the namespaces in the cluster.</p>
+<p>You should now be able to run <code>kubectl</code> commands. Try running <code>kubectl get namespaces</code> to list the namespaces in the cluster.</p>
 <h4 id="troubleshooting-quot-current-quot-context">Troubleshooting: &ldquo;current&rdquo; context</h4><p>If you see an error like this when executing <code>kubectl</code> commands:</p>
 <div class="highlight"><pre class="highlight shell" tabindex="0"><code>The connection to the server localhost:8080 was refused
 </code></pre></div><p>A common reason for this is that the &ldquo;current&rdquo; context has not been set. Check it by running:</p>
@@ -212,7 +205,7 @@
 <ol>
 <li><p>Assuming you already have a kubeconfig for live-1, download another kubeconfig for live from <a href="https://login.live.cloud-platform.service.justice.gov.uk">login.live.cloud-platform.service.justice.gov.uk</a>.</p></li>
 <li><p>Move the kubeconfig to your .kube folder:</p>
-<div class="highlight"><pre class="highlight shell" tabindex="0"><code>    <span class="nb">mv</span> ~/Downloads/kubecfg.yaml ~/.kube/config-live
+<div class="highlight"><pre class="highlight shell" tabindex="0"><code><span class="nb">mv</span> ~/Downloads/kubecfg.yaml ~/.kube/config-live
 </code></pre></div></li>
 <li><p>Edit <code>~/.kube/config-live</code>, and change the username <strong>in two places</strong>, from <code>&lt;firstname&gt;.&lt;lastname&gt;@digital.justice.gov.uk</code> to <code>&lt;firstname&gt;.&lt;lastname&gt;@live</code>, as shown below:</p>
 <div class="highlight"><pre class="highlight yaml" tabindex="0"><code><span class="na">contexts</span><span class="pi">:</span>
@@ -227,7 +220,7 @@
 <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">&lt;firstname&gt;.&lt;lastname&gt;@live</span>
 </code></pre></div><p>Explanation: If we don&rsquo;t rename the username, then the merge will overwrite one of the them and their token, which is different between the clusters.</p></li>
 <li><p>Copy your existing live-1 credentials into a separate file:</p>
-<div class="highlight"><pre class="highlight shell" tabindex="0"><code>    <span class="nb">cp</span> ~/.kube/config ~/.kube/config-live-1
+<div class="highlight"><pre class="highlight shell" tabindex="0"><code><span class="nb">cp</span> ~/.kube/config ~/.kube/config-live-1
 </code></pre></div></li>
 <li><p>Edit <code>~/.kube/config-live-1</code>, and change the username in two places, from <code>&lt;firstname&gt;.&lt;lastname&gt;@digital.justice.gov.uk</code> to <code>&lt;firstname&gt;.&lt;lastname&gt;@live-1</code>, as shown below:</p>
 <div class="highlight"><pre class="highlight yaml" tabindex="0"><code><span class="na">contexts</span><span class="pi">:</span>
