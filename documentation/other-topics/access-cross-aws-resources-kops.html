@@ -119,12 +119,12 @@
 
 <ol>
 <li><p><strong>Create the IAM role</strong></p>
-<p>Create a file (cross-iam-role.tf) inside your environment folder in the <a href="https://github.com/ministryofjustice/cloud-platform-environments">cloud-platform-environments</a> repo, 
+<p>Create a file (cross-iam-role.tf) inside your environment folder in the <a href="https://github.com/ministryofjustice/cloud-platform-environments">cloud-platform-environments</a> repo,
 update the template below with the correct values and raise a PR.</p>
 <p><details>
   <summary>Click here to see a template code block</summary>
   <pre><code>
-    data &quot;aws_iam_policy_document&quot; &quot;<namespace>-kiam-trust-chain&quot; {
+    data &quot;aws_iam_policy_document&quot; &quot;&lt;namespace&gt;-kiam-trust-chain&quot; {
       # KIAM trust chain to allow pods to assume roles defined below
       statement {
         principals {
@@ -134,57 +134,57 @@ update the template below with the correct values and raise a PR.</p>
         actions = [&quot;sts:AssumeRole&quot;]
       }
     }
-    variable &quot;<namespace>-tags&quot; {
+    variable &quot;&lt;namespace&gt;-tags&quot; {
       type = map(string)
       default = {
-        business-unit          = &quot;<Which part of the MoJ is responsible for this service? (e.g HMPPS, Legal Aid Agency)>&quot;
-        application            = &quot;<Application name>&quot;
-        is-production          = &quot;<true/false>&quot;
-        environment-name       = &quot;<dev/test/staging/prod>&quot;
-        owner                  = &quot;<team responsible for this application>&quot;
-        infrastructure-support = &quot;<Email address for contact/support>&quot;
+        business-unit          = &quot;&lt;Which part of the MoJ is responsible for this service? (e.g HMPPS, Legal Aid Agency)&gt;&quot;
+        application            = &quot;&lt;Application name&gt;&quot;
+        is-production          = &quot;&lt;true/false&gt;&quot;
+        environment-name       = &quot;&lt;dev/test/staging/prod&gt;&quot;
+        owner                  = &quot;&lt;team responsible for this application&gt;&quot;
+        infrastructure-support = &quot;&lt;Email address for contact/support&gt;&quot;
       }
     }
-    resource &quot;aws_iam_role&quot; &quot;<namespace>-<role-name>&quot; {
-      name               = &quot;<namespace>-<role-name>&quot;
+    resource &quot;aws_iam_role&quot; &quot;&lt;namespace&gt;-&lt;role-name&gt;&quot; {
+      name               = &quot;&lt;namespace&gt;-&lt;role-name&gt;&quot;
       description        = &quot;IAM role for XXXX&quot;
-      tags               = var.<namespace>-tags
-      assume_role_policy = data.aws_iam_policy_document.<namespace>-kiam-trust-chain.json
+      tags               = var.&lt;namespace&gt;-tags
+      assume_role_policy = data.aws_iam_policy_document.&lt;namespace&gt;-kiam-trust-chain.json
     }
-    resource &quot;kubernetes_secret&quot; &quot;<secret-name-in-your-namespace>&quot; {
+    resource &quot;kubernetes_secret&quot; &quot;&lt;secret-name-in-your-namespace&gt;&quot; {
       metadata {
-        name      = &quot;<secret-name-in-your-namespace>&quot;
-        namespace = &quot;<namespace>&quot;
+        name      = &quot;&lt;secret-name-in-your-namespace&gt;&quot;
+        namespace = &quot;&lt;namespace&gt;&quot;
       }
       data = {
-        arn       = aws_iam_role.<namespace>-<role-name>.arn
-        name      = aws_iam_role.<namespace>-<role-name>.name
-        unique_id = aws_iam_role.<namespace>-<role-name>.unique_id
+        arn       = aws_iam_role.&lt;namespace&gt;-&lt;role-name&gt;.arn
+        name      = aws_iam_role.&lt;namespace&gt;-&lt;role-name&gt;.name
+        unique_id = aws_iam_role.&lt;namespace&gt;-&lt;role-name&gt;.unique_id
       }
     }
-    data &quot;aws_iam_policy_document&quot; &quot;<namespace>-<role-name>&quot; {
+    data &quot;aws_iam_policy_document&quot; &quot;&lt;namespace&gt;-&lt;role-name&gt;&quot; {
       # allow pods to assume this role
       statement {
         actions   = [&quot;sts:AssumeRole&quot;]
-        resources = [aws_iam_role.<namespace>-<role-name>.arn]
+        resources = [aws_iam_role.&lt;namespace&gt;-&lt;role-name&gt;.arn]
       }
-      # Provide list of permissions and target AWS account resources to allow access from
+      # Provide list of permissions and target AWS account resources to allow access to
       statement {
         actions = [
-          &quot;<some action>&quot;,
+          &quot;&lt;some action&gt;&quot;,
         ]
         resources = [
-          &quot;<ARN of resource in target AWS account>/*&quot;,
+          &quot;&lt;ARN of resource in target AWS account&gt;/*&quot;,
         ]
       }
     }
-    resource &quot;aws_iam_policy&quot; &quot;<namespace>-<policy-name>&quot; {
-      name   = &quot;<namespace>-<policy-name>&quot;
-      policy = data.aws_iam_policy_document.<namespace>-<policy-name>.json
+    resource &quot;aws_iam_policy&quot; &quot;&lt;namespace&gt;-&lt;policy-name&gt;&quot; {
+      name   = &quot;&lt;namespace&gt;-&lt;policy-name&gt;&quot;
+      policy = data.aws_iam_policy_document.&lt;namespace&gt;-&lt;policy-name&gt;.json
     }
-    resource &quot;aws_iam_role_policy_attachment&quot; &quot;<namespace>-<policy-name>&quot; {
-      role       = aws_iam_role.<namespace>-<role-name>.name
-      policy_arn = aws_iam_policy.<namespace>-<policy-name>.arn
+    resource &quot;aws_iam_role_policy_attachment&quot; &quot;&lt;namespace&gt;-&lt;policy-name&gt;&quot; {
+      role       = aws_iam_role.&lt;namespace&gt;-&lt;role-name&gt;.name
+      policy_arn = aws_iam_policy.&lt;namespace&gt;-&lt;policy-name&gt;.arn
     }
 </code>
 </pre>
@@ -237,7 +237,7 @@ update the template below with the correct values and raise a PR.</p>
         actions   = ["sts:AssumeRole"]
         resources = [aws_iam_role.my-namespace-app-iam-role.arn]
       }
-      # Provide list of permissions and target AWS account resources to allow access from
+      # Provide list of permissions and target AWS account resources to allow access to
       statement {
         actions = [
           "s3.PutObject",

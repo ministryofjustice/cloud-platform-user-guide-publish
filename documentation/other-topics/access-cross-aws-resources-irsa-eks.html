@@ -123,52 +123,49 @@
 
 <ol>
 <li><p><strong>Create the IAM role for service accounts config</strong></p>
-<p>Create a file (cross-iam-role-sa.tf) inside your environment folder in the <a href="https://github.com/ministryofjustice/cloud-platform-environments">cloud-platform-environments</a> repo, 
+<p>Create a file (cross-iam-role-sa.tf) inside your environment folder in the <a href="https://github.com/ministryofjustice/cloud-platform-environments">cloud-platform-environments</a> repo,
 update the template below with the correct values and raise a PR.</p>
 
 <details><summary>Click here to see a template code block</summary>
 <pre><code>
     module "irsa" {
-      source = "github.com/ministryofjustice/cloud-platform-terraform-irsa?ref=0.0.1"
-      namespace        = "<namespace>"
-      role_policy_arns = ["<aws_iam_policy.<namespace>_<policy_name>.arn>"]
+      source = "github.com/ministryofjustice/cloud-platform-terraform-irsa?ref=1.0.2"
+      namespace        = "&lt;namespace&gt;"
+      role_policy_arns = ["&lt;aws_iam_policy.&lt;namespace&gt;_&lt;policy_name&gt;.arn&gt;"]
     }
-    data "aws_iam_policy_document" "<namespace>_<policy_name>" {
-      # "api" policy statements for the namespace
-      # allows direct access to "landing" S3 bucket
+    data "aws_iam_policy_document" "&lt;namespace&gt;_&lt;policy_name&gt;" {
+      # Provide list of permissions and target AWS account resources to allow access to
       statement {
         actions = [
           "s3:PutObject",
           "s3:PutObjectAcl",
         ]
         resources = [
-          "<ARN of resource in target AWS account>/*",
+          "&lt;ARN of resource in target AWS account&gt;/*",
         ]
       }
     }
-    resource "aws_iam_policy" "<namespace>_<policy_name>" {
-      name   = "<namespace>-<policy-name>"
-      policy = data.aws_iam_policy_document.<namespace>_<policy_name>.json
-    } 
-    variable "<namespace>-tags" {
-      type = map(string)
-      default = {
-        business-unit          = "<Which part of the MoJ is responsible for this service? (e.g HMPPS, Legal Aid Agency)>"
-        application            = "<Application name>"
-        is-production          = "<true/false>"
-        environment-name       = "<dev/test/staging/prod>"
-        owner                  = "<team responsible for this application>"
-        infrastructure-support = "<Email address for contact/support>"
+    resource "aws_iam_policy" "&lt;namespace&gt;_&lt;policy_name&gt;" {
+      name   = "&lt;namespace&gt;-&lt;policy-name&gt;"
+      policy = data.aws_iam_policy_document.&lt;namespace&gt;_&lt;policy_name&gt;.json
+
+      tags = {
+        business-unit          = "&lt;Which part of the MoJ is responsible for this service? (e.g HMPPS, Legal Aid Agency)&gt;"
+        application            = "&lt;Application name&gt;"
+        is-production          = "&lt;true/false&gt;"
+        environment-name       = "&lt;dev/test/staging/prod&gt;"
+        owner                  = "&lt;team responsible for this application&gt;"
+        infrastructure-support = "&lt;Email address for contact/support&gt;"
       }
     }
     resource "kubernetes_secret" "irsa" {
       metadata {
         name      = "irsa-output"
-        namespace = "<namespace>"
+        namespace = "&lt;namespace&gt;"
       }
       data = {
         role = module.irsa.aws_iam_role_name
-        serviceaccount = module.irsa.service_account_name
+        serviceaccount = module.irsa.service_account_name.name
       }
     }
 </code>
@@ -177,14 +174,13 @@ update the template below with the correct values and raise a PR.</p>
 
 <details><summary> Here is an example using the template above, with typical values provided</summary>
 <pre><code>
-      module "irsa" {
-      source = "github.com/ministryofjustice/cloud-platform-terraform-irsa?ref=0.0.1"
+    module "irsa" {
+      source = "github.com/ministryofjustice/cloud-platform-terraform-irsa?ref=1.0.2"
       namespace        = "my-namespace"
       role_policy_arns = [aws_iam_policy.my_namespace_my_policy.arn]
     }
     data "aws_iam_policy_document" "my_namespace_my_policy" {
-      # "api" policy statements for the namespace/policy
-      # allows direct access to "landing" S3 bucket
+      # Provide list of permissions and target AWS account resources to allow access to
       statement {
         actions = [
           "s3:PutObject",
@@ -198,10 +194,8 @@ update the template below with the correct values and raise a PR.</p>
     resource "aws_iam_policy" "my_namespace_my_policy" {
       name   = "my-namespace-my-policy"
       policy = data.aws_iam_policy_document.my_namespace_my_policy.json
-    }
-    variable "my-namespace-tags" {
-      type = map(string)
-      default = {
+
+      tags = {
         business-unit          = "Cloud Platform"
         application            = "My Application"
         is-production          = "false"
@@ -217,7 +211,7 @@ update the template below with the correct values and raise a PR.</p>
       }
       data = {
         role = module.irsa.aws_iam_role_name
-        serviceaccount = module.irsa.service_account_name
+        serviceaccount = module.irsa.service_account_name.name
       }
     }
 </code>
