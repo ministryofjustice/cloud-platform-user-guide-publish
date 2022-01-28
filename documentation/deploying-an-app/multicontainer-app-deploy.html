@@ -176,7 +176,7 @@ docker push 754256621582.dkr.ecr.eu-west-2.amazonaws.com/[team_name]/[repo_name]
 <p>Note: The yaml files in the github repository refer to docker images from docker hub, e.g. <code>ministryofjustice/cloud-platform-multi-container-demo-app:worker-1.6</code>
 These will work, but in order to deploy the docker images you built in the earlier step, please change this to the full reference to your docker images.</p>
 </blockquote>
-<p>You also need to change the <code>host</code> entry in the <code>ingress.yaml</code> file, so that this instance of the application has a unique hostname (i.e. change <code>multi-container-demo.apps.live-1.cloud-platform.service.justice.gov.uk</code> to something like <code>[yourname]-demo.apps.live-1.cloud-platform.service.justice.gov.uk</code>)</p>
+<p>You also need to change the <code>host</code> entry in the <code>ingress.yaml</code> file, so that this instance of the application has a unique hostname (i.e. change <code>multi-container-demo.apps.live.cloud-platform.service.justice.gov.uk</code> to something like <code>[yourname]-demo.apps.live.cloud-platform.service.justice.gov.uk</code>)</p>
 
 <blockquote>
 <p>The cluster will not allow you to deploy an ingress with the same hostname as an existing ingress, so it&rsquo;s important to ensure your hostname is unique.</p>
@@ -193,7 +193,7 @@ This will run rails database migrations.</p>
 <h2 id="deploying-to-the-cluster">Deploying to the cluster</h2><p>After you have built and pushed your docker images, and made the corresponding changes to the <code>kubernetes_deploy/*.yaml</code> files, you can apply the configuration to your namespace in the kubernetes cluster:</p>
 <div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>  kubectl apply --filename kubernetes_deploy --namespace [your namespace]
 </code></pre></div><h2 id="interacting-with-the-application">Interacting with the application</h2><p>You should be able to view the application in your browser at:</p>
-<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>https://&lt;unique hostname you chose&gt;.apps.live-1.cloud-platform.service.justice.gov.uk/
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>https://&lt;unique hostname you chose&gt;.apps.live.cloud-platform.service.justice.gov.uk/
 </code></pre></div><p>It should behave in the same way as when you were running it locally via docker-compose.</p>
 <h2 id="further-development">Further Development</h2><p>Once you have deployed a working application, you can create a monitoring dashboard and custom alerts using these examples:</p>
 

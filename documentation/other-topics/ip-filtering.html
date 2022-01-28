@@ -137,8 +137,6 @@ metadata:
   name: &lt;ingress-name&gt;
   namespace: &lt;namespace-name&gt;
   annotations:
-    kubectl.kubernetes.io/last-applied-configuration: |
-          {"apiVersion":"networking.k8s.io/v1beta1","kind":"Ingress","metadata":{"annotations":{"kubernetes.io/ingress.class":"nginx","nginx.ingress.kubernetes.io/whitelist-source-range":"1.1.1.1/24,10.0.0.0/24"},"name":"&lt;my-ingress&gt;","namespace":"&lt;my-namespace&gt;"},"spec":{"rules":[{"host":"my-app.apps.live-1.cloud-platform.service.justice.gov.uk","http":{"paths":[{"backend":{"serviceName":"&lt;my-svc&gt;","servicePort":3000},"path":"/"}]}}],"tls":[{"hosts":["my-app.apps.live-1.cloud-platform.service.justice.gov.uk"]}]}}
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/whitelist-source-range: 1.1.1.1/24,10.0.0.0/24
     external-dns.alpha.kubernetes.io/set-identifier: &lt;ingress-name&gt;-&lt;namespace-name&gt;-&lt;colour&gt;
@@ -149,7 +147,7 @@ metadata:
   namespace: &lt;my-namespace&gt;
 spec:
   rules:
-  - host: my-app.apps.live-1.cloud-platform.service.justice.gov.uk
+  - host: my-app.apps.live.cloud-platform.service.justice.gov.uk
     http:
       paths:
       - path: /
@@ -158,14 +156,14 @@ spec:
           servicePort: 3000
   tls:
   - hosts:
-    - my-app.apps.live-1.cloud-platform.service.justice.gov.uk
+    - my-app.apps.live.cloud-platform.service.justice.gov.uk
 status:
   loadBalancer:
     ingress:
     - hostname: &lt;hostname&gt;
 </code></pre></div><p>(Note - Please change the <code>ingress-name</code> and <code>namespace-name</code> values in the above example. The <code>colour</code> should be <code>blue</code> for ingress in live-1 and <code>green</code> for ingress in EKS <code>live</code> cluster)</p>
 <p>Testing with the annotation set:</p>
-<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>curl -v -H "Host: my-app.apps.live-1.cloud-platform.service.justice.gov.uk" &lt;HOST-IP&gt;
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>curl -v -H "Host: my-app.apps.live.cloud-platform.service.justice.gov.uk" &lt;HOST-IP&gt;
 </code></pre></div><p>Will return a &ldquo;403 forbidden&rdquo; status</p>
 <h4 id="ip6-ipv6">IP6 / IPv6</h4><p>Currently, IPv6 is not supported for inbound IP filtering.</p>
 <p>It should be possible to add IPv6 support to the platform, but nobody has asked for this, so we haven&rsquo;t done it.</p>

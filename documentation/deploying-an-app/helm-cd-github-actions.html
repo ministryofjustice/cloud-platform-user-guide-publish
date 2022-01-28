@@ -240,12 +240,12 @@ namespace that contains the <code>url</code> for your RDS instance.</p>
 <div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>databaseUrlSecretName: rds-instance-output
 </code></pre></div><p>A little further down in the same file, you should see these lines:</p>
 <div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>  hosts:
-    - host: &lt;DNS-PREFIX&gt;.apps.live-1.cloud-platform.service.justice.gov.uk
+    - host: &lt;DNS-PREFIX&gt;.apps.live.cloud-platform.service.justice.gov.uk
 </code></pre></div><p>We need to replace <code>&lt;DNS-PREFIX&gt;</code> with a unique hostname for your instance of
 this application.</p>
 <p>I&rsquo;m going to use <code>helm-cd</code> for this, but you should pick a different value.</p>
 <div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>  hosts:
-    - host: helm-cd.apps.live-1.cloud-platform.service.justice.gov.uk
+    - host: helm-cd.apps.live.cloud-platform.service.justice.gov.uk
 </code></pre></div><p>Commit and push your changes.</p>
 <h3 id="manual-helm-deploy">Manual Helm Deploy</h3><p>At this point you should be able to deploy the application like this:</p>
 <div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>cd helm_deploy/multi-container-app/
@@ -260,7 +260,7 @@ REVISION: 1
 ...
 </code></pre></div><p>To confirm that the app. is working, visit the URL corresponding to the
 hostname you chose:</p>
-<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>https://helm-cd.apps.live-1.cloud-platform.service.justice.gov.uk
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>https://helm-cd.apps.live.cloud-platform.service.justice.gov.uk
 </code></pre></div><h2 id="automating-deployment">Automating deployment</h2><p>The steps we need our continuous deployment (CD) workflow to carry out are very
 similar to those in the <a href="/documentation/deploying-an-app/github-actions-continuous-deployment.html">github actions CD</a> tutorial. Whenever a change
 is pushed to the <code>main</code> branch:</p>

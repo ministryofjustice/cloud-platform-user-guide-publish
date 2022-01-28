@@ -120,10 +120,10 @@ associated AWS resources, and helps to keep our hosting costs down.</p>
 <a href="https://help.github.com/en/articles/about-pull-requests">PR</a> which deletes the associated folder from the <a href="https://github.com/ministryofjustice/cloud-platform-environments">cloud-platform-environments</a>.</p>
 <p>So, if your namespace is called <code>mynamespace</code>, then you need to raise a <a href="https://help.github.com/en/articles/about-pull-requests">PR</a>
 deleting the folder:</p>
-<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code> namespaces/live-1.cloud-platform.service.justice.gov.uk/mynamespace
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code> namespaces/live.cloud-platform.service.justice.gov.uk/mynamespace
 </code></pre></div><p>&hellip;and all its contents, from the <a href="https://github.com/ministryofjustice/cloud-platform-environments">cloud-platform-environments</a> repository.</p>
-<p>Merging this <a href="https://help.github.com/en/articles/about-pull-requests">PR</a> will trigger the <a href="/documentation/other-topics/apply-pipeline.html">Apply Pipeline</a>,
-which will delete all of your namespace&rsquo;s AWS resources, followed by the
+<p>Merging this <a href="https://help.github.com/en/articles/about-pull-requests">PR</a> will trigger the <a href="https://concourse.cloud-platform.service.justice.gov.uk/teams/main/pipelines/environments-live/jobs/detect-deleted-namespaces">detect-deleted-namespaces Pipeline</a>,
+which will alert cloud-platform team to delete all of your namespace&rsquo;s AWS resources, followed by the
 namespace itself.</p>
 
 <blockquote>

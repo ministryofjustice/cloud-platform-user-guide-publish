@@ -214,7 +214,7 @@ docker push 754256621582.dkr.ecr.eu-west-2.amazonaws.com/webops/dstest-ecr:1.0
 
 <ul>
 <li>Replace the <code>image:</code> value with the one for your ECR</li>
-<li><p>Replace the <code>dstest</code> in <code>dstest.apps.live-1.cloud-platform.service.justice.gov.uk</code> with a hostname that is unique to your application (e.g. use your own name, or the namespace name)</p></li>
+<li><p>Replace the <code>dstest</code> in <code>dstest.apps.live.cloud-platform.service.justice.gov.uk</code> with a hostname that is unique to your application (e.g. use your own name, or the namespace name)</p></li>
 <li><p><code>kubernetes-deploy.yaml</code></p></li>
 </ul>
 <div class="highlight"><pre class="highlight yaml" tabindex="0"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">apps/v1</span>
@@ -263,9 +263,9 @@ docker push 754256621582.dkr.ecr.eu-west-2.amazonaws.com/webops/dstest-ecr:1.0
 <span class="na">spec</span><span class="pi">:</span>
   <span class="na">tls</span><span class="pi">:</span>
   <span class="pi">-</span> <span class="na">hosts</span><span class="pi">:</span>
-    <span class="pi">-</span> <span class="s">dstest.apps.live-1.cloud-platform.service.justice.gov.uk</span>
+    <span class="pi">-</span> <span class="s">dstest.apps.live.cloud-platform.service.justice.gov.uk</span>
   <span class="na">rules</span><span class="pi">:</span>
-  <span class="pi">-</span> <span class="na">host</span><span class="pi">:</span> <span class="s">dstest.apps.live-1.cloud-platform.service.justice.gov.uk</span>
+  <span class="pi">-</span> <span class="na">host</span><span class="pi">:</span> <span class="s">dstest.apps.live.cloud-platform.service.justice.gov.uk</span>
     <span class="na">http</span><span class="pi">:</span>
       <span class="na">paths</span><span class="pi">:</span>
       <span class="pi">-</span> <span class="na">path</span><span class="pi">:</span> <span class="s">/</span>

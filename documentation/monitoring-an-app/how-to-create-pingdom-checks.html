@@ -134,7 +134,7 @@
 <li>You have <a href="/documentation/getting-started/env-create.html#creating-a-cloud-platform-environment">created a namespace for your application</a></li>
 <li>You have a slack channel to send alerts to</li>
 </ul>
-<h2 id="create-a-pingdom-check">Create a Pingdom check</h2><p>Add the below 2 files in in the resources directory of your namespace in your <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live-1.cloud-platform.service.justice.gov.uk">cloud-platform-environments</a> repository. You can define the conditions of your check using the resources outlined in the <a href="https://github.com/russellcardullo/terraform-provider-pingdom">Terraform community provider</a>. Here&rsquo;s a working example of a <a href="https://github.com/ministryofjustice/cloud-platform-environments/blob/main/namespaces/live-1.cloud-platform.service.justice.gov.uk/claim-criminal-injuries-compensation-uat/resources/pingdom.tf">basic check</a>.</p>
+<h2 id="create-a-pingdom-check">Create a Pingdom check</h2><p>Add the below 2 files in in the resources directory of your namespace in your <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk">cloud-platform-environments</a> repository. You can define the conditions of your check using the resources outlined in the <a href="https://github.com/russellcardullo/terraform-provider-pingdom">Terraform community provider</a>. Here&rsquo;s a working example of a <a href="https://github.com/ministryofjustice/cloud-platform-environments/blob/main/namespaces/live.cloud-platform.service.justice.gov.uk/claim-criminal-injuries-compensation-uat/resources/pingdom.tf">basic check</a>.</p>
 
 <ol>
 <li><p>Add the below code to the <code>required_providers</code> block in <code>versions.tf</code></p>
@@ -182,7 +182,7 @@
 </ol>
 <p><strong>Note</strong>: You&rsquo;ll need to include the <code>provider &quot;pingdom&quot;</code> and <code>terraform</code> blocks either in this file or in a <code>main.tf</code> file.</p>
 <p>You can define the conditions of your check using the resources outlined in the <a href="https://github.com/russellcardullo/terraform-provider-pingdom">Terraform community provider</a>.</p>
-<p>Here&rsquo;s a working example of a <a href="https://github.com/ministryofjustice/cloud-platform-environments/blob/main/namespaces/live-1.cloud-platform.service.justice.gov.uk/claim-criminal-injuries-compensation-uat/resources/pingdom.tf">basic check</a>.</p>
+<p>Here&rsquo;s a working example of a <a href="https://github.com/ministryofjustice/cloud-platform-environments/blob/main/namespaces/live.cloud-platform.service.justice.gov.uk/claim-criminal-injuries-compensation-uat/resources/pingdom.tf">basic check</a>.</p>
 <p>This basic check simply checks that the host/url (in this case; uat.claim-criminal-injuries-compensation.service.justice.gov.uk) returns a 200 every minute (resolution = 1 minute). 
   When six (sendnotificationwhendown = 6) consecutive checks fail it triggers an alarm.</p>
 <p><a href="https://github.com/russellcardullo/terraform-provider-pingdom#pingdom-check">This</a> page explains all the attributes used in the check.</p>

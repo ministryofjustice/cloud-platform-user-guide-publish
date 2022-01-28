@@ -135,7 +135,7 @@ systems.</p>
 <ul>
 <li>live-1 - the &ldquo;application&rdquo; cluster, managed via <a href="https://github.com/kubernetes/kops">Kops</a>, which runs all hosted services</li>
 <li>manager - an <a href="https://aws.amazon.com/eks/">EKS</a> cluster which runs shared services such as monitoring and CI/CD pipelines</li>
-<li>live - a newer &ldquo;application&rdquo; cluster, managed by EKS. Applications running on the live-1 cluster 
+<li>live - a newer &ldquo;application&rdquo; cluster, managed by EKS, which runs all hosted services.
 will be <a href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/migrate-to-live.html">migrated to the &ldquo;live&rdquo; cluster</a> during Autumn 2021. </li>
 </ul>
 <p>&hellip;plus additional AWS managed services such as database instances, S3 buckets,
