@@ -249,17 +249,7 @@
 <ul>
 <li><p>Ensure your containers are &ldquo;stateless&rdquo;. During the transition between clusters, your pods will be running simultaneously on both &ldquo;live&rdquo; and &ldquo;live-1&rdquo;. Any state that is in the containers (or inside the pod), such as the ephemeral disk or EBS, will not be copied to the new cluster. For example if you store user session data on disk, then moving it to Elasticache will avoid web users being logged off when traffic gets routed to the other cluster.</p></li>
 <li><p>Check that multiple copies of your app are ok to communicate simultaneously with AWS resources. These AWS resources will be shared between clusters. For example, your RDS instance will accept connections from pods in &ldquo;live&rdquo; and &ldquo;live-1&rdquo;.</p></li>
-<li><p>If you use Kubernetes <a href="https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/">Cronjobs</a> and <a href="https://kubernetes.io/docs/concepts/workloads/controllers/job/">Jobs</a> with option <a href="https://kubernetes.io/docs/concepts/workloads/controllers/ttlafterfinished/"><code>ttlSecondsAfterFinished</code></a> then refer to this guide: <a href="/documentation/other-topics/migrate-to-live-k8s-jobs.html#migrating-kubernetes-jobs-to-the-quot-live-quot-cluster">ttlSecondsAfterFinished</a>, you can check that by running below commands in your namespace.</p></li>
-</ul>
-<div class="highlight"><pre class="highlight shell" tabindex="0"><code>  Cronjobs:
-  kubectl <span class="nt">-n</span> &lt;namespace-name&gt; get cronjobs <span class="nt">-ojson</span> | jq <span class="s1">'.items[] | select(.spec.jobTemplate.spec.ttlSecondsAfterFinished != null ) | .metadata.name'</span>
-
-  Jobs:
-  kubectl <span class="nt">-n</span> &lt;namespace-name&gt; get <span class="nb">jobs</span> <span class="nt">-ojson</span> | jq <span class="nt">-r</span> <span class="s1">'.items[] | select(.spec.ttlSecondsAfterFinished !=  null ) | .metadata.name'</span>
-
-</code></pre></div>
-<ul>
-<li>Ensure you have installed the <a href="/documentation/getting-started/cloud-platform-cli.html#the-cloud-platform-cli">cloud-platform cli</a> at the <a href="https://github.com/ministryofjustice/cloud-platform-cli/releases/latest">latest version</a>. To test:</li>
+<li><p>Ensure you have installed the <a href="/documentation/getting-started/cloud-platform-cli.html#the-cloud-platform-cli">cloud-platform cli</a> at the <a href="https://github.com/ministryofjustice/cloud-platform-cli/releases/latest">latest version</a>. To test:</p></li>
 </ul>
 <div class="highlight"><pre class="highlight shell" tabindex="0"><code>  cloud-platform version
 </code></pre></div><p>(Old versions try to auto-update, but this can fail. In this case, to upgrade, run <code>brew update &amp;&amp; brew upgrade cloud-platform-cli</code> or download the <a href="https://api.github.com/repos/ministryofjustice/cloud-platform-cli/releases/latest">latest release</a>)</p>
@@ -329,7 +319,7 @@
 <div class="highlight"><pre class="highlight shell" tabindex="0"><code>  kubectl <span class="nt">--context</span> live.cloud-platform.service.justice.gov.uk <span class="nt">-n</span> &lt;namespace-name&gt; apply <span class="nt">-f</span> live-ingress.yaml
 </code></pre></div><p><strong>NOTE</strong>: You will see the below warning when you create new ingress in &ldquo;live&rdquo; cluster, please ignore this warning for now.</p>
 <div class="highlight"><pre class="highlight shell" tabindex="0"><code>Warning: networking.k8s.io/v1beta1 Ingress is deprecated <span class="k">in </span>v1.19+, unavailable <span class="k">in </span>v1.22+<span class="p">;</span> use networking.k8s.io/v1 Ingress
-</code></pre></div><p>The &ldquo;live-1&rdquo; cluster is running Kubernetes version &ldquo;1.18&rdquo;, live&quot; cluster is upgraded to Kubernetes version &ldquo;1.20&rdquo;, the networking.k8s.io/v1 API version, available since v1.19, and the networking.k8s.io/v1beta1 API version of IngressClass is no longer served as of v1.22. We will make sure everyone has migrated over to the new API version before we move to v1.22. There are quite a few changes to a number of different APIs on v1.22 of which we will communicate and give clear instructions on what needs to change, to what and by when.</p>
+</code></pre></div><p>The &ldquo;live-1&rdquo; cluster is running Kubernetes version &ldquo;1.18&rdquo;, &ldquo;live&rdquo; cluster is upgraded to Kubernetes version &ldquo;1.20&rdquo;, the networking.k8s.io/v1 API version, available since v1.19, and the networking.k8s.io/v1beta1 API version of IngressClass is no longer served as of v1.22. We will make sure everyone has migrated over to the new API version before we move to v1.22. There are quite a few changes to a number of different APIs on v1.22 of which we will communicate and give clear instructions on what needs to change, to what and by when.</p>
 <h2 id="step-6-create-a-new-step-to-your-deployment-pipeline">Step 6 - Create a new step to your deployment pipeline</h2><p>Your application&rsquo;s continuous deployment pipeline needs a couple of changes:</p>
 
 <ul>
@@ -401,14 +391,13 @@ to the <code>live-1</code> cluster.</p>
 <p>The migration process takes account of differences that will affect services:</p>
 
 <ul>
-<li><p>Pods that need to make calls to AWS will need to authenticate differently - they now need to use <a href="https://aws.amazon.com/blogs/opensource/introducing-fine-grained-iam-roles-service-accounts/">IRSA</a>, rather than kiam. Terraform modules have been adapted to take account of this.</p></li>
-<li><p>Kubernetes jobs don&rsquo;t get cleaned after a TTL. TTL Controller for Finished Resources(ttlSecondsAfterFinished) is not available in EKS yet. For users who use ttlSecondsAfterFinished to clear completed jobs, should setup <a href="https://kubernetes.io/docs/tasks/job/automated-tasks-with-cron-jobs/#jobs-history-limits">Jobs History Limits</a> using failedJobsHistoryLimit and successfulJobsHistoryLimit.</p></li>
+<li>Pods that need to make calls to AWS will need to authenticate differently - they now need to use <a href="https://aws.amazon.com/blogs/opensource/introducing-fine-grained-iam-roles-service-accounts/">IRSA</a>, rather than kiam. Terraform modules have been adapted to take account of this.</li>
 </ul>
 <p>Other differences which we think will not affect services:</p>
 
 <ul>
 <li><p>EKS manages the control plane (master) nodes instead of kOps.</p></li>
-<li><p>Kubernetes version is 1.19 instead of 1.18. No YAML needs to change because no k8s APIs have been removed in this upgrade.</p></li>
+<li><p>Kubernetes version is 1.20 instead of 1.18. No YAML needs to change because no k8s APIs have been removed in this upgrade.</p></li>
 <li><p>Pod networking is implemented by Amazon&rsquo;s <a href="https://docs.aws.amazon.com/eks/latest/userguide/pod-networking.html">VPC Container Network Interface (CNI) plugin for Kubernetes</a>. Pods are assigned IP addresses associated with Elastic Network Interfaces on worker nodes. The IPs come from the VPC network pool and therefore do not require NAT to access resources outside the Kubernetes cluster. This replaces the platform&rsquo;s use of Calico CNI, which uses an overlay network.</p></li>
 </ul>
 <h2 id="how-to-roll-back">How to roll back</h2><p>Easy roll back is a key feature of this migration process. At any point in this migration process you can revert to using your service on the original &ldquo;live-1&rdquo; cluster. This may be necessary if you encounter problems running the namespace on the new cluster, and post-pone the migration until that is resolved.</p>
@@ -496,16 +485,16 @@ You can let your team know that they are no longer restricted from changing the 
 </ul>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2022-05-01">
+              <div data-module='page-expiry' data-last-reviewed-on="2022-05-02">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 1 February 2022.
+      This page was last reviewed on 2 February 2022.
 
-        It needs to be reviewed again on 1 May 2022
+        It needs to be reviewed again on 2 May 2022
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 1 May 2022.
+      This page was set to be reviewed before 2 May 2022.
       This might mean the content is out of date.
     </div>
   </div>
