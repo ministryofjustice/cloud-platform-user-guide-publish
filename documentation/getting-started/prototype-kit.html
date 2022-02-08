@@ -104,6 +104,11 @@
     <ul>
       <li>
         <a href="#before-you-start"><span>Before you start</span></a>
+        <ul>
+          <li>
+            <a href="#assumptions"><span>Assumptions</span></a>
+          </li>
+        </ul>
       </li>
       <li>
         <a href="#1-copy-clone-the-environments-repository"><span>1. Copy (Clone) the environments repository</span></a>
@@ -139,6 +144,12 @@
 <li>have the <a href="/documentation/getting-started/cloud-platform-cli.html">Cloud Platform CLI</a> installed</li>
 <li>have a local development environment including a terminal and a git client</li>
 </ul>
+<h3 id="assumptions">Assumptions</h3><p>We assume you will have:</p>
+
+<ul>
+<li>a github repository with Gov.UK Prototype Kit code.</li>
+<li>a prototype kit code build using Node.js.</li>
+</ul>
 <h2 id="1-copy-clone-the-environments-repository">1. Copy (Clone) the <code>environments</code> repository</h2><p>To create resources on the Cloud Platform, you need to raise a pull request
 against the <a href="https://github.com/ministryofjustice/cloud-platform-environments">cloud-platform-environments</a> repository.</p>
 <p>Create a copy of the <a href="https://github.com/ministryofjustice/cloud-platform-environments">cloud-platform-environments</a> repository:</p>
@@ -146,25 +157,23 @@ against the <a href="https://github.com/ministryofjustice/cloud-platform-environ
 <span class="nv">$ </span><span class="nb">cd </span>cloud-platform-environments
 </code></pre></div><h2 id="2-create-your-prototype-kit-site">2. Create your prototype kit site</h2><p>In the Cloud Platform CLI run:</p>
 <div class="highlight"><pre class="highlight shell" tabindex="0"><code><span class="nv">$ </span>cloud-platform environment prototype create
-</code></pre></div><p>You&rsquo;ll be asked to name your prototype.</p>
+</code></pre></div><p>You&rsquo;ll be asked to name your prototype/namespace, which should be the name of your prototype github repository.</p>
 <p>This name will be used as:</p>
 
 <ul>
 <li>the <a href="/documentation/getting-started/env-create.html">namespace</a> which will be created on the Cloud Platform</li>
-<li>the name of the GitHub repository which will be created, and which will
-contain your code</li>
+<li>the github repository name, to create files for building a docker image and a continuous deployment (CD) workflow, targeting the Cloud Platform.</li>
 <li>the domain name your prototype kit will be published to</li>
 </ul>
 
 <blockquote>
-<p>You must ensure that there is not already a namespace or github repository
-with this name</p>
+<p>You must ensure that the namespace name should be the same as your prototype github repository and there is not already a namespace.</p>
 </blockquote>
 <p>For example, if you choose <code>my-prototype</code> as the name, you will create:</p>
 
 <ul>
-<li>a namespace on the Cloud Platform called <code>my-prototype</code></li>
-<li>the GitHub repository <code>https://github.com/ministryofjustice/my-prototype</code></li>
+<li><p>a namespace on the Cloud Platform called <code>my-prototype</code></p></li>
+<li><p>these <a href="https://github.com/ministryofjustice/cloud-platform-terraform-github-prototype/tree/main/templates">template files</a> in your GitHub repository <code>https://github.com/ministryofjustice/my-prototype</code></p></li>
 </ul>
 <p>&hellip;and your prototype kit website will be available at the URL:</p>
 <div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>https://my-prototype.apps.live.cloud-platform.service.justice.gov.uk
@@ -174,12 +183,12 @@ several files in a folder called:</p>
 </code></pre></div><p>Create a new branch, <code>git add</code> the new folder and then raise a pull request (PR).</p>
 <p>Once a member of the Cloud Platform team has approved your PR, merge it.</p>
 <p>When you merge the PR, the <a href="/documentation/other-topics/apply-pipeline.html">Apply Pipeline</a>
-will create your namespace and GitHub repository.</p>
+will create your namespace and these <a href="https://github.com/ministryofjustice/cloud-platform-terraform-github-prototype/tree/main/templates">template files</a> in your GitHub repository.</p>
 <h2 id="seeing-your-published-prototype">Seeing your published prototype</h2><p>There are a few things to be aware of, concerning your prototype kit site:</p>
 
 <ul>
-<li><p>It can take around 5 minutes for your protoype to be published</p></li>
-<li><p>The first time it tries to publish it will fail. You’ll need to publish a second time to complete the set up.</p></li>
+<li><p>It can take around 5 minutes for your prototype to be published</p></li>
+<li><p>The first time it tries to publish it will fail. You’ll need to publish a second time to complete the set-up.</p></li>
 </ul>
 
 <blockquote>
@@ -189,22 +198,14 @@ works before making any changes.</p>
 </blockquote>
 
 <ul>
-<li>The GitHub repository is created with <a href="https://docs.github.com/en/github/administering-a-repository/about-protected-branches">branch protection</a> applied to the
-default <code>main</code> branch. If you don&rsquo;t want this, edit the <code>github-repo.tf</code> file
-in your namespace folder in the environments repository, and remove this
-stanza:</li>
+<li>These <a href="https://github.com/ministryofjustice/cloud-platform-terraform-github-prototype/tree/main/templates">template files</a> created in the <code>main</code> branch. If you don&rsquo;t want any of these files in your git-hub repository or use your template files, edit the <code>github-repo.tf</code> file
+in your namespace folder in the environments repository, as shown in this <a href="https://github.com/ministryofjustice/cloud-platform-terraform-github-prototype/blob/main/examples/github.tf#L11-L29">example</a> </li>
 </ul>
-<div class="highlight"><pre class="highlight hcl" tabindex="0"><code><span class="nx">resource</span> <span class="s2">"github_branch_protection"</span> <span class="s2">"default"</span> <span class="p">{</span>
-  <span class="nx">repository_id</span>          <span class="p">=</span> <span class="nx">github_repository</span><span class="err">.</span><span class="nx">prototype</span><span class="err">.</span><span class="nx">id</span>
-  <span class="nx">pattern</span>                <span class="p">=</span> <span class="s2">"main"</span>
-  <span class="nx">enforce_admins</span>         <span class="p">=</span> <span class="kc">true</span>
-  <span class="nx">require_signed_commits</span> <span class="p">=</span> <span class="kc">true</span>
-<span class="p">}</span>
-</code></pre></div>
+
 <blockquote>
-<p>If you use the GitHub UI to disable branch protection, the <a href="/documentation/other-topics/apply-pipeline.html">Apply Pipeline</a> will re-enable it shortly afterwards.</p>
-<p>The only way to permanently disable it is to remove it from the terraform
-source code.</p>
+<p>If you push any changes to these files in your repository, the <a href="/documentation/other-topics/apply-pipeline.html">Apply Pipeline</a> will overwrite it shortly afterwards.</p>
+<p>The only way to update them is through environments repository, as shown in this <a href="https://github.com/ministryofjustice/cloud-platform-terraform-github-prototype/blob/main/examples/github.tf#L11-L29">example</a> or remove it from the terraform
+source code and copy those files in to your repository.</p>
 </blockquote>
 <h2 id="deleting-your-published-prototype">Deleting your published prototype</h2><p>When you no longer need your prototype to be published:</p>
 
