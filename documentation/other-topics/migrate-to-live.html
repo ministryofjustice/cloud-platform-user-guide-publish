@@ -258,7 +258,7 @@
 <h2 id="step-1-agree-a-time-to-perform-the-migration">Step 1 - Agree a time to perform the migration</h2><p>During the process of migration you can still deploy your app to both clusters together. However you will not be able to change your environment configuration, as defined in <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live-1.cloud-platform.service.justice.gov.uk">environments repo</a>, which may be an issue. You should speak to your team and agree a time and date to attempt to migrate your namespace. It&rsquo;s also strongly recommended that you get familiar with migrating a non-production namespace before attempting prod.</p>
 <h2 id="step-2-amend-and-apply-your-quot-live-1-quot-ingress-resource">Step 2 - Amend and apply your &ldquo;live-1&rdquo; ingress resource</h2><p>You must add two new annotations to your existing <code>ingress</code> resource in &ldquo;live-1&rdquo;, needed for load balancing using <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resource-record-sets-values-weighted.html#rrsets-values-weighted-weight">DNS weighting</a>. We&rsquo;ve designed this process to allow for moving traffic gradually to the new copy of your app on the new cluster, which also provides easy roll-back, if needed.</p>
 <p>This looks as follows:</p>
-<div class="highlight"><pre class="highlight yaml" tabindex="0"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">networking.k8s.io/v1beta1</span>
+<div class="highlight"><pre class="highlight yaml" tabindex="0"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">networking.k8s.io/v1</span>
 <span class="na">kind</span><span class="pi">:</span> <span class="s">Ingress</span>
 <span class="na">metadata</span><span class="pi">:</span>
   <span class="na">annotations</span><span class="pi">:</span>
@@ -302,7 +302,7 @@
 <p>Case 1: You have <strong>plain YAML files</strong>, one for each environment e.g. dev, staging, prod, which you apply using <code>kubectl apply</code> (either with CI/CD or manually on the command-line). Create a duplicate of your folder of YAML files as shown <a href="https://github.com/ministryofjustice/cloud-platform-reference-app/tree/main/deploy/kubectl">here</a>. e.g. <code>cp -R deploy-dev deploy-dev-live</code>. Now change the annotations in the new live ingress.yaml, as described below.</p>
 <p>Case 2: You have a <strong>Helm chart</strong>, with templated YAML, with a different values.yaml file for each environment. In the ingress.yaml ensure you&rsquo;ve included the annotations below, and use variables for their values. Create a duplicate of the values.yaml for the environment you&rsquo;re migrating as shown <a href="https://github.com/ministryofjustice/cloud-platform-reference-app-github-action/tree/main/deploy/helm">here</a>. In all of your values.yaml files (one for each environment), provide values for these annotations, as described below. Every environment and cluster will have a unique value for <code>set-identifier</code>.</p>
 <p>Set the annotations in the new (live) ingress to have these two values:</p>
-<div class="highlight"><pre class="highlight yaml" tabindex="0"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">networking.k8s.io/v1beta1</span>
+<div class="highlight"><pre class="highlight yaml" tabindex="0"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">networking.k8s.io/v1</span>
 <span class="na">kind</span><span class="pi">:</span> <span class="s">Ingress</span>
 <span class="na">metadata</span><span class="pi">:</span>
   <span class="na">annotations</span><span class="pi">:</span>
@@ -317,10 +317,7 @@
 </ul>
 <p>Once you have created a new live-ingress.yaml with the above two external-dns annotations, you can apply the ingress in the &ldquo;live&rdquo; cluster using this command:</p>
 <div class="highlight"><pre class="highlight shell" tabindex="0"><code>  kubectl <span class="nt">--context</span> live.cloud-platform.service.justice.gov.uk <span class="nt">-n</span> &lt;namespace-name&gt; apply <span class="nt">-f</span> live-ingress.yaml
-</code></pre></div><p><strong>NOTE</strong>: You will see the below warning when you create new ingress in &ldquo;live&rdquo; cluster, please ignore this warning for now.</p>
-<div class="highlight"><pre class="highlight shell" tabindex="0"><code>Warning: networking.k8s.io/v1beta1 Ingress is deprecated <span class="k">in </span>v1.19+, unavailable <span class="k">in </span>v1.22+<span class="p">;</span> use networking.k8s.io/v1 Ingress
-</code></pre></div><p>The &ldquo;live-1&rdquo; cluster is running Kubernetes version &ldquo;1.18&rdquo;, &ldquo;live&rdquo; cluster is upgraded to Kubernetes version &ldquo;1.20&rdquo;, the networking.k8s.io/v1 API version, available since v1.19, and the networking.k8s.io/v1beta1 API version of IngressClass is no longer served as of v1.22. We will make sure everyone has migrated over to the new API version before we move to v1.22. There are quite a few changes to a number of different APIs on v1.22 of which we will communicate and give clear instructions on what needs to change, to what and by when.</p>
-<h2 id="step-6-create-a-new-step-to-your-deployment-pipeline">Step 6 - Create a new step to your deployment pipeline</h2><p>Your application&rsquo;s continuous deployment pipeline needs a couple of changes:</p>
+</code></pre></div><h2 id="step-6-create-a-new-step-to-your-deployment-pipeline">Step 6 - Create a new step to your deployment pipeline</h2><p>Your application&rsquo;s continuous deployment pipeline needs a couple of changes:</p>
 
 <ul>
 <li>deploy the app to both clusters, not just &ldquo;live-1&rdquo;</li>
@@ -485,16 +482,16 @@ You can let your team know that they are no longer restricted from changing the 
 </ul>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2022-05-02">
+              <div data-module='page-expiry' data-last-reviewed-on="2022-06-24">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 2 February 2022.
+      This page was last reviewed on 24 March 2022.
 
-        It needs to be reviewed again on 2 May 2022
+        It needs to be reviewed again on 24 June 2022
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 2 May 2022.
+      This page was set to be reviewed before 24 June 2022.
       This might mean the content is out of date.
     </div>
   </div>

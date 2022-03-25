@@ -251,7 +251,7 @@ docker push 754256621582.dkr.ecr.eu-west-2.amazonaws.com/webops/dstest-ecr:1.0
   <span class="na">selector</span><span class="pi">:</span>
     <span class="na">app</span><span class="pi">:</span> <span class="s">webserver</span>
 <span class="nn">---</span>
-<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">networking.k8s.io/v1beta1</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">networking.k8s.io/v1</span>
 <span class="na">kind</span><span class="pi">:</span> <span class="s">Ingress</span>
 <span class="na">metadata</span><span class="pi">:</span>
   <span class="na">name</span><span class="pi">:</span> <span class="s">&lt;ingress-name&gt;</span>
@@ -269,9 +269,12 @@ docker push 754256621582.dkr.ecr.eu-west-2.amazonaws.com/webops/dstest-ecr:1.0
     <span class="na">http</span><span class="pi">:</span>
       <span class="na">paths</span><span class="pi">:</span>
       <span class="pi">-</span> <span class="na">path</span><span class="pi">:</span> <span class="s">/</span>
-        <span class="na">backend</span><span class="pi">:</span>
-          <span class="na">serviceName</span><span class="pi">:</span> <span class="s">nginx-service</span>
-          <span class="na">servicePort</span><span class="pi">:</span> <span class="m">8080</span>
+        <span class="na">pathType</span><span class="pi">:</span> <span class="s">ImplementationSpecific</span>
+          <span class="s">backend</span><span class="pi">:</span>
+            <span class="na">service</span><span class="pi">:</span>
+              <span class="na">name</span><span class="pi">:</span> <span class="s">nginx-service</span>
+              <span class="na">port</span><span class="pi">:</span>
+                <span class="na">number</span><span class="pi">:</span> <span class="m">8080</span>
 </code></pre></div><p>(Note - Please change the <code>ingress-name</code> and <code>namespace-name</code> values in the above example. The <code>colour</code> should be <code>blue</code> for ingress in live-1 and <code>green</code> for ingress in EKS <code>live</code> cluster)</p>
 <p>Deploy to the cluster like this:</p>
 <div class="highlight"><pre class="highlight shell" tabindex="0"><code>kubectl <span class="nt">-n</span> &lt;your namespace&gt; apply <span class="nt">-f</span> kubernetes-deploy.yaml
@@ -417,16 +420,16 @@ your GitHub Action run and deploy your changes to the cluster.</p>
 <p>For reference, this is the full <a href="https://gist.github.com/862a8ad93de5f4b4838420437a97f3b2">GitHub Action</a>.</p>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2022-05-15">
+              <div data-module='page-expiry' data-last-reviewed-on="2022-06-24">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 15 February 2022.
+      This page was last reviewed on 24 March 2022.
 
-        It needs to be reviewed again on 15 May 2022
+        It needs to be reviewed again on 24 June 2022
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 15 May 2022.
+      This page was set to be reviewed before 24 June 2022.
       This might mean the content is out of date.
     </div>
   </div>

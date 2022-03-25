@@ -156,7 +156,7 @@ To point your application to the ModSec ingress-controller, add the following an
 <div class="highlight"><pre class="highlight yaml" tabindex="0"><code><span class="s">nginx.ingress.kubernetes.io/modsecurity-transaction-id</span><span class="pi">:</span> <span class="s2">"</span><span class="s">$request_id"</span>
 </code></pre></div><p>The above annotation is optional, but it can be used to pass transactionIDs from nginx.</p>
 <p>Example:</p>
-<div class="highlight"><pre class="highlight yaml" tabindex="0"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">networking.k8s.io/v1beta1</span>
+<div class="highlight"><pre class="highlight yaml" tabindex="0"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">networking.k8s.io/v1</span>
 <span class="na">kind</span><span class="pi">:</span> <span class="s">Ingress</span>
   <span class="s">name</span><span class="pi">:</span> <span class="s">&lt;ingress-name&gt;</span>
   <span class="s">namespace</span><span class="pi">:</span> <span class="s">&lt;namespace-name&gt;</span>
@@ -176,9 +176,12 @@ To point your application to the ModSec ingress-controller, add the following an
     <span class="na">http</span><span class="pi">:</span>
       <span class="na">paths</span><span class="pi">:</span>
       <span class="pi">-</span> <span class="na">path</span><span class="pi">:</span> <span class="s">/</span>
-        <span class="na">backend</span><span class="pi">:</span>
-          <span class="na">serviceName</span><span class="pi">:</span> <span class="s">app-service</span>
-          <span class="na">servicePort</span><span class="pi">:</span> <span class="m">8080</span>
+        <span class="na">pathType</span><span class="pi">:</span> <span class="s">ImplementationSpecific</span>
+          <span class="s">backend</span><span class="pi">:</span>
+            <span class="na">service</span><span class="pi">:</span>
+              <span class="na">name</span><span class="pi">:</span> <span class="s">app-service</span>
+              <span class="na">port</span><span class="pi">:</span>
+                <span class="na">name</span><span class="pi">:</span> <span class="m">8080</span>
 </code></pre></div><p>(Note - Please change the <code>ingress-name</code> and <code>namespace-name</code> values in the above example. The <code>colour</code> should be <code>blue</code> for ingress in live-1 and <code>green</code> for ingress in EKS <code>live</code> cluster)</p>
 <h3 id="logging">Logging</h3><p>All disruptive actions are logged in the ModSecurity audit log file and the error log for for nginx ingress-controller. 
 Fluent-bit is used to ship error logs into the Cloud Platform ELK stack. To view any possible logs, log into <a href="https://kibana.cloud-platform.service.justice.gov.uk/_plugin/kibana/">Kibana</a>, 
@@ -210,16 +213,16 @@ client: 12.123.1.12, server: test-ingress.url, request: "GET /?exec=/bin/bash HT
 For more information in anomaly scoring, click <a href="https://www.modsecurity.org/CRS/Documentation/anomaly.html#anomaly-scoring-mode">here</a></p>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2022-04-14">
+              <div data-module='page-expiry' data-last-reviewed-on="2022-06-24">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 14 January 2022.
+      This page was last reviewed on 24 March 2022.
 
-        It needs to be reviewed again on 14 April 2022
+        It needs to be reviewed again on 24 June 2022
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 14 April 2022.
+      This page was set to be reviewed before 24 June 2022.
       This might mean the content is out of date.
     </div>
   </div>

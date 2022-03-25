@@ -210,7 +210,7 @@ the event of any problems with our certificate/DNS systems.</p>
 <ol>
 <li>You will need to update your <code>Ingress</code> spec to include the new hostname.</li>
 </ol>
-<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>     apiVersion: networking.k8s.io/v1beta1
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>     apiVersion: networking.k8s.io/v1
      kind: Ingress
      metadata:
        name: &lt;ingress-name&gt;
@@ -231,16 +231,22 @@ the event of any problems with our certificate/DNS systems.</p>
          http:
            paths:
            - path: /
-             backend:
-               serviceName: &lt;my-svc&gt;
-               servicePort: 80
+             pathType: ImplementationSpecific
+               backend:
+                 service:
+                   name: &lt;my-svc&gt; 
+                   port:
+                     number: 80
    +   - host: &lt;hostname&gt;
    +     http:
    +       paths:
    +       - path: /
-   +         backend:
-   +           serviceName: &lt;my-svc&gt;
-   +           servicePort: 80
+   +         pathType: ImplementationSpecific
+               backend:
+                 service:
+                   name: &lt;my-svc&gt; 
+                   port:
+                     number: 80
 </code></pre></div><p>(Note - Please change the <code>ingress-name</code> and <code>namespace-name</code> values in the above example. The <code>colour</code> should be <code>blue</code> for ingress in live-1 and <code>green</code> for ingress in EKS <code>live</code> cluster)</p>
 <p>Once you&rsquo;ve made the changes to your <code>Ingress</code>, the cluster (and more
 specifically, <code>external-dns</code>) will update the necessary records defined in it.
@@ -251,16 +257,16 @@ speed up the process. You should search online for the proper method to do so,
 based on your operating system and/or browser.</p>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2022-06-04">
+              <div data-module='page-expiry' data-last-reviewed-on="2022-06-24">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 4 March 2022.
+      This page was last reviewed on 24 March 2022.
 
-        It needs to be reviewed again on 4 June 2022
+        It needs to be reviewed again on 24 June 2022
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 4 June 2022.
+      This page was set to be reviewed before 24 June 2022.
       This might mean the content is out of date.
     </div>
   </div>

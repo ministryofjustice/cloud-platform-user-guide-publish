@@ -256,7 +256,7 @@ directory to the namespace called <code>my-namespace</code> (or whatever you cal
 <blockquote>
 <p>You can find more deployment config info <a href="https://kubernetes.io/docs/tasks/run-application/run-stateless-application-deployment/">in the kubernetes developer documentation</a>.</p>
 </blockquote>
-<h3 id="ingress-yaml"><code>ingress.yaml</code></h3><div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>apiVersion: networking.k8s.io/v1beta1
+<h3 id="ingress-yaml"><code>ingress.yaml</code></h3><div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>apiVersion: networking.k8s.io/v1
 kind: Ingress
   name: &lt;ingress-name&gt;
   namespace: &lt;namespace-name&gt;
@@ -273,9 +273,12 @@ spec:
     http:
       paths:
       - path: /
-        backend:
-          serviceName: rubyapp-service
-          servicePort: 4567
+        pathType: ImplementationSpecific
+          backend:
+            service:
+              name: rubyapp-service
+              port:
+                number: 4567
 </code></pre></div><p>(Note - Please change the <code>ingress-name</code> and <code>namespace-name</code> values in the above example. The <code>colour</code> should be <code>blue</code> for ingress in live-1 and <code>green</code> for ingress in EKS <code>live</code> cluster)</p>
 <p>This tells the cluster that our ingress should accept web traffic to the hostname we
 defined, and should route that traffic to port 4567 of the &ldquo;service&rdquo; called
@@ -446,16 +449,16 @@ service <span class="s2">"rubyapp-service"</span> unchanged
 </code></pre></div><p>Now, if you reload the browser page showing the &lsquo;Hello world&rsquo; message from the application, you will be prompted to enter the username and password.</p>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2022-03-22">
+              <div data-module='page-expiry' data-last-reviewed-on="2022-06-23">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 22 December 2021.
+      This page was last reviewed on 23 March 2022.
 
-        It needs to be reviewed again on 22 March 2022
+        It needs to be reviewed again on 23 June 2022
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 22 March 2022.
+      This page was set to be reviewed before 23 June 2022.
       This might mean the content is out of date.
     </div>
   </div>

@@ -125,7 +125,7 @@ annotations:
     nginx.ingress.kubernetes.io/permanent-redirect: https://raw.githubusercontent.com/ministryofjustice/security-guidance/main/contact/vulnerability-disclosure-security.txt
 </code></pre></div><p>An example is shown below:</p>
 <div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
 name: helloworld-rubyapp-ingress-security-txt-redirect
@@ -143,25 +143,28 @@ rules:
     http:
     paths:
     - path: /.well-known/security.txt
+      pathType: ImplementationSpecific
         backend:
-        serviceName: rubyapp-service
-        servicePort: 4567
+          service:
+            name: rubyapp-service
+            port:
+              number: 4567
 </code></pre></div></li>
 <li><p>Apply your <code>ingress-redirect.yaml</code> file to the cluster</p></li>
 </ul>
 <div class="highlight"><pre class="highlight shell" tabindex="0"><code>  kubectl <span class="nt">-n</span> &lt;my-namespace&gt; apply <span class="nt">-f</span> ingress-redirect.yaml
 </code></pre></div>
 
-              <div data-module='page-expiry' data-last-reviewed-on="2022-01-04">
+              <div data-module='page-expiry' data-last-reviewed-on="2022-06-24">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 4 October 2021.
+      This page was last reviewed on 24 March 2022.
 
-        It needs to be reviewed again on 4 January 2022
+        It needs to be reviewed again on 24 June 2022
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 4 January 2022.
+      This page was set to be reviewed before 24 June 2022.
       This might mean the content is out of date.
     </div>
   </div>
