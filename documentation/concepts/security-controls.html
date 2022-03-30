@@ -130,13 +130,11 @@
               <h1 id="security-controls-on-the-cloud-platform">Security Controls on the Cloud Platform</h1><p>The purpose of this page is to explain some of the security issues which often
 come up during &ldquo;code of connection&rdquo; processes, when connecting to external
 systems.</p>
-<h2 id="network-architecture">Network architecture</h2><p>The Cloud Platform (CP) is hosted in <a href="https://aws.amazon.com/">Amazon AWS</a>, and consists of three <a href="https://kubernetes.io/">kubernetes</a> clusters:</p>
+<h2 id="network-architecture">Network architecture</h2><p>The Cloud Platform (CP) is hosted in <a href="https://aws.amazon.com/">Amazon AWS</a>, and consists of two <a href="https://kubernetes.io/">kubernetes</a> clusters:</p>
 
 <ul>
-<li>live-1 - the &ldquo;application&rdquo; cluster, managed via <a href="https://github.com/kubernetes/kops">Kops</a>, which runs all hosted services</li>
 <li>manager - an <a href="https://aws.amazon.com/eks/">EKS</a> cluster which runs shared services such as monitoring and CI/CD pipelines</li>
-<li>live - a newer &ldquo;application&rdquo; cluster, managed by EKS, which runs all hosted services.
-will be <a href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/migrate-to-live.html">migrated to the &ldquo;live&rdquo; cluster</a> during Autumn 2021. </li>
+<li>live - a <a href="https://aws.amazon.com/eks/">EKS</a> &ldquo;application&rdquo; cluster, managed by EKS, which runs all hosted services.</li>
 </ul>
 <p>&hellip;plus additional AWS managed services such as database instances, S3 buckets,
 etc.</p>

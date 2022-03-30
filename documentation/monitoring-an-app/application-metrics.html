@@ -201,7 +201,7 @@ run Rails.application
            <span class="na">matchLabels</span><span class="pi">:</span>
              <span class="na">component</span><span class="pi">:</span> <span class="s">monitoring</span>
 </code></pre></div><h3 id="querying-metrics">Querying metrics</h3><p>We can now query our <code>/metric</code> endpoint using the Cloud Platform Prometheus.</p>
-<p>Head to Cloud Platform Prometheus <a href="https://prometheus.live.cloud-platform.service.justice.gov.uk/graph?g0.expr=&amp;g0.tab=1&amp;g0.stacked=0&amp;g0.show_exemplars=0&amp;g0.range_input=1h">live cluster</a> / <a href="https://prometheus.cloud-platform.service.justice.gov.uk/graph">live-1 cluster</a> and use the following promql query to view the application latency (remembering to change the namespace value):</p>
+<p>Head to the Cloud Platform&rsquo;s instance of <a href="https://prometheus.cloud-platform.service.justice.gov.uk/graph">Prometheus</a> and use the following promql query to view the application latency (remembering to change the namespace value):</p>
 <div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>http_server_request_duration_seconds_sum{namespace="my-namespace"}
 </code></pre></div><p>The output will be something like:
 <a href="/images/prometheus.png" rel="noopener noreferrer"><img src="/images/prometheus.png" alt="Image of prometheus output" /></a></p>

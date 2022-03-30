@@ -275,7 +275,7 @@ docker push 754256621582.dkr.ecr.eu-west-2.amazonaws.com/webops/dstest-ecr:1.0
               <span class="na">name</span><span class="pi">:</span> <span class="s">nginx-service</span>
               <span class="na">port</span><span class="pi">:</span>
                 <span class="na">number</span><span class="pi">:</span> <span class="m">8080</span>
-</code></pre></div><p>(Note - Please change the <code>ingress-name</code> and <code>namespace-name</code> values in the above example. The <code>colour</code> should be <code>blue</code> for ingress in live-1 and <code>green</code> for ingress in EKS <code>live</code> cluster)</p>
+</code></pre></div><p>(Note - Please change the <code>ingress-name</code> and <code>namespace-name</code> values in the above example. The <code>colour</code> should be <code>green</code> for ingress in EKS <code>live</code> cluster)</p>
 <p>Deploy to the cluster like this:</p>
 <div class="highlight"><pre class="highlight shell" tabindex="0"><code>kubectl <span class="nt">-n</span> &lt;your namespace&gt; apply <span class="nt">-f</span> kubernetes-deploy.yaml
 </code></pre></div><p>After a few seconds, you should be able to visit the ingress hostname and see &ldquo;Hello, World!&rdquo;</p>

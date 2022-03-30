@@ -101,15 +101,6 @@
                       <ul>
   <li>
     <a href="#long-running-environments-operations"><span>Long-running environments operations</span></a>
-    <ul>
-      <li>
-        <ul>
-          <li>
-            <a href="#skip-quot-live-1-quot-environments-during-migration"><span>Skip “live-1” environments during migration</span></a>
-          </li>
-        </ul>
-      </li>
-    </ul>
   </li>
 </ul>
 
@@ -148,7 +139,6 @@ namespaces/live.cloud-platform.service.justice.gov.uk/mynamespace/APPLY_PIPELINE
 <li>Raise your PR, and approve it when it is merged.</li>
 <li>After your change has completed successfully, raise another PR to remove the <code>APPLY_PIPELINE_SKIP_THIS_NAMESPACE</code> file.</li>
 </ol>
-<h3 id="skip-quot-live-1-quot-environments-during-migration">Skip &ldquo;live-1&rdquo; environments during migration</h3><p>When you <a href="/documentation/other-topics/migrate-to-live.html#step-3-migrate-your-namespace-environment-to-quot-live-quot">migrate your namespace environment to “live”</a>, a file called <code>MIGRATED_SKIP_APPLY_THIS_NAMESPACE</code> is added to your namespace repository in <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk">live-1</a>, this will allow the <a href="https://concourse.cloud-platform.service.justice.gov.uk/teams/main/pipelines/environments-terraform">Apply Pipelines</a> to skip individual namespaces in &ldquo;live-1&rdquo;, to avoid resource conflicts during <a href="/documentation/other-topics/migrate-to-live.html#migrate-to-the-quot-live-quot-cluster">migration</a>.</p>
 
 
               <div data-module='page-expiry' data-last-reviewed-on="2022-06-22">

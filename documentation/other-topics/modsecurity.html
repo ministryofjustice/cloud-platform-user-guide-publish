@@ -182,7 +182,7 @@ To point your application to the ModSec ingress-controller, add the following an
               <span class="na">name</span><span class="pi">:</span> <span class="s">app-service</span>
               <span class="na">port</span><span class="pi">:</span>
                 <span class="na">name</span><span class="pi">:</span> <span class="m">8080</span>
-</code></pre></div><p>(Note - Please change the <code>ingress-name</code> and <code>namespace-name</code> values in the above example. The <code>colour</code> should be <code>blue</code> for ingress in live-1 and <code>green</code> for ingress in EKS <code>live</code> cluster)</p>
+</code></pre></div><p>(Note - Please change the <code>ingress-name</code> and <code>namespace-name</code> values in the above example. The <code>colour</code> should be <code>green</code> for ingress in EKS <code>live</code> cluster)</p>
 <h3 id="logging">Logging</h3><p>All disruptive actions are logged in the ModSecurity audit log file and the error log for for nginx ingress-controller. 
 Fluent-bit is used to ship error logs into the Cloud Platform ELK stack. To view any possible logs, log into <a href="https://kibana.cloud-platform.service.justice.gov.uk/_plugin/kibana/">Kibana</a>, 
 select <code>kubernetes_ingress</code> index and search for <code>ModSecurity</code>. You can filter down to a particular host using <code>log_processed.http_host.log is &quot;host: &quot;test-ingress.url&quot;</code></p>

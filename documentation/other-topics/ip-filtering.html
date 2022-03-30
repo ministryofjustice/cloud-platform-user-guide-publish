@@ -164,7 +164,7 @@ status:
   loadBalancer:
     ingress:
     - hostname: &lt;hostname&gt;
-</code></pre></div><p>(Note - Please change the <code>ingress-name</code> and <code>namespace-name</code> values in the above example. The <code>colour</code> should be <code>blue</code> for ingress in live-1 and <code>green</code> for ingress in EKS <code>live</code> cluster)</p>
+</code></pre></div><p>(Note - Please change the <code>ingress-name</code> and <code>namespace-name</code> values in the above example. The <code>colour</code> should be <code>green</code> for ingress in EKS <code>live</code> cluster)</p>
 <p>Testing with the annotation set:</p>
 <div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>curl -v -H "Host: my-app.apps.live.cloud-platform.service.justice.gov.uk" &lt;HOST-IP&gt;
 </code></pre></div><p>Will return a &ldquo;403 forbidden&rdquo; status</p>
@@ -178,9 +178,6 @@ status:
 <h4 id="nat-gateways">NAT Gateways</h4><p>IP traffic from the Cloud Platform will originate from the IP numbers of one our NAT Gateways. We have one NAT Gateway in each of the three availability zones in which we host the Cloud Platform, and outbound traffic may originate from any of them.</p>
 <p>Currently, these are the IPs from which traffic will appear to come:</p>
 <h5 id="live-cluster">Live Cluster</h5><div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>35.178.209.113
-3.8.51.207
-35.177.252.54
-</code></pre></div><h5 id="live-1-cluster">Live-1 Cluster</h5><div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>35.178.209.113
 3.8.51.207
 35.177.252.54
 </code></pre></div><h5 id="changes">Changes</h5><p>There is <strong>no guarantee</strong> that the origin IPs of traffic from the cloud platform will remain the same.</p>
