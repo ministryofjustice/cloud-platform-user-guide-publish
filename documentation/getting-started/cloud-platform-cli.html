@@ -160,9 +160,14 @@ always needing to craft your terraform or kubernetes yaml files by hand, and to
 simplify some common tasks (like checking the github teams in your kube config
 file).</p>
 <h2 id="installation">Installation</h2><p>The CLI tool is a single binary: <code>cloud-platform</code>.</p>
-<p>If you&rsquo;re on a Mac, you can install it using homebrew:</p>
-<div class="highlight"><pre class="highlight shell" tabindex="0"><code>brew <span class="nb">install </span>ministryofjustice/cloud-platform-tap/cloud-platform-cli
-</code></pre></div><p>Alternatively, install the binary into your $PATH (choose from the <a href="https://github.com/ministryofjustice/cloud-platform-cli/releases">GitHub releases</a> for your system):</p>
+<p>If you&rsquo;re on a Mac, you can install it using <a href="https://brew.sh/">Homebrew</a>:</p>
+<div class="highlight"><pre class="highlight shell" tabindex="0"><code><span class="nv">$ </span>brew <span class="nb">install </span>ministryofjustice/cloud-platform-tap/cloud-platform-cli
+</code></pre></div>
+<blockquote>
+<p>Note: This only works if Homebrew is installed on your computer, please
+visit Homebrew home page for up-to-date instructions on how to install it.</p>
+</blockquote>
+<p>Alternatively, install the binary into your $PATH (choose from the <a href="https://github.com/ministryofjustice/cloud-platform-cli/releases">GitHub releases</a> for your system):</p>
 <div class="highlight"><pre class="highlight shell" tabindex="0"><code><span class="c"># Mac - Intel</span>
 <span class="nb">tar </span>xzv <span class="nt">-C</span> /usr/local/bin/ <span class="nt">-f</span> &lt;<span class="o">(</span>curl <span class="nt">-sL</span> <span class="si">$(</span>curl <span class="nt">-sL</span> https://api.github.com/repos/ministryofjustice/cloud-platform-cli/releases/latest | jq <span class="nt">-r</span> <span class="s1">'.assets[] | select(.browser_download_url | match("darwin_amd64")) | .browser_download_url'</span><span class="si">)</span><span class="o">)</span>
 
