@@ -170,9 +170,10 @@
 <p><a href="/images/github-authorize-moj-new.png" rel="noopener noreferrer"><img src="/images/github-authorize-moj-new.png" alt="GitHub Authorize MoJ" /></a></p></li>
 <li><p>Auth0.com asks if &lsquo;live:kubernetes&rsquo; app may access &lsquo;justice-cloud-platform account&rsquo;. Select &ldquo;Accept&rdquo;.</p></li>
 <li><p>Select &lsquo;Download Config File&rsquo;.</p></li>
-<li><p>Move the downloaded file to <code>~/.kube/config</code>:</p>
+<li><p>Move the downloaded file to directory and rename the file to config <code>~/.kube/config</code>:</p>
 <div class="highlight"><pre class="highlight shell" tabindex="0"><code><span class="nb">mv </span>kubecfg.yaml ~/.kube/config
-</code></pre></div><p>If you&rsquo;ve already got a kubeconfig, you may want to replace it, or merge with it - see <a href="#using-multiple-kubeconfigs">Using multiple kubeconfigs</a>.</p></li>
+</code></pre></div><p>The above command will rename the <code>kubecfg.yaml</code> file to <code>config</code> and move it into the <code>~/.kube</code> directory.</p>
+<p>If you&rsquo;ve already got a kubeconfig, you may want to replace it, or merge with it - see <a href="#using-multiple-kubeconfigs">Using multiple kubeconfigs</a>.</p></li>
 <li><p>Minimize the permissions on the file:</p>
 <div class="highlight"><pre class="highlight shell" tabindex="0"><code><span class="nb">chmod </span>600 ~/.kube/config
 </code></pre></div></li>
