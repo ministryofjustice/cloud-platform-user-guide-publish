@@ -5,24 +5,24 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
-    <title>Accessing your RDS database - Cloud Platform User Guide</title>
+    <title>PodDisruptionBudgets and Cluster maintenance - Cloud Platform User Guide</title>
 
     <link href="/stylesheets/manifest.css" rel="stylesheet" />
 
-    <link rel="canonical" href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/rds-external-access.html">
+    <link rel="canonical" href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/pod-distruption-budgets-cluster-maintenance.html">
 
       <meta name="robots" content="noindex" />
       <meta name="twitter:card" content="summary" />
       <meta name="twitter:domain" content="user-guide.cloud-platform.service.justice.gov.uk" />
       <meta name="twitter:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
-      <meta name="twitter:title" content="Accessing your RDS database - Cloud Platform User Guide" />
-      <meta name="twitter:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/rds-external-access.html" />
+      <meta name="twitter:title" content="PodDisruptionBudgets and Cluster maintenance - Cloud Platform User Guide" />
+      <meta name="twitter:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/pod-distruption-budgets-cluster-maintenance.html" />
 
       <meta property="og:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
       <meta property="og:site_name" content="Cloud Platform User Guide" />
-      <meta property="og:title" content="Accessing your RDS database" />
+      <meta property="og:title" content="PodDisruptionBudgets and Cluster maintenance" />
       <meta property="og:type" content="object" />
-      <meta property="og:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/rds-external-access.html" />
+      <meta property="og:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/pod-distruption-budgets-cluster-maintenance.html" />
 
     
   </head>
@@ -100,21 +100,21 @@
               <nav id="toc" class="js-toc-list toc__list" aria-labelledby="toc-heading">
                       <ul>
   <li>
-    <a href="#accessing-your-rds-database"><span>Accessing your RDS database</span></a>
+    <a href="#poddisruptionbudgets-and-cluster-maintenance"><span>PodDisruptionBudgets and Cluster maintenance</span></a>
     <ul>
       <li>
         <ul>
           <li>
-            <a href="#1-run-a-port-forward-pod"><span>1. Run a port-forward pod</span></a>
+            <a href="#introduction"><span>Introduction</span></a>
           </li>
           <li>
-            <a href="#2-forward-local-traffic-to-the-port-forward-pod"><span>2. Forward local traffic to the port-forward-pod</span></a>
+            <a href="#defining-poddisruptionbudget-for-your-application"><span>Defining PodDisruptionBudget for your application:</span></a>
           </li>
           <li>
-            <a href="#3-access-the-database"><span>3. Access the database</span></a>
+            <a href="#setting-minavailable-to-100-or-same-as-pod-number"><span>Setting minAvailable to 100% or same as pod number</span></a>
           </li>
           <li>
-            <a href="#4-delete-the-port-forward-pod"><span>4. Delete the port-forward pod</span></a>
+            <a href="#pdb-with-100-availability-and-cluster-maintenance-operations"><span>PDB with 100% availability and cluster maintenance operations</span></a>
           </li>
         </ul>
       </li>
@@ -129,77 +129,66 @@
 
         <div class="app-pane__content toc-open-disabled">
           <main id="content" class="technical-documentation" data-module="anchored-headings">
-              <h1 id="accessing-your-rds-database">Accessing your RDS database</h1><p>When you create an RDS instance using the <a href="https://github.com/ministryofjustice/cloud-platform-terraform-rds-instance">RDS module</a>, it is created inside a
-virtual private cloud (VPC), which will only accept network connections from
-within the kubernetes cluster.  So, trying to connect to the RDS instance from
-your local machine will not work.</p>
-<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>+--------------+      outside      \ /       inside           +--------------+
-| Your machine | -------------------X-----------------------&gt; | RDS instance |
-+--------------+                   / \                        +--------------+
-                               VPC Boundary
-</code></pre></div><p>If you need to access your database from outside the cluster (e.g. from your
-own development machine, or to perform a bulk data import), you can do so via
-the following steps:</p>
+              <h1 id="poddisruptionbudgets-and-cluster-maintenance">PodDisruptionBudgets and Cluster maintenance</h1><h3 id="introduction">Introduction</h3><p>PodDisruptionBudget(PDB) is a feature which will help you run highly available applications and limit the 
+disruption to your application during nodes rollout and pods rescheduling, such as for upgrades or routine maintenance work on the Kubernetes nodes.</p>
+<p>Refer to the kubernetes documentation at <a href="https://kubernetes.io/docs/concepts/workloads/pods/disruptions/">pod disruptions,</a> for detailed explainations.</p>
+<h3 id="defining-poddisruptionbudget-for-your-application">Defining PodDisruptionBudget for your application:</h3><p>You can configure PDB by defining the number or percentage of pods that can go down with <code>maxUnavailable</code> and 
+must stay up with <code>minAvailable</code>. PDB applies the budget by using a selector and currently 
+supports ReplicaSet, StatefulSet, and Deployment.</p>
+<p>Example PDB definitions using <code>minAvailable</code></p>
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: my-pdp
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: my-app-name
+</code></pre></div><p>If your application is defined with <code>3 deployment replicas</code>, then during node rollout, the cluster 
+will make sure you have 2 available and hence 1 pod is rescheduled at one time.</p>
+<h3 id="setting-minavailable-to-100-or-same-as-pod-number">Setting minAvailable to 100% or same as pod number</h3><p>If your deployment replicas is set to 1 and have a PodDisruptionBudget defined with <code>minAvailable: 100%</code> or <code>minAvailable: 1</code>,
+this will ensure none of your pods will ever be disrupted. This will halt any node rollout process by Cloud Platform team such as draining a node or doing
+a cluster upgrade.</p>
+<p>Example PDB definitions using <code>minAvailable:1</code></p>
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: helloworld-pdp
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: helloworld-rubyapp
+</code></pre></div><p>Example of deployment for the above PDB</p>
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: helloworld-rubyapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: helloworld-rubyapp
+  template:
+    metadata:
+      labels:
+        app: helloworld-rubyapp
+    spec:
+      containers:
+      - name: rubyapp
+        image: ministryofjustice/cloud-platform-helloworld-ruby:1.1
+        ports:
+        - containerPort: 4567
+</code></pre></div><h3 id="pdb-with-100-availability-and-cluster-maintenance-operations">PDB with 100% availability and cluster maintenance operations</h3><p>Cloud Platform team runs a recycle-node pipeline on every weekday between 8am and 10am where 
+the oldest worker node is gracefully replaced. This is to ensure the pods are not stuck around forever in one node 
+and things like namespace quota and limit range changes have the desired effects and not holding reservations for 
+the old values.</p>
+<p>If you have a deployment set as above with an unreasonable/aggressive PDB, the recycle-node pipeline tries to evict the pod gracefully 
+from the node, but after several unsuccessful retries it will evict the pod brutally which may bring downtime to your app.</p>
+<p>The team also perform regular kubernetes upgrades to mitigate security vulnerability and to benefit new features. Hence, ensure 
+your configuration for replicas and PodDisruptionBudget allow the Cloud Platform team to manage the nodes.</p>
 
-<ol>
-<li>Run a pod inside the cluster to forward network traffic to your RDS instance</li>
-<li>Tell kubernetes to forward traffic from your local machine to the new pod</li>
-<li>Access the database as if it were running on your local machine</li>
-</ol>
-<p>So, the connection from your machine to the RDS instance works like this:</p>
-<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>+--------------+             +---------------------+          +--------------+
-| Your machine |------------&gt;| Port forwarding pod |---------&gt;| RDS instance |
-+--------------+             +---------------------+          +--------------+
-</code></pre></div><h3 id="1-run-a-port-forward-pod">1. Run a port-forward pod</h3><p>There are several docker images designed to forward network traffic, but you need one which does not run as <code>root</code>.</p>
-
-<blockquote>
-<p>The cluster pod security policy (PSP) will prevent any images from running a process as the <code>root</code> user, so docker images which expect to do this will not work.</p>
-</blockquote>
-<p>We will use <a href="https://cloud.docker.com/u/ministryofjustice/repository/docker/ministryofjustice/port-forward">ministryofjustice/port-forward</a> for this example.</p>
-<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>kubectl \
-  -n [your namespace] \
-  run port-forward-pod \
-  --image=ministryofjustice/port-forward \
-  --port=5432 \
-  --env="REMOTE_HOST=[your database hostname]" \
-  --env="LOCAL_PORT=5432" \
-  --env="REMOTE_PORT=5432"
-</code></pre></div><p>Use port <code>1433</code> for MS-SQL.</p>
-
-<blockquote>
-<p>This creates a pod in your namespace, but without a deployment to manage it.</p>
-<p>Manually-created pods (i.e. those which are not part of a <a href="https://kubernetes.io/docs/tasks/run-application/run-stateless-application-deployment/">deployment</a>) will be deleted 
-by regular cluster maintainance operation - [node-recycling] which runs every weekday between 8 am and 10 am.
-If you need a port-forward pod to persist longer than
-this, please make it part of a <a href="https://kubernetes.io/docs/tasks/run-application/run-stateless-application-deployment/">deployment</a>.</p>
-</blockquote>
-<h3 id="2-forward-local-traffic-to-the-port-forward-pod">2. Forward local traffic to the port-forward-pod</h3><p>Now you need to forward network traffic from a port on your local machine to the port-forward pod inside the cluster.</p>
-<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>kubectl \
-  -n [your namespace] \
-  port-forward \
-  port-forward-pod 5432:5432
-</code></pre></div><p>Use port <code>1433</code> for MS-SQL.</p>
-<p>You need to leave this running as long as you are accessing the database.</p>
-<h3 id="3-access-the-database">3. Access the database</h3><p>Now you can connect to the database as if it were running locally, on your machine.</p>
-<p>If you are exporting a database URL from your RDS kubernetes secret, it might have a value like this:</p>
-<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>postgres://cpDvquXO5B:R1eDN0xEUnaH6Aqr@cloud-platform-df3589e0e7acba37.cdwm328dlye6.eu-west-2.rds.amazonaws.com:5432/dbdf3589e0e7acba37
-
-</code></pre></div><p>For MS-SQL, use <a href="https://cloudblogs.microsoft.com/sqlserver/2017/05/16/sql-server-command-line-tools-for-macos-released/">sqlcmd for MacOS</a> and test with a command like</p>
-<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>sqlcmd -S tcp:127.0.0.1,1433 -U $user -P $pass -Q 'select @@version'
-</code></pre></div><p>You can use this URL to connect to your database via the port forward you have set up, but you need to replace the database hostname, (<code>cloud-platform-df3589e0e7acba37.cdwm328dlye6.eu-west-2.rds.amazonaws.com</code> in this example), with <code>localhost</code>.</p>
-<p>So, if you were starting from the database URL above, the database connection command you will run on your local machine would be:</p>
-<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>psql postgres://cpDvquXO5B:R1eDN0xEUnaH6Aqr@localhost:5432/dbdf3589e0e7acba37
-</code></pre></div><p>If you are exporting the database credentials separately, the command would be something like this:</p>
-<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>psql \
-  --host localhost \
-  --port 5432 \
-  --dbname [your database name] \
-  --username [your database username] \
-  --password
-</code></pre></div><p>(You will be prompted to enter the database password, which you should get (and then base64 decode) from your kubernetes secret)</p>
-<h3 id="4-delete-the-port-forward-pod">4. Delete the port-forward pod</h3><p>Please remember to delete the port-forwarding pod when you have finished.</p>
-<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>kubectl delete pod port-forward-pod -n [your namespace]
-</code></pre></div>
 
               <div data-module='page-expiry' data-last-reviewed-on="2022-08-12">
     <div class='page-expiry--not-expired'>
@@ -219,8 +208,8 @@ this, please make it part of a <a href="https://kubernetes.io/docs/tasks/run-app
 
           <aside>
               <ul class="contribution-banner">
-                <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide/blob/main/source/documentation/other-topics/rds-external-access.html.md.erb">View source</a></li>
-                <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide/issues/new?labels=bug&amp;title=Re:%20'Accessing%20your%20RDS%20database'&amp;body=Problem%20with%20'Accessing%20your%20RDS%20database'%20(https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/rds-external-access.html)">Report problem</a></li>
+                <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide/blob/main/source/documentation/other-topics/pod-distruption-budgets-cluster-maintenance.html.md.erb">View source</a></li>
+                <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide/issues/new?labels=bug&amp;title=Re:%20'PodDisruptionBudgets%20and%20Cluster%20maintenance'&amp;body=Problem%20with%20'PodDisruptionBudgets%20and%20Cluster%20maintenance'%20(https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/pod-distruption-budgets-cluster-maintenance.html)">Report problem</a></li>
                 <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide">GitHub Repo</a></li>
               </ul>
           </aside>
