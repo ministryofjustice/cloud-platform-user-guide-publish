@@ -155,6 +155,7 @@ spec:
 </code></pre></div><p>Verify the Cronjob is created:</p>
 <div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>kubectl get cronjob --namespace [your namespace]
 </code></pre></div><h3 id="clean-up-finished-jobs">Clean up finished jobs</h3><p>Jobs created by CronJobs are usually not needed after they have run to completion. Use the <a href="https://kubernetes.io/docs/concepts/workloads/controllers/ttlafterfinished/">TTL mechanism</a> to automatically clean them up by settting <code>ttlSecondsAfterFinished</code>, to tell kubernetes when it can delete the completed Job.</p>
+<p>We also have a <a href="https://concourse.cloud-platform.service.justice.gov.uk/teams/main/pipelines/maintenance/jobs/delete-completed-jobs">delete-completed-jobs</a> concourse job which will clean up all completed jobs which do not have <code>ttlSecondsAfterFinished</code> defined.</p>
 <p>Deleting completed Jobs cleans up the Pods they create, which helps the kubernetes cluster to use its CPU and memory resources efficiently. You can still see the logs of the deleted Pod in <a href="https://kibana.cloud-platform.service.justice.gov.uk/_plugin/kibana">kibana</a>.</p>
 
 <blockquote>
