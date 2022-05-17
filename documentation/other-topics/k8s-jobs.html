@@ -138,6 +138,7 @@ kind: Job
 metadata:
   name: job1
 spec:
+  ttlSecondsAfterFinished: 100
   template:
     spec:
       containers:
@@ -148,7 +149,6 @@ spec:
             - -c
             - date; echo sleeping....; sleep 90s; echo exiting...; date
       restartPolicy: Never
-      ttlSecondsAfterFinished: 100
 </code></pre></div><h3 id="deploying-a-job-to-your-namespace">Deploying a job to your Namespace</h3><p>You need a yaml file to define your job. You can either create your own, or copy and tweak the above example, then deploy it as usual:</p>
 <div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>  ```
   kubectl apply -f [file-name].yaml --namespace [your namespace]
