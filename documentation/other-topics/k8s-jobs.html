@@ -162,6 +162,7 @@ spec:
 <blockquote>
 <p>Note: Kubernetes uses UTC exclusively. Make sure you take that into account when you’re creating your schedule or setting up <code>ttlSecondsAfterFinished</code>.</p>
 </blockquote>
+<p>We have a <a href="https://concourse.cloud-platform.service.justice.gov.uk/teams/main/pipelines/maintenance/jobs/delete-completed-jobs">delete-completed-jobs</a> concourse job which will clean up all completed jobs which do not have <code>ttlSecondsAfterFinished</code> defined.</p>
 
 
               <div data-module='page-expiry' data-last-reviewed-on="2022-08-10">
