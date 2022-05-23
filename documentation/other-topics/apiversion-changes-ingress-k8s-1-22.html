@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
-    <title>Removing Deprecated Ingress APIs for K8s 1.22 - Cloud Platform User Guide</title>
+    <title>Removing Deprecated Ingress APIs for Cloud Platform - Kubernetes v1.22 - Cloud Platform User Guide</title>
 
     <link href="/stylesheets/manifest.css" rel="stylesheet" />
 
@@ -15,12 +15,12 @@
       <meta name="twitter:card" content="summary" />
       <meta name="twitter:domain" content="user-guide.cloud-platform.service.justice.gov.uk" />
       <meta name="twitter:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
-      <meta name="twitter:title" content="Removing Deprecated Ingress APIs for K8s 1.22 - Cloud Platform User Guide" />
+      <meta name="twitter:title" content="Removing Deprecated Ingress APIs for Cloud Platform - Kubernetes v1.22 - Cloud Platform User Guide" />
       <meta name="twitter:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/apiversion-changes-ingress-k8s-1-22.html" />
 
       <meta property="og:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
       <meta property="og:site_name" content="Cloud Platform User Guide" />
-      <meta property="og:title" content="Removing Deprecated Ingress APIs for K8s 1.22" />
+      <meta property="og:title" content="Removing Deprecated Ingress APIs for Cloud Platform - Kubernetes v1.22" />
       <meta property="og:type" content="object" />
       <meta property="og:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/apiversion-changes-ingress-k8s-1-22.html" />
 
@@ -100,18 +100,15 @@
               <nav id="toc" class="js-toc-list toc__list" aria-labelledby="toc-heading">
                       <ul>
   <li>
-    <a href="#removing-deprecated-ingress-apis-for-k8s-1-22"><span>Removing Deprecated Ingress APIs for K8s 1.22</span></a>
+    <a href="#removing-deprecated-ingress-apis-for-cloud-platform-kubernetes-v1-22"><span>Removing Deprecated Ingress APIs for Cloud Platform - Kubernetes v1.22</span></a>
     <ul>
       <li>
         <ul>
           <li>
-            <a href="#how-to-identify-that-your-ingress-manifest-is-deprecated"><span>How to identify that your ingress manifest is deprecated</span></a>
-          </li>
-          <li>
             <a href="#resources-deployed-using-kubectl"><span>Resources deployed using kubectl</span></a>
           </li>
           <li>
-            <a href="#resources-deployed-using-helm-chart"><span>Resources deployed using helm chart</span></a>
+            <a href="#resources-deployed-using-a-helm-chart"><span>Resources deployed using a helm chart</span></a>
           </li>
           <li>
             <a href="#getting-help"><span>Getting help</span></a>
@@ -129,33 +126,27 @@
 
         <div class="app-pane__content toc-open-disabled">
           <main id="content" class="technical-documentation" data-module="anchored-headings">
-              <h1 id="removing-deprecated-ingress-apis-for-k8s-1-22">Removing Deprecated Ingress APIs for K8s 1.22</h1><p>Ingress APIs <code>extensions/v1beta1</code> and <code>networking.k8s.io/v1beta1</code> versions were deprecated and below guidance explains the changes required 
-for updating the ingress manifest which is used to create Ingress resources in the cluster.</p>
-<p>Updating the Ingress APIs are <strong>required</strong> before Cloud Platform kubernetes cluster can be upgraded from <strong>1.21</strong> to <strong>1.22</strong>.</p>
-<p>The replacement Ingress v1 APIs are already available within the current kubernetes version 1.21 and the existing persisted objects are accessible
-via the new <code>v1</code> API. Below are the details of the changes required.</p>
+              <h1 id="removing-deprecated-ingress-apis-for-cloud-platform-kubernetes-v1-22">Removing Deprecated Ingress APIs for Cloud Platform - Kubernetes v1.22</h1><p>All beta Ingress API versions such as <code>extensions/v1beta1</code> and <code>networking.k8s.io/v1beta1</code> have been deprecated and are not available in Kubernetes v1.22 or the new nginx-ingress-controller v1.2</p>
+<p>This user guide describes how to use the following stable Ingress API which is required for <strong>all</strong> ingresses:</p>
 
 <ul>
-<li>The backend <code>serviceName</code> field is renamed to <code>service.name</code></li>
-<li>Numeric backend <code>servicePort</code> fields are renamed to <code>service.port.number</code></li>
-<li>String backend <code>servicePort</code> fields are renamed to <code>service.port.name</code></li>
-<li><code>pathType</code> is now required for each specified path. Options are <code>Prefix</code>, <code>Exact</code>, and <code>ImplementationSpecific</code>. 
-To match the undefined <code>v1beta1</code> behavior, use <code>ImplementationSpecific</code>.</li>
-<li><code>spec.backend</code> is renamed to <code>spec.defaultBackend</code></li>
+<li><code>networking.k8s.io/v1</code></li>
 </ul>
-<h3 id="how-to-identify-that-your-ingress-manifest-is-deprecated">How to identify that your ingress manifest is deprecated</h3><p>When applying the ingress manifest into the cluster, you will see the below error which highlights that the 
-request for the ingress you are making is deprecated and changes are required.</p>
-<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>Warning: networking.k8s.io/v1beta1 Ingress is deprecated in v1.19+, 
-unavailable in v1.22+; use networking.k8s.io/v1 Ingress
-</code></pre></div><h3 id="resources-deployed-using-kubectl">Resources deployed using kubectl</h3><p>If your ingress manifest looks similar to below:</p>
+<p>The replacement Ingress v1 API is available within the current Cloud Platform Kubernetes version 1.21 and nginx-ingress-controller v0.47.0</p>
+<p>To view which apiVersion you are using, run the following kubectl command:</p>
+<p><code>kubectl --namespace &lt;namespace&gt; get ingress &lt;ingress-name&gt; -o yaml</code></p>
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>apiVersion: networking.k8s.io/v1
+kind: Ingress
+</code></pre></div><h3 id="resources-deployed-using-kubectl">Resources deployed using kubectl</h3><p>If your ingress is using a beta version of the ingress API, it should look similar to the following:</p>
 
 <pre>
-apiVersion: <b>networking.k8s.io/v1beta1</b>
+apiVersion: <b>networking.k8s.io/v1beta1</b> OR <b>extensions/v1beta1</b>
 kind: Ingress
 metadata:
   name: helloworld
   annotations:
-    external-dns.alpha.kubernetes.io/set-identifier: heloworld-mynamespace-green
+    kubernetes.io/ingress.class: nginx
+    external-dns.alpha.kubernetes.io/set-identifier: helloworld-mynamespace-green
     external-dns.alpha.kubernetes.io/aws-weight: "100"
 spec:
   tls:
@@ -170,40 +161,16 @@ spec:
           serviceName: helloworld
           servicePort: 4567</b>
 </pre>
-<p>OR</p>
-
-<pre>
-apiVersion: <b>extensions/v1beta1</b>
-kind: Ingress
-metadata:
-  name: helloworld
-  annotations:
-    external-dns.alpha.kubernetes.io/set-identifier: heloworld-mynamespace-green
-    external-dns.alpha.kubernetes.io/aws-weight: "100"
-spec:
-  tls:
-  - hosts:
-    - helloworld-app.apps.live.cloud-platform.service.justice.gov.uk
-  rules:
-  - host: helloworld-app.apps.live.cloud-platform.service.justice.gov.uk
-    http:
-      paths:
-      - <b>path: /
-        backend:
-          serviceName: helloworld
-          servicePort: 4567</b>
-</pre>
- 
-<p>Migrate to use the <b>networking.k8s.io/v1</b> API version. Main changes include</p>
+<p>Convert the manifest to use the <code>networking.k8s.io/v1</code> API version syntax:</p>
 
 <ul>
 <li>Change the <code>apiVersion</code> to <code>networking.k8s.io/v1</code></li>
 <li>Add <code>pathType: ImplementationSpecific</code> after <code>path: /</code></li>
-<li>Rename <code>-backend.serviceName</code> to <code>-backend.service.name</code></li>
-<li>for String servicePort rename <code>-backend.servicePort</code> to <code>-backend.service.port.name</code></li>
-<li>For Numeric servicePort rename <code>-backend.servicePort</code> to <code>-backend.service.port.number</code></li>
+<li>For serviceName, rename <code>-backend.serviceName</code> to <code>-backend.service.name</code></li>
+<li>For String servicePort, rename <code>-backend.servicePort</code> to <code>-backend.service.port.name</code></li>
+<li>For Numeric servicePort, rename <code>-backend.servicePort</code> to <code>-backend.service.port.number</code></li>
 </ul>
-<p>The manifest after changes will look like:</p>
+<p>The manifest should look like the below after the changes:</p>
 
 <pre>
 apiVersion: <b>networking.k8s.io/v1</b>
@@ -211,7 +178,8 @@ kind: Ingress
 metadata:
   name: helloworld
   annotations:
-    external-dns.alpha.kubernetes.io/set-identifier: heloworld-mynamespace-green
+    kubernetes.io/ingress.class: nginx
+    external-dns.alpha.kubernetes.io/set-identifier: helloworld-mynamespace-green
     external-dns.alpha.kubernetes.io/aws-weight: "100"
 spec:
   tls:
@@ -225,15 +193,15 @@ spec:
         <b>pathType: ImplementationSpecific
         backend:
           service:
-            name: rubyapp-service
+            name: helloworld
             port:
               number: 4567</b>
 </pre>
 <p>To apply your changes:</p>
 <p><code>kubectl apply --filename ingress.yaml --namespace &lt;namespace&gt;</code></p>
-<h3 id="resources-deployed-using-helm-chart">Resources deployed using helm chart</h3><p><strong>NOTE</strong> - Check the helm version</p>
-<p>The Cloud Platform kubernetes version 1.21 is compatible with helm version 3.5.x so make sure you have the 
-correct version installed before updating the manifest. If you are on older helm versions, you might get error as below:</p>
+<h3 id="resources-deployed-using-a-helm-chart">Resources deployed using a helm chart</h3><p><strong>NOTE</strong> - Check the helm version</p>
+<p>The Cloud Platform runs on Kubernetes v1.21 and is compatible with helm version 3.5.x. Please make sure you have the 
+correct version installed before updating the manifest. If you are on older helm versions, you might get an error below:</p>
 <div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>Error: UPGRADE FAILED: rendered manifests contain a new resource that already exists. 
 Unable to continue with update: existing resource conflict: namespace: XXX, name: YYYY,
 existing_kind: networking.k8s.io/v1, Kind=Ingress, new_kind: networking.k8s.io/v1, Kind=Ingress
@@ -272,23 +240,13 @@ spec:
   {{- end }}
 {{- end }}
 </pre>
-<p>Migrate to use the networking.k8s.io/v1 API version. Main changes include</p>
-
-<ul>
-<li>Change the <code>apiVersion</code> to <code>networking.k8s.io/v1</code></li>
-<li>Add <code>pathType: ImplementationSpecific</code> after <code>path: /</code></li>
-<li>Rename <code>-backend.serviceName</code> to <code>-backend.service.name</code></li>
-<li>for String servicePort rename <code>-backend.servicePort</code> to <code>-backend.service.port.name</code></li>
-<li>For Numeric servicePort rename <code>-backend.servicePort</code> to <code>-backend.service.port.number</code></li>
-<li></li>
-</ul>
 <p>The manifest after changes will look like:</p>
 
 <pre>
   {{- if .Values.ingress.enabled -}}
 {{- $fullName := include "app.fullname" . -}}
 {{- $ingressPath := .Values.ingress.path -}}
-apiVersion: <b>networking.k8s.io/v1beta1</b>
+apiVersion: <b>networking.k8s.io/v1</b>
 kind: Ingress
 metadata:
   name: {{ $fullName }}
@@ -323,9 +281,7 @@ spec:
 </pre>
 <p>To apply your changes:</p>
 <div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>helm upgrade -f &lt;values-file.yaml&gt; &lt;your-release&gt; &lt;your-chart&gt; --namespace &lt;your-namespace&gt;
-</code></pre></div><p><strong>NOTE: If you dont update your manifest to use the latest API versions after we upgraded to kubernetes 1.22, 
-you will get failures when deploying your application.</strong></p>
-<h3 id="getting-help">Getting help</h3><p>If you have any questions, please contact us on <a href="https://mojdt.slack.com/messages/C57UPMZLY">#ask-cloud-platform</a> Slack channel.</p>
+</code></pre></div><h3 id="getting-help">Getting help</h3><p>If you have any questions, please contact us on <a href="https://mojdt.slack.com/messages/C57UPMZLY">#ask-cloud-platform</a> Slack channel.</p>
 
 
               <div data-module='page-expiry' data-last-reviewed-on="2022-06-23">
@@ -347,7 +303,7 @@ you will get failures when deploying your application.</strong></p>
           <aside>
               <ul class="contribution-banner">
                 <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide/blob/main/source/documentation/other-topics/apiversion-changes-ingress-k8s-1-22.html.md.erb">View source</a></li>
-                <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide/issues/new?labels=bug&amp;title=Re:%20'Removing%20Deprecated%20Ingress%20APIs%20for%20K8s%201.22'&amp;body=Problem%20with%20'Removing%20Deprecated%20Ingress%20APIs%20for%20K8s%201.22'%20(https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/apiversion-changes-ingress-k8s-1-22.html)">Report problem</a></li>
+                <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide/issues/new?labels=bug&amp;title=Re:%20'Removing%20Deprecated%20Ingress%20APIs%20for%20Cloud%20Platform%20-%20Kubernetes%20v1.22'&amp;body=Problem%20with%20'Removing%20Deprecated%20Ingress%20APIs%20for%20Cloud%20Platform%20-%20Kubernetes%20v1.22'%20(https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/apiversion-changes-ingress-k8s-1-22.html)">Report problem</a></li>
                 <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide">GitHub Repo</a></li>
               </ul>
           </aside>
