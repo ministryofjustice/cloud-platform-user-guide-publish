@@ -115,7 +115,7 @@
 complete, e.g. upgrading an RDS instance from one version to another.</p>
 <p>This means a scheduled <a href="https://concourse.cloud-platform.service.justice.gov.uk/teams/main/pipelines/environments-live/jobs/apply-live">apply pipeline</a> run might try to operate on a namespace
 while it is being modified.</p>
-<p>We use <a href="https://www.terraform.io/docs/language/state/locking.html">Terraform state locking</a> to ensure that this does not cause serious
+<p>We use <a href="https://www.terraform.io/language/state/locking">Terraform state locking</a> to ensure that this does not cause serious
 problems, but at the least it would cause the <a href="/documentation/other-topics/apply-pipeline.html">Apply Pipeline</a>
 to timeout with an error if it can&rsquo;t acquire a lock on the target namespace&rsquo;s
 terraform state.</p>

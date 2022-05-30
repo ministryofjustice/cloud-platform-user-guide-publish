@@ -225,7 +225,7 @@ Once approved, you can merge and the changes will be applied.
 Shortly after, to confirm the zone has been created, you should be able to access the <code>Zone_ID</code> as Secret on kubernetes in your namespace.</p>
 <h2 id="support-ticket">Support ticket</h2><p>Please raise a <a href="http://goo.gl/msfGiS">support ticket</a> with the Cloud Platform.</p>
 <p>Provide them with the domain name, the Cloud Platform team will finalize the process <strong>by creating a matching NS record in the DSD account.</strong></p>
-<h2 id="add-dns-records-to-a-route53-zone">Add DNS records to a route53 zone</h2><p>You can add DNS records for the zone you created, using the <a href="https://www.terraform.io/docs/providers/aws/r/route53_record.html">aws_route53_record</a> terraform resource.</p>
+<h2 id="add-dns-records-to-a-route53-zone">Add DNS records to a route53 zone</h2><p>You can add DNS records for the zone you created, using the <a href="https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route53_record">aws_route53_record</a> terraform resource.</p>
 <p>Example below, will add a record set of type &ldquo;CNAME&rdquo; to the route53 zone.</p>
 <div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>resource "aws_route53_record" "add_cname_email" {
   name    = "YOUR DOMAIN GOES HERE"
@@ -235,7 +235,7 @@ Shortly after, to confirm the zone has been created, you should be able to acces
   ttl     = "300"
 }
 
-</code></pre></div><p>Follow the <a href="https://www.terraform.io/docs/providers/aws/r/route53_record.html">example-usage</a>, to create different type of record sets, using aws_route53_record resource.</p>
+</code></pre></div><p>Follow the <a href="https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route53_record">example-usage</a>, to create different type of record sets, using aws_route53_record resource.</p>
 
 
               <div data-module='page-expiry' data-last-reviewed-on="2022-06-01">

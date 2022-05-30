@@ -155,7 +155,7 @@ zone to the Cloud Platform. Hostnames used by your services (using <code>Ingress
 will be automatically managed by the cluster.</p>
 <p>If you wish to create custom records in your zone you can do so by defining them
 in the <a href="https://github.com/ministryofjustice/cloud-platform-environments/">environments repository</a> using the terraform
-<a href="https://www.terraform.io/docs/providers/aws/r/route53_record.html"><code>aws_route53_record</code></a> resource.</p>
+<a href="https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route53_record"><code>aws_route53_record</code></a> resource.</p>
 <h4 id="obtaining-a-certificate">Obtaining a certificate</h4>
 <ol>
 <li>Create the <a href="https://cert-manager.io/docs/concepts/certificate/">Certificate</a> resource, filling in any placeholders with your
