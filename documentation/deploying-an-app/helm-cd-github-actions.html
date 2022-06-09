@@ -238,7 +238,13 @@ rm helm_deploy/multi-container-app/container-postgres-secrets.yaml
 namespace that contains the <code>url</code> for your RDS instance.</p>
 <p>By default this is <code>rds-instance-output</code> so this line should be:</p>
 <div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>databaseUrlSecretName: rds-instance-output
-</code></pre></div><p>A little further down in the same file, you should see these lines:</p>
+</code></pre></div><p>Next, you will see the line:</p>
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>  - external-dns.alpha.kubernetes.io/set-identifier: &lt;ingress-name&gt;-&lt;namespace-name&gt;-green
+</code></pre></div><p>We need to replace <code>&lt;ingress-name&gt;</code> with the name for our ingress - in the case of 
+this demo application <code>multi-container-app</code>.</p>
+<p><code>&lt;namespace-name&gt;</code> will need to be replaced with the namespace which you are working within.</p>
+<p><code>green</code> here is the correct value for ingress in EKS <code>live</code> cluster so leave as it is.</p>
+<p>A little further down in the same file, you should see these lines:</p>
 <div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>  hosts:
     - host: &lt;DNS-PREFIX&gt;.apps.live.cloud-platform.service.justice.gov.uk
 </code></pre></div><p>We need to replace <code>&lt;DNS-PREFIX&gt;</code> with a unique hostname for your instance of

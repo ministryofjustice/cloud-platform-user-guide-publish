@@ -177,6 +177,11 @@ docker push 754256621582.dkr.ecr.eu-west-2.amazonaws.com/[team_name]/[repo_name]
 These will work, but in order to deploy the docker images you built in the earlier step, please change this to the full reference to your docker images.</p>
 </blockquote>
 <p>You also need to change the <code>host</code> entry in the <code>ingress.yaml</code> file, so that this instance of the application has a unique hostname (i.e. change <code>multi-container-demo.apps.live.cloud-platform.service.justice.gov.uk</code> to something like <code>[yourname]-demo.apps.live.cloud-platform.service.justice.gov.uk</code>)</p>
+<p>Additionally in the <code>ingress.yaml</code> file, you will need to amend the following line:</p>
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>  - external-dns.alpha.kubernetes.io/set-identifier: &lt;ingress-name&gt;-&lt;namespace-name&gt;-green
+</code></pre></div><p><code>&lt;ingress-name&gt;</code> should be set to the name identifier of your ingress, in this case <code>multi-container-demo</code>.</p>
+<p><code>&lt;namespace-name&gt;</code> should be set to the namespace which you are working within.</p>
+<p><code>green</code> here is the correct value for ingress in EKS <code>live</code> cluster so leave as it is.</p>
 
 <blockquote>
 <p>The cluster will not allow you to deploy an ingress with the same hostname as an existing ingress, so it&rsquo;s important to ensure your hostname is unique.</p>
