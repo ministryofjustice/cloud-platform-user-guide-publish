@@ -122,9 +122,9 @@ associated AWS resources, and helps to keep our hosting costs down.</p>
 deleting the folder:</p>
 <div class="highlight"><pre class="highlight plaintext" tabindex="0"><code> namespaces/live.cloud-platform.service.justice.gov.uk/mynamespace
 </code></pre></div><p>&hellip;and all its contents, from the <a href="https://github.com/ministryofjustice/cloud-platform-environments">cloud-platform-environments</a> repository.</p>
-<p>Merging this <a href="https://help.github.com/en/articles/about-pull-requests">PR</a> will trigger the <a href="https://concourse.cloud-platform.service.justice.gov.uk/teams/main/pipelines/environments-live/jobs/detect-deleted-namespaces">detect-deleted-namespaces Pipeline</a>,
-which will alert cloud-platform team to delete all of your namespace&rsquo;s AWS resources, followed by the
-namespace itself.</p>
+<p>Merging this <a href="https://help.github.com/en/articles/about-pull-requests">PR</a> will trigger the <a href="/documentation/other-topics/apply-pipeline.html">destroy-deleted-namespaces Pipeline</a>,
+which will delete all of your non production (with namespace annotation &ldquo;cloud-platform.justice.gov.uk/is-production = false&rdquo;) namespace&rsquo;s AWS resources, followed by the
+namespace itself, for production namespaces cloud-platform team will get an alert to manually delete the namespace.</p>
 
 <blockquote>
 <p>NB: If you have set up a CI/CD pipeline, which deploys into your namespace,
@@ -133,16 +133,16 @@ immediately recreated by your build pipeline.</p>
 </blockquote>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2022-08-30">
+              <div data-module='page-expiry' data-last-reviewed-on="2022-09-10">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 30 May 2022.
+      This page was last reviewed on 10 June 2022.
 
-        It needs to be reviewed again on 30 August 2022
+        It needs to be reviewed again on 10 September 2022
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 30 August 2022.
+      This page was set to be reviewed before 10 September 2022.
       This might mean the content is out of date.
     </div>
   </div>
