@@ -208,6 +208,12 @@ will create your namespace and push the credentials required to publish the kit 
 <span class="nv">$ </span>git checkout main 
 <span class="nv">$ </span>cloud-platform prototype deploy create
 </code></pre></div><p>This will create the files to build and deploy your prototype kit to the environment you created in step 2 and 3.</p>
+
+<blockquote>
+<p>The deployment files work only on the <strong>latest version</strong> of the prototype kit which we regularly update in the <a href="https://github.com/ministryofjustice/moj-prototype-template">moj-prototype-template</a>. Your deployment
+may break if your prototype kit is not the latest version.</p>
+</blockquote>
+<p>Use the instructions to <a href="https://govuk-prototype-kit.herokuapp.com/docs/updating-the-kit">update your prototype kit</a> to latest version</p>
 <h2 id="5-push-these-files-to-github">5. Push these files to github</h2><div class="highlight"><pre class="highlight shell" tabindex="0"><code><span class="nv">$ </span>git add <span class="nb">.</span>
 <span class="nv">$ </span>git commit <span class="nt">-m</span> <span class="s2">"Add docker build and deployment files"</span>
 <span class="nv">$ </span>git push origin main
