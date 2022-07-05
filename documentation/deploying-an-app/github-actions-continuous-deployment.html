@@ -417,19 +417,63 @@ authenticate to the cluster:</p>
           <span class="s">kubectl -n ${KUBE_NAMESPACE} apply -f kubernetes-deploy.yaml</span>
 </code></pre></div><p>Now if you raise and merge a PR making a change to <code>index.html</code>, you should see
 your GitHub Action run and deploy your changes to the cluster.</p>
-<p>For reference, this is the full <a href="https://gist.github.com/862a8ad93de5f4b4838420437a97f3b2">GitHub Action</a>.</p>
+<p>For reference, your complete GitHub Action <code>cd.yaml</code> should look like below:</p>
+<div class="highlight"><pre class="highlight yaml" tabindex="0"><code><span class="na">name</span><span class="pi">:</span> <span class="s">Continuous Deployment</span>
 
+<span class="na">on</span><span class="pi">:</span>
+  <span class="na">workflow_dispatch</span><span class="pi">:</span>
+  <span class="na">push</span><span class="pi">:</span>
+    <span class="na">branches</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s1">'</span><span class="s">main'</span>
 
-              <div data-module='page-expiry' data-last-reviewed-on="2022-06-24">
+<span class="na">env</span><span class="pi">:</span>
+  <span class="na">KUBE_NAMESPACE</span><span class="pi">:</span> <span class="s">${{ secrets.KUBE_NAMESPACE }}</span>
+
+<span class="na">jobs</span><span class="pi">:</span>
+  <span class="na">main</span><span class="pi">:</span>
+    <span class="na">runs-on</span><span class="pi">:</span> <span class="s">ubuntu-latest</span>
+    <span class="na">steps</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Checkout</span>
+        <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/checkout@v2</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Build</span>
+        <span class="na">run</span><span class="pi">:</span> <span class="s">docker build -t foo .</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Push to ECR</span>
+        <span class="na">id</span><span class="pi">:</span> <span class="s">ecr</span>
+        <span class="na">uses</span><span class="pi">:</span> <span class="s">jwalton/gh-ecr-push@v1</span>
+        <span class="na">with</span><span class="pi">:</span>
+          <span class="na">access-key-id</span><span class="pi">:</span> <span class="s">${{ secrets.ECR_AWS_ACCESS_KEY_ID }}</span>
+          <span class="na">secret-access-key</span><span class="pi">:</span> <span class="s">${{ secrets.ECR_AWS_SECRET_ACCESS_KEY }}</span>
+          <span class="na">region</span><span class="pi">:</span> <span class="s">eu-west-2</span>
+          <span class="na">local-image</span><span class="pi">:</span> <span class="s">foo</span>
+          <span class="na">image</span><span class="pi">:</span> <span class="s">${{ secrets.ECR_NAME }}:${{ github.sha }}</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Update image tag</span>
+        <span class="na">env</span><span class="pi">:</span>
+          <span class="na">ECR_URL</span><span class="pi">:</span> <span class="s">${{ secrets.ECR_URL }}</span>
+        <span class="na">run</span><span class="pi">:</span> <span class="s">export IMAGE_TAG=${{ github.sha }} &amp;&amp; cat kubernetes-deploy.tpl | envsubst &gt; kubernetes-deploy.yaml</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Authenticate to the cluster</span>
+        <span class="na">env</span><span class="pi">:</span>
+          <span class="na">KUBE_CLUSTER</span><span class="pi">:</span> <span class="s">${{ secrets.KUBE_CLUSTER }}</span>
+        <span class="na">run</span><span class="pi">:</span> <span class="pi">|</span>
+          <span class="s">echo "${{ secrets.KUBE_CERT }}" &gt; ca.crt</span>
+          <span class="s">kubectl config set-cluster ${KUBE_CLUSTER} --certificate-authority=./ca.crt --server=https://${KUBE_CLUSTER}</span>
+          <span class="s">kubectl config set-credentials deploy-user --token=${{ secrets.KUBE_TOKEN }}</span>
+          <span class="s">kubectl config set-context ${KUBE_CLUSTER} --cluster=${KUBE_CLUSTER} --user=deploy-user --namespace=${{ secrets.KUBE_NAMESPACE }}</span>
+          <span class="s">kubectl config use-context ${KUBE_CLUSTER}</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Apply the updated manifest</span>
+        <span class="na">run</span><span class="pi">:</span> <span class="pi">|</span>
+          <span class="s">kubectl -n ${KUBE_NAMESPACE} apply -f kubernetes-deploy.yaml</span>
+</code></pre></div>
+
+              <div data-module='page-expiry' data-last-reviewed-on="2022-10-05">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 24 March 2022.
+      This page was last reviewed on 5 July 2022.
 
-        It needs to be reviewed again on 24 June 2022
+        It needs to be reviewed again on 5 October 2022
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 24 June 2022.
+      This page was set to be reviewed before 5 October 2022.
       This might mean the content is out of date.
     </div>
   </div>
