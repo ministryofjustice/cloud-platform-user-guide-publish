@@ -142,7 +142,7 @@
   SecRuleEngine On
 </code></pre></div></blockquote>
 <h3 id="introduction">Introduction</h3><h4 id="what-is-a-web-application-firewall-waf">What is a Web Application Firewall (WAF)?</h4><p>A Web Application Firewall or WAF helps protect web applications by filtering and monitoring HTTP traffic between a web application and the Internet. A WAF is a <a href="https://en.wikipedia.org/wiki/OSI_model">layer 7</a> defense and is one of the most common means of protecting against malicious web application security flaws at the application layer. However, it must be noted that a WAF is not designed and does not protect against all types of attacks.</p>
-<h4 id="modsecurity">ModSecurity</h4><p><a href="http://www.modsecurity.org/about.html">ModSecurity</a> is an open source, cross platform web application firewall (WAF) developed by Trustwave&rsquo;s SpiderLabs. It has a robust event-based programming language which provides protection from a range of attacks against web applications and allows for HTTP traffic monitoring and logging.</p>
+<h4 id="modsecurity">ModSecurity</h4><p><a href="https://github.com/SpiderLabs/ModSecurity">ModSecurity</a> is an open source, cross platform web application firewall (WAF) developed by Trustwave&rsquo;s SpiderLabs. It has a robust event-based programming language which provides protection from a range of attacks against web applications and allows for HTTP traffic monitoring and logging.</p>
 <p>For the Cloud Platform, ModSecurity has been configured as an opt-in feature. New and current applications will require a specific set of annotations to be added to their ingress manifest file.</p>
 <h3 id="ingress-annotations">Ingress Annotations</h3><p>We have a dedicated ingress-controller with ModSecurity enabled separate from the default ingress-controller. 
 To point your application to the ModSec ingress-controller, add the following annotation to your ingress manifest file:</p>
@@ -213,16 +213,16 @@ client: 12.123.1.12, server: test-ingress.url, request: "GET /?exec=/bin/bash HT
 For more information in anomaly scoring, click <a href="https://www.modsecurity.org/CRS/Documentation/anomaly.html#anomaly-scoring-mode">here</a></p>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2022-06-24">
+              <div data-module='page-expiry' data-last-reviewed-on="2022-10-07">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 24 March 2022.
+      This page was last reviewed on 7 July 2022.
 
-        It needs to be reviewed again on 24 June 2022
+        It needs to be reviewed again on 7 October 2022
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 24 June 2022.
+      This page was set to be reviewed before 7 October 2022.
       This might mean the content is out of date.
     </div>
   </div>
