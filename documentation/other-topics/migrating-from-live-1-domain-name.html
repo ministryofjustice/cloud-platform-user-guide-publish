@@ -111,9 +111,6 @@
             <a href="#do-i-need-to-update-my-application-domain"><span>Do I need to update my application domain?</span></a>
           </li>
           <li>
-            <a href="#downtime"><span>Downtime</span></a>
-          </li>
-          <li>
             <a href="#steps-to-follow"><span>Steps to follow</span></a>
           </li>
           <li>
@@ -152,10 +149,14 @@ and or Helm Charts to reflect this change, prior to the removal of the
 <code>*.apps.live-1.cloud-platform.services.justice.gov.uk</code> Route53 hosted zone in the near future.</p>
 <h3 id="do-i-need-to-update-my-application-domain">Do I need to update my application domain?</h3><p>To check whether you have a Cloud Platform hosted application still configured to use the 
 <code>live-1</code> domain, please consult <a href="https://reports.cloud-platform.service.justice.gov.uk/live_1_domains">this page</a>.</p>
-<h3 id="downtime">Downtime</h3><p>Switching your domain over may incur a short period of downtime. If you wish to test
-your new <code>live</code> hostname is working before deleting your <code>live-1</code> hostname,  you can follow 
+<h3 id="steps-to-follow">Steps to follow</h3>
+<blockquote>
+<p><strong>IMPORTANT</strong>: Switching your domain over will incur a short delay due to DNS propogation. We strongly
+advise you to test in non-production environments before making the change on any production environments.</p>
+<p>If you wish to test your new <code>live</code> hostname is resolvable before deleting your <code>live-1</code> hostname,  you can follow 
 <a href="#staged-migration">these steps</a> described further down in this guide.</p>
-<h3 id="steps-to-follow">Steps to follow</h3><p>To view your current domain URL for your given deployment, run the following kubectl command:</p>
+</blockquote>
+<p>To view your current domain URL for your given deployment, run the following kubectl command:</p>
 <p><code>kubectl --namespace &lt;namespace&gt; get ingress</code></p>
 <p>and take note of the URL shown under <code>HOSTS</code>:</p>
 <div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>HOSTS
@@ -321,16 +322,16 @@ for live-1, and run the above apply command again.</p>
 </code></pre></div><h3 id="getting-help">Getting help</h3><p>If you have any questions, please contact us on <a href="https://mojdt.slack.com/messages/C57UPMZLY">#ask-cloud-platform</a> Slack channel.</p>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2022-10-05">
+              <div data-module='page-expiry' data-last-reviewed-on="2022-10-06">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 5 July 2022.
+      This page was last reviewed on 6 July 2022.
 
-        It needs to be reviewed again on 5 October 2022
+        It needs to be reviewed again on 6 October 2022
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 5 October 2022.
+      This page was set to be reviewed before 6 October 2022.
       This might mean the content is out of date.
     </div>
   </div>
