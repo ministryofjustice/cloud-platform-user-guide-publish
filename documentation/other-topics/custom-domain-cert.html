@@ -130,6 +130,10 @@ HTTP endpoints, using a pre-defined domain:</p>
 <p>Most applications will need their own, application-specific <code>gov.uk</code> hostname.
 These hostnames (or usually, entire domains) are managed individually and a
 number of actions are required to set them up.</p>
+
+<blockquote>
+<p>Note: Using pre-defined domain is only recommended for development/staging/uat environments, as this is cluster bound and we will not always be on the live cluster. For any production environments, we strongly recommend using the custom domain, as it will always be the same regardless of what cluster the domain lives on.</p>
+</blockquote>
 <h3 id="setup">Setup</h3><p>Domains are managed inside <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/hosted-zones-working-with.html">DNS zones</a>. You can read more about the structure
 of the Domain Name System in this <a href="https://en.wikipedia.org/wiki/Domain_Name_System#Structure">page</a>. It is
 recommended that applications use their own DNS zones, to provide better
