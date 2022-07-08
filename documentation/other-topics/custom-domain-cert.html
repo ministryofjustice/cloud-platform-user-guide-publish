@@ -185,6 +185,10 @@ the event of any problems with our certificate/DNS systems.</p>
        kind: ClusterIssuer
      dnsNames:
      - &lt;hostname&gt;
+</code></pre></div><h5 id="certificate-character-limit">Certificate character limit</h5><p>The Common Name field in certificates is limited to 64 characters. As a consequence of this restriction, when a host or service has a DNS name longer than 64 characters, that name cannot be used as the CN. Right now, the advised workaround is to include a shorter common name alongside the long dns name. The short name can be your custom domain name.</p>
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>     dnsNames:
+     - short-name.service.justice.gov.uk
+     - this-is-a-long-very-long-long-long-long-long-long-long-long-long-name.service.justice.gov.uk
 </code></pre></div>
 <ol>
 <li>Make sure the certificate has been issued correctly, by checking its <code>Status</code>:</li>
