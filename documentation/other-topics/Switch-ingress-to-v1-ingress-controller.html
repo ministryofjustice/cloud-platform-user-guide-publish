@@ -140,6 +140,14 @@
 <p>These ingress-controllers are running on version <strong>v0.47.0</strong></p>
 <p>Unfortunately, there is a breaking change in the upgrade path of the nginx-ingress-controller to v1.0 and above. This would require all service teams to make changes to all ingress manifests at the same time as the upgrade.</p>
 <p>To avoid this, the Cloud Platform team have released a new set of nginx-ingress-controllers <strong>(v1.2)</strong> alongside the current nginx-ingress-controllers <strong>(v0.47.0)</strong>.</p>
+<p>There are number of benefits to using the new v1.2 ingress controllers:</p>
+
+<ul>
+<li>Security updates (The current controllers are no longer getting security patches. The new versions already have patches for the 3 latest CVEs)</li>
+<li>Introducing support for TLS 1.3 (new feature)</li>
+<li>Retiring support for TLS 1.0 and 1.1 (mitigate security risks, address Service Team ITHC report and to align to NCSC recommendations)</li>
+<li>Prerequisite for Kubernetes 1.22 upgrade</li>
+</ul>
 <p>Service teams using the Cloud Platform are asked to switch to the new releases of the nginx-ingress-controller(v1.2).</p>
 <h3 id="pre-requisite-ingress-api-version">Pre-requisite - Ingress API Version</h3>
 <blockquote>
