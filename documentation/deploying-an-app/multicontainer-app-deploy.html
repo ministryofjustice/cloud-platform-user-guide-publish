@@ -153,7 +153,7 @@
 <div class="highlight"><pre class="highlight plaintext" tabindex="0"><code># rds.tf
 ...
 data {
-  url = postgres://${module.module_name.database_username}:${module.module_name.database_password}@${module.module_name.rds_instance_endpoint}/${module.module_name.database_name}
+  url = "postgres://${module.module_name.database_username}:${module.module_name.database_password}@${module.module_name.rds_instance_endpoint}/${module.module_name.database_name}"
 }
 ...
 </code></pre></div><p>Please ensure that your <code>rds.tf</code> file exports a database <code>url</code> value in this way (changing <code>module_name</code> to match the name you use in your <code>rds.tf</code> file).</p>
@@ -212,16 +212,16 @@ This will run rails database migrations.</p>
 </ul>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2022-08-31">
+              <div data-module='page-expiry' data-last-reviewed-on="2022-10-18">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 31 May 2022.
+      This page was last reviewed on 18 July 2022.
 
-        It needs to be reviewed again on 31 August 2022
+        It needs to be reviewed again on 18 October 2022
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 31 August 2022.
+      This page was set to be reviewed before 18 October 2022.
       This might mean the content is out of date.
     </div>
   </div>

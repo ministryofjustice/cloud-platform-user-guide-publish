@@ -150,7 +150,7 @@
 <h3 id="assumptions">Assumptions</h3><p>To keep this document short we will assume you already have an application up and running in a namespace on the Cloud Platform, if not, please see <a href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/deploying-an-app/multicontainer-app-deploy.html#deploying-a-multi-container-application-to-the-cloud-platform">Deploying a multi-container application to the Cloud Platform</a>.</p>
 <h3 id="changing-the-application-code">Changing the application code</h3><p>We need to add the Prometheus Ruby client library via a gem to give us our <code>/metrics</code> endpoint.</p>
 <p>First, add the gem to your Gemfile and install with bundler.</p>
-<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>gem `prometheus-client`
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>gem 'prometheus-client'
 </code></pre></div><p>Next, we need to amend the <code>config.ru</code> file and include the two <code>rack</code> middlewares required by the <code>prometheus-client</code>.</p>
 <div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>require_relative 'config/environment'
 require 'prometheus/middleware/collector'
@@ -212,16 +212,16 @@ run Rails.application
 <p><a href="https://github.com/prometheus-operator/prometheus-operator/blob/v0.17.0/Documentation/user-guides/running-exporters.md">Example ServiceMonitors</a></p>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2022-08-31">
+              <div data-module='page-expiry' data-last-reviewed-on="2022-10-18">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 31 May 2022.
+      This page was last reviewed on 18 July 2022.
 
-        It needs to be reviewed again on 31 August 2022
+        It needs to be reviewed again on 18 October 2022
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 31 August 2022.
+      This page was set to be reviewed before 18 October 2022.
       This might mean the content is out of date.
     </div>
   </div>
