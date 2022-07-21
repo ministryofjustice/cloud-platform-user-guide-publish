@@ -269,7 +269,7 @@ spec:
 </pre>
 <p>To apply the changes to the ingress, as a quick alternative to running your application&rsquo;s CI/CD pipeline, you can apply them directly:</p>
 <div class="highlight"><pre class="highlight shell" tabindex="0"><code>kubectl <span class="nt">-n</span> &lt;namespace-name&gt; apply <span class="nt">-f</span> ingress-new.yaml
-</code></pre></div><h4 id="verify-traffic-sent-to-the-new-ingress">Verify traffic sent to the new ingress</h4><p>After you have applied new ingress with <code>external-dns.alpha.kubernetes.io/aws-weight</code> value set to &ldquo;100&rdquo;, you can verify traffic is being sent to the new ingress using <a href="https://grafana.live.cloud-platform.service.justice.gov.uk/d/f1e13059dfd23fdcaf479f4fa833f92610c2dfa5/kubernetes-ingress-traffic?orgId=1">grafana</a></p>
+</code></pre></div><h4 id="verify-and-wait-for-traffic-to-be-sent-to-the-new-ingress">Verify and wait for traffic to be sent to the new ingress</h4><p>After you have applied new ingress with <code>external-dns.alpha.kubernetes.io/aws-weight</code> value set to &ldquo;100&rdquo;, wait for couple of minutes for the traffic to be sent to the new ingress, you can verify traffic is being sent to the new ingress using <a href="https://grafana.live.cloud-platform.service.justice.gov.uk/d/f1e13059dfd23fdcaf479f4fa833f92610c2dfa5/kubernetes-ingress-traffic?orgId=1">grafana</a></p>
 <p>Get the &ldquo;hostname&rdquo; used in your ingress for your namespace</p>
 <div class="highlight"><pre class="highlight shell" tabindex="0"><code>  kubectl get ingress &lt;ingress-name&gt; <span class="nt">-n</span> &lt;namespace-name&gt; <span class="nt">-o</span> json | jq <span class="nt">-r</span> <span class="s1">'.spec.rules[].host'</span>
 </code></pre></div><p>Using the &ldquo;hostname&rdquo; from the above command, make a cURL call every 5 seconds to send traffic to your service</p>
@@ -281,16 +281,16 @@ to the cluster.</p>
 <h3 id="getting-help">Getting help</h3><p>If you have any questions, please contact us on <a href="https://mojdt.slack.com/messages/C57UPMZLY">#ask-cloud-platform</a> Slack channel.</p>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2022-10-13">
+              <div data-module='page-expiry' data-last-reviewed-on="2022-10-21">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 13 July 2022.
+      This page was last reviewed on 21 July 2022.
 
-        It needs to be reviewed again on 13 October 2022
+        It needs to be reviewed again on 21 October 2022
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 13 October 2022.
+      This page was set to be reviewed before 21 October 2022.
       This might mean the content is out of date.
     </div>
   </div>
