@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
-    <title>Publish Grafana Dashboard Snapshots - Cloud Platform User Guide</title>
+    <title>Publish a Grafana Dashboard Snapshot - Cloud Platform User Guide</title>
 
     <link href="/stylesheets/manifest.css" rel="stylesheet" />
 
@@ -15,12 +15,12 @@
       <meta name="twitter:card" content="summary" />
       <meta name="twitter:domain" content="user-guide.cloud-platform.service.justice.gov.uk" />
       <meta name="twitter:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
-      <meta name="twitter:title" content="Publish Grafana Dashboard Snapshots - Cloud Platform User Guide" />
+      <meta name="twitter:title" content="Publish a Grafana Dashboard Snapshot - Cloud Platform User Guide" />
       <meta name="twitter:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/grafana-snapshots.html" />
 
       <meta property="og:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
       <meta property="og:site_name" content="Cloud Platform User Guide" />
-      <meta property="og:title" content="Publish Grafana Dashboard Snapshots" />
+      <meta property="og:title" content="Publish a Grafana Dashboard Snapshot" />
       <meta property="og:type" content="object" />
       <meta property="og:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/grafana-snapshots.html" />
 
@@ -100,13 +100,15 @@
               <nav id="toc" class="js-toc-list toc__list" aria-labelledby="toc-heading">
                       <ul>
   <li>
-    <a href="#publish-grafana-dashboard-snapshots"><span>Publish Grafana Dashboard Snapshots</span></a>
+    <a href="#publish-a-grafana-dashboard-snapshot"><span>Publish a Grafana Dashboard Snapshot</span></a>
     <ul>
       <li>
-        <a href="#introduction"><span>Introduction</span></a>
         <ul>
           <li>
-            <a href="#publish-a-snapshots"><span>Publish a Snapshots</span></a>
+            <a href="#introduction"><span>Introduction</span></a>
+          </li>
+          <li>
+            <a href="#publish-a-snapshot"><span>Publish a Snapshot</span></a>
           </li>
         </ul>
       </li>
@@ -121,23 +123,17 @@
 
         <div class="app-pane__content toc-open-disabled">
           <main id="content" class="technical-documentation" data-module="anchored-headings">
-              <h1 id="publish-grafana-dashboard-snapshots">Publish Grafana Dashboard Snapshots</h1><h2 id="introduction">Introduction</h2><p>You can publish a dashboard snapshot to users within and outside of the MOJ organisation.</p>
-<h3 id="publish-a-snapshots">Publish a Snapshots</h3><p>A dashboard snapshot shares an interactive dashboard publicly. Grafana strips sensitive data like queries (metric, template and annotation) and panel links, leaving only the visible metric data and series names embedded into your dashboard. Dashboard snapshots can be accessed by anyone with the link.</p>
+              <h1 id="publish-a-grafana-dashboard-snapshot">Publish a Grafana Dashboard Snapshot</h1><h3 id="introduction">Introduction</h3><p>Cloud Platform users can publish a dashboard snapshot to users within and outside of the MOJ organisation.</p>
+<h3 id="publish-a-snapshot">Publish a Snapshot</h3><p>A dashboard snapshot shares an interactive dashboard publicly. Grafana strips sensitive data like queries (metric, template and annotation) and panel links, leaving only the visible metric data and series names embedded into your dashboard. Dashboard snapshots can be accessed by anyone with the link.</p>
 <p>You can publish snapshots to your local instance or to snapshots.raintank.io. The latter is a free service provided by Grafana Labs that allows you to publish dashboard snapshots to an external Grafana instance. <code>Anyone with the link can view it.</code></p>
 <p>You can set an expiration time if you want the snapshot removed after a certain time period. However, if you select the expire option to &lsquo;Never&rsquo; and later decide you would like to stop sharing, you will need to create a <a href="http://goo.gl/msfGiS">support ticket</a> with the Cloud Platform team to have the snapshot removed from public view.</p>
-<h4 id="steps">Steps:</h4>
-<ul>
-<li>Click the <code>Share dashboard or panel</code> button next to the dashboard name on the dashboard page.</li>
-</ul>
+<h4 id="steps">Steps:</h4><p>1) Click the <code>Share dashboard or panel</code> button next to the dashboard name on the dashboard page.</p>
 <p><a href="/images/grafana-snapshot1.png" rel="noopener noreferrer"><img src="/images/grafana-snapshot1.png" alt="Dashboard share button" /></a></p>
-
-<ul>
-<li>Select the <code>Snapshot</code> option.</li>
-<li>Enter a name for the snapshot.</li>
-<li><p>Select the <code>Expire</code> option.</p>
-<p>Options are Never, 1 hour, 1 day and 7 days.</p></li>
-<li><p>Click the <code>Local Snapshot</code> or <code>Publish to snapshot.raintank.io</code> button to publish.</p></li>
-</ul>
+<p>2) Select the <code>Snapshot</code> option.</p>
+<p>3) Enter a name for the snapshot.</p>
+<p>4) Select the <code>Expire</code> option.</p>
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>Options are Never, 1 hour, 1 day and 7 days.
+</code></pre></div><p>5) Click the <code>Local Snapshot</code> or <code>Publish to snapshot.raintank.io</code> button to publish.</p>
 <p><a href="/images/grafana-snapshot2.png" rel="noopener noreferrer"><img src="/images/grafana-snapshot2.png" alt="Dashboard share page" /></a></p>
 
 
@@ -160,7 +156,7 @@
           <aside>
               <ul class="contribution-banner">
                 <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide/blob/main/source/documentation/other-topics/grafana-snapshots.html.md.erb">View source</a></li>
-                <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide/issues/new?labels=bug&amp;title=Re:%20'Publish%20Grafana%20Dashboard%20Snapshots'&amp;body=Problem%20with%20'Publish%20Grafana%20Dashboard%20Snapshots'%20(https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/grafana-snapshots.html)">Report problem</a></li>
+                <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide/issues/new?labels=bug&amp;title=Re:%20'Publish%20a%20Grafana%20Dashboard%20Snapshot'&amp;body=Problem%20with%20'Publish%20a%20Grafana%20Dashboard%20Snapshot'%20(https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/grafana-snapshots.html)">Report problem</a></li>
                 <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide">GitHub Repo</a></li>
               </ul>
           </aside>
