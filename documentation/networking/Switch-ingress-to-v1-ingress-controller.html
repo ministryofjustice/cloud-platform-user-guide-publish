@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en" class="govuk-template no-js">
+  <head>
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+    <title>Switch ingress to the new nginx-ingress-controller v1.2 - Cloud Platform User Guide</title>
+
+    <link href="/stylesheets/manifest.css" rel="stylesheet" />
+
+    <link rel="canonical" href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/networking/Switch-ingress-to-v1-ingress-controller.html">
+
+      <meta name="robots" content="noindex" />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:domain" content="user-guide.cloud-platform.service.justice.gov.uk" />
+      <meta name="twitter:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
+      <meta name="twitter:title" content="Switch ingress to the new nginx-ingress-controller v1.2 - Cloud Platform User Guide" />
+      <meta name="twitter:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/networking/Switch-ingress-to-v1-ingress-controller.html" />
+
+      <meta property="og:image" content="https://user-guide.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
+      <meta property="og:site_name" content="Cloud Platform User Guide" />
+      <meta property="og:title" content="Switch ingress to the new nginx-ingress-controller v1.2" />
+      <meta property="og:type" content="object" />
+      <meta property="og:url" content="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/networking/Switch-ingress-to-v1-ingress-controller.html" />
+
+    
+  </head>
+
+  <body class="govuk-template__body">
+    <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
+
+    <div class="app-pane">
+      <div class="app-pane__header toc-open-disabled">
+        <a href="#content" class="govuk-skip-link">Skip to main content</a>
+
+        <header class="govuk-header app-header" role="banner" data-module="govuk-header">
+  <div class="govuk-header__container govuk-header__container--full-width">
+    <div class="govuk-header__logo">
+      <a href="/" class="govuk-header__link govuk-header__link--homepage">
+        <span class="govuk-header__product-name">
+          Cloud Platform User Guide
+        </span>
+      </a>
+    </div>
+    <div class="govuk-header__content">
+      <button type="button" class="govuk-header__menu-button govuk-js-header-toggle" aria-controls="navigation" aria-label="Show or hide Top Level Navigation">Menu</button>
+      <nav>
+        <ul id="navigation" class="govuk-header__navigation govuk-header__navigation--end" aria-label="Top Level Navigation">
+            <li class="govuk-header__navigation-item">
+              <a class="govuk-header__link" href="mailto:platforms+user-guide@digital.justice.gov.uk?subject=User+guide+feedback">Feedback / Report a problem</a>
+            </li>
+            <li class="govuk-header__navigation-item">
+              <a class="govuk-header__link" href="/">Documentation</a>
+            </li>
+            <li class="govuk-header__navigation-item">
+              <a class="govuk-header__link" href="https://github.com/ministryofjustice/cloud-platform-user-guide">GitHub</a>
+            </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>
+
+      </div>
+
+        <div id="toc-heading" class="toc-show fixedsticky">
+          <button type="button" class="toc-show__label js-toc-show" aria-controls="toc">
+            Table of contents <span class="toc-show__icon"></span>
+          </button>
+        </div>
+
+      <div class="app-pane__body" data-module="in-page-navigation">
+          <div class="app-pane__toc">
+            <div class="toc" data-module="table-of-contents" tabindex="-1" aria-label="Table of contents" role="dialog">
+              <div class="search" data-module="search">
+  <form action="https://www.google.co.uk/search" method="get" role="search" class="search__form govuk-!-margin-bottom-4">
+    <input type="hidden" name="as_sitesearch" value="https://user-guide.cloud-platform.service.justice.gov.uk"/>
+    <label class="govuk-label search__label" for="search" aria-hidden="true">
+      Search (via Google)
+    </label>
+    <input
+      type="text"
+      id="search" name="q"
+      class="govuk-input govuk-!-margin-bottom-0 search__input"
+      aria-controls="search-results"
+      placeholder="Search">
+    <button type="submit" class="search__button">Search</button>
+  </form>
+  <div id="search-results" class="search-results" aria-hidden="true" role="dialog" aria-labelledby="search-results-title">
+    <div class="search-results__inner">
+      <button class="search-results__close">Close<span class="search-results__close-label"> search results</span></button>
+      <h2 id="search-results-title" class="search-results__title" aria-live="assertive" role="alert">Results</h2>
+      <div class="search-results__content"></div>
+    </div>
+  </div>
+</div>
+
+              <button type="button" class="toc__close js-toc-close" aria-controls="toc" aria-label="Hide table of contents"></button>
+              <nav id="toc" class="js-toc-list toc__list" aria-labelledby="toc-heading">
+                      <ul>
+  <li>
+    <a href="#switch-ingress-to-the-new-nginx-ingress-controller-v1-2"><span>Switch ingress to the new nginx-ingress-controller v1.2</span></a>
+    <ul>
+      <li>
+        <a href="#introduction"><span>Introduction</span></a>
+        <ul>
+          <li>
+            <a href="#pre-requisite-ingress-api-version"><span>Pre-requisite - Ingress API Version</span></a>
+          </li>
+          <li>
+            <a href="#switch-to-the-new-nginx-ingress-controller"><span>Switch to the new nginx-ingress-controller</span></a>
+          </li>
+          <li>
+            <a href="#switch-to-the-new-ingress-controller-with-zero-downtime"><span>Switch to the new ingress controller with zero downtime</span></a>
+          </li>
+          <li>
+            <a href="#getting-help"><span>Getting help</span></a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+
+              </nav>
+            </div>
+          </div>
+
+        <div class="app-pane__content toc-open-disabled">
+          <main id="content" class="technical-documentation" data-module="anchored-headings">
+              <h1 id="switch-ingress-to-the-new-nginx-ingress-controller-v1-2">Switch ingress to the new nginx-ingress-controller v1.2</h1><h2 id="introduction">Introduction</h2><p>An ingress-controller is a specialised load balancer for Kubernetes. The Cloud Platform use the <a href="https://kubernetes.github.io/ingress-nginx/">nginx-ingress-controller</a> to accept traffic from outside the Kubernetes platform and load balance it to pods running in Namespaces.</p>
+<p>Currently all service teams are using 1 of 2 ingress-controllers using one of the following annotations:</p>
+
+<ul>
+<li><code>kubernetes.io/ingress.class: nginx</code>   - This is the default ingress-controller</li>
+<li><code>kubernetes.io/ingress.class: modsec01</code>  - This ingress-controller has the modsec WAF enabled. </li>
+</ul>
+<p>These ingress-controllers are running on version <strong>v0.47.0</strong></p>
+<p>Unfortunately, there is a breaking change in the upgrade path of the nginx-ingress-controller to v1.0 and above. This would require all service teams to make changes to all ingress manifests at the same time as the upgrade.</p>
+<p>To avoid this, the Cloud Platform team have released a new set of nginx-ingress-controllers <strong>(v1.2)</strong> alongside the current nginx-ingress-controllers <strong>(v0.47.0)</strong>.</p>
+<p>There are number of benefits to using the new v1.2 ingress controllers:</p>
+
+<ul>
+<li>Security updates (The current controllers are no longer getting security patches. The new versions already have patches for the 3 latest CVEs)</li>
+<li>Introducing support for TLS 1.3 (new feature)</li>
+<li>Retiring support for TLS 1.0 and 1.1 (mitigate security risks, address Service Team ITHC report and to align to NCSC recommendations)</li>
+<li>Prerequisite for Kubernetes 1.22 upgrade</li>
+</ul>
+<p>Service teams using the Cloud Platform are asked to switch to the new releases of the nginx-ingress-controller(v1.2).</p>
+<h3 id="pre-requisite-ingress-api-version">Pre-requisite - Ingress API Version</h3>
+<blockquote>
+<p>This is a critical change/check all users should complete <strong>before</strong> switching to the new nginx-ingress-controller(v1.2).</p>
+<p>This change is also in preparation for the upgrade of the Cloud-Platform to Kubernetes 1.22 which has deprecated all beta versions of the Ingress API.</p>
+<p>Please follow the <a href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/networking/apiversion-changes-ingress-k8s-1-22.html#removing-deprecated-ingress-apis-for-cloud-platform-kubernetes-v1-22">Deprecated Ingress API</a> document on how to check and if required, change to the stable Ingress API version.</p>
+</blockquote>
+<h3 id="switch-to-the-new-nginx-ingress-controller">Switch to the new nginx-ingress-controller</h3>
+<blockquote>
+<p><strong>IMPORTANT</strong>: There may be downtime of up to 10 minutes while switching to the new ingress controller due to DNS propagation. Please test in non-production environments before making the change on your production applications.</p>
+<p>Alternatively you can follow the steps later in this document to switch to the new nginx-ingress-controller(v1.2) without downtime.</p>
+</blockquote>
+<p>There are 2 releases of the new nginx-ingress-controller(v1.2). They can be selected using the new <code>IngressClassName</code> field:</p>
+
+<ul>
+<li><code>ingressClassName: default</code> - This is the default ingress-controller</li>
+<li><code>ingressClassName: modsec</code>  - This ingress-controller has the modsec WAF enabled. </li>
+</ul>
+<p>To switch to the new nginx-ingress-controller(v1.2):</p>
+
+<ul>
+<li>Remove the <code>kubernetes.io/ingress.class</code> annotation</li>
+<li>Add the <code>ingressClassName</code> field under <code>spec</code> (using the <code>default</code> or <code>modsec</code> value)</li>
+</ul>
+<p>The changes should look like the below:</p>
+
+<pre>
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: helloworld
+  annotations:
+    external-dns.alpha.kubernetes.io/set-identifier: helloworld-mynamespace-green
+    external-dns.alpha.kubernetes.io/aws-weight: "100"
+spec:
+  <b>ingressClassName: default</b> OR <b>modsec</b>
+  tls:
+  - hosts:
+    - helloworld-app.apps.live.cloud-platform.service.justice.gov.uk
+  rules:
+  - host: helloworld-app.apps.live.cloud-platform.service.justice.gov.uk
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: helloworld
+            port:
+              number: 4567
+</pre>
+<h3 id="switch-to-the-new-ingress-controller-with-zero-downtime">Switch to the new ingress controller with zero downtime</h3><p>The following steps describe how to switch ingress controllers without downtime. We <b>strongly</b> recommend teams test these steps on their non-production environments before attempting on production.</p>
+<h4 id="step-1-changes-to-your-current-ingress-resource">Step 1 - Changes to your current ingress resource</h4><p>You must set <code>external-dns.alpha.kubernetes.io/aws-weight</code> value to &ldquo;0&rdquo; for the current ingress. This does not mean traffic will stop, 0 is a valid value for a single ingress.</p>
+
+<pre>
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: helloworld
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    external-dns.alpha.kubernetes.io/set-identifier: helloworld-mynamespace-green
+    <b>external-dns.alpha.kubernetes.io/aws-weight: "0"</b>
+spec:
+  tls:
+  - hosts:
+    - helloworld-app.apps.live.cloud-platform.service.justice.gov.uk
+  rules:
+  - host: helloworld-app.apps.live.cloud-platform.service.justice.gov.uk
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: helloworld
+            port:
+              number: 4567
+</pre>
+<h4 id="step-2-create-a-new-ingress-resource">Step 2 - Create a new ingress resource</h4><p>Create a new Ingress with a different ingress name to the existing one with the following changes:</p>
+
+<ol>
+<li><p>Create a new ingress name different to the existing one:</p>
+<p><code>name: helloworld-new</code></p></li>
+<li><p>Update set-identifier annotation to match with the new ingress name (<code>-green</code> remains the same):</p>
+<p><code>external-dns.alpha.kubernetes.io/set-identifier: helloworld-new-mynamespace-green</code></p></li>
+<li><p>Update aws-weight annotation to &ldquo;100&rdquo;:</p>
+<p><code>external-dns.alpha.kubernetes.io/aws-weight: &quot;100&quot;</code></p></li>
+<li><p>Remove the <code>kubernetes.io/ingress.class</code> annotation.</p></li>
+<li><p>Use the new ingress controller:</p>
+<p>Add <code>ingressClassName</code> under <code>spec</code>, using the value of <code>default</code> or <code>modsec</code></p></li>
+</ol>
+<p>The new manifest after changes will look like:</p>
+
+<pre>
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  <b>name: helloworld-new</b>
+  annotations:
+    <b>external-dns.alpha.kubernetes.io/set-identifier: helloworld-new-mynamespace-green</b>
+    <b>external-dns.alpha.kubernetes.io/aws-weight: "100"</b>
+spec:
+  <b>ingressClassName: default</b> OR <b>modsec</b>
+  tls:
+  - hosts:
+    - helloworld-app.apps.live.cloud-platform.service.justice.gov.uk
+  rules:
+  - host: helloworld-app.apps.live.cloud-platform.service.justice.gov.uk
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: helloworld
+            port:
+              number: 4567
+</pre>
+<p>To apply the changes to the ingress, as a quick alternative to running your application&rsquo;s CI/CD pipeline, you can apply them directly:</p>
+<div class="highlight"><pre class="highlight shell" tabindex="0"><code>kubectl <span class="nt">-n</span> &lt;namespace-name&gt; apply <span class="nt">-f</span> ingress-new.yaml
+</code></pre></div><h4 id="verify-and-wait-for-traffic-to-be-sent-to-the-new-ingress">Verify and wait for traffic to be sent to the new ingress</h4><p>After you have applied new ingress with <code>external-dns.alpha.kubernetes.io/aws-weight</code> value set to &ldquo;100&rdquo;, wait for couple of minutes for the traffic to be sent to the new ingress, you can verify traffic is being sent to the new ingress using <a href="https://grafana.live.cloud-platform.service.justice.gov.uk/d/f1e13059dfd23fdcaf479f4fa833f92610c2dfa5/kubernetes-ingress-traffic?orgId=1">grafana</a></p>
+<p>Get the &ldquo;hostname&rdquo; used in your ingress for your namespace</p>
+<div class="highlight"><pre class="highlight shell" tabindex="0"><code>  kubectl get ingress &lt;ingress-name&gt; <span class="nt">-n</span> &lt;namespace-name&gt; <span class="nt">-o</span> json | jq <span class="nt">-r</span> <span class="s1">'.spec.rules[].host'</span>
+</code></pre></div><p>Using the &ldquo;hostname&rdquo; from the above command, make a cURL call every 5 seconds to send traffic to your service</p>
+<div class="highlight"><pre class="highlight shell" tabindex="0"><code>  <span class="k">while </span><span class="nb">sleep </span>5<span class="p">;</span> <span class="k">do </span>curl <span class="nt">-I</span> https://&lt;host-name&gt;<span class="p">;</span> <span class="k">done</span>
+</code></pre></div><p>To view your ingress traffic, login to <a href="https://grafana.live.cloud-platform.service.justice.gov.uk/d/f1e13059dfd23fdcaf479f4fa833f92610c2dfa5/kubernetes-ingress-traffic?orgId=1">grafana-live</a>, in <code>Kubernetes-ingress traffic</code> dashboard, select your <code>ingress-name</code> and <code>namespace-name</code> from the drop-down and do a search, you will see traffic for your new ingress.</p>
+<p>Your new ingress is successfully switched to the new ingress controller.</p>
+<h4 id="step-3-cleanup-old-ingress">Step 3 - Cleanup old ingress</h4><p>Once you have successfully switched to the new ingress controller, you can tidy up by deleting the old ingress and updating your CI pipeline/job with new ingress manifest that deploys
+to the cluster.</p>
+<h3 id="getting-help">Getting help</h3><p>If you have any questions, please contact us on <a href="https://mojdt.slack.com/messages/C57UPMZLY">#ask-cloud-platform</a> Slack channel.</p>
+
+
+              <div data-module='page-expiry' data-last-reviewed-on="2022-10-21">
+    <div class='page-expiry--not-expired'>
+      This page was last reviewed on 21 July 2022.
+
+        It needs to be reviewed again on 21 October 2022
+.
+    </div>
+
+    <div class='page-expiry--expired'>
+      This page was set to be reviewed before 21 October 2022.
+      This might mean the content is out of date.
+    </div>
+  </div>
+
+          </main>
+
+          <aside>
+              <ul class="contribution-banner">
+                <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide/blob/main/source/documentation/networking/Switch-ingress-to-v1-ingress-controller.html.md.erb">View source</a></li>
+                <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide/issues/new?labels=bug&amp;title=Re:%20'Switch%20ingress%20to%20the%20new%20nginx-ingress-controller%20v1.2'&amp;body=Problem%20with%20'Switch%20ingress%20to%20the%20new%20nginx-ingress-controller%20v1.2'%20(https://user-guide.cloud-platform.service.justice.gov.uk/documentation/networking/Switch-ingress-to-v1-ingress-controller.html)">Report problem</a></li>
+                <li><a href="https://github.com/ministryofjustice/cloud-platform-user-guide">GitHub Repo</a></li>
+              </ul>
+          </aside>
+
+          <footer class="govuk-footer app-footer" role="contentinfo">
+  <div class="govuk-footer__meta">
+    <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
+
+
+      <svg
+        aria-hidden="true"
+        focusable="false"
+        class="govuk-footer__licence-logo"
+        xmlns="http://www.w3.org/2000/svg"
+        viewbox="0 0 483.2 195.7"
+        height="17"
+        width="41"
+      >
+        <path
+          fill="currentColor"
+          d="M421.5 142.8V.1l-50.7 32.3v161.1h112.4v-50.7zm-122.3-9.6A47.12 47.12 0 0 1 221 97.8c0-26 21.1-47.1 47.1-47.1 16.7 0 31.4 8.7 39.7 21.8l42.7-27.2A97.63 97.63 0 0 0 268.1 0c-36.5 0-68.3 20.1-85.1 49.7A98 98 0 0 0 97.8 0C43.9 0 0 43.9 0 97.8s43.9 97.8 97.8 97.8c36.5 0 68.3-20.1 85.1-49.7a97.76 97.76 0 0 0 149.6 25.4l19.4 22.2h3v-87.8h-80l24.3 27.5zM97.8 145c-26 0-47.1-21.1-47.1-47.1s21.1-47.1 47.1-47.1 47.2 21 47.2 47S123.8 145 97.8 145"
+        />
+      </svg>
+      <span class="govuk-footer__licence-description">
+        All content is available under the
+        <a
+          class="govuk-footer__link"
+          href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+          rel="license"
+        >Open Government Licence v3.0</a>, except where otherwise stated
+      </span>
+    </div>
+    <div class="govuk-footer__meta-item">
+      <a
+        class="govuk-footer__link govuk-footer__copyright-logo"
+        href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/"
+      >© Crown copyright</a>
+    </div>
+  </div>
+</footer>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <script src="/javascripts/application.js"></script>
+  </body>
+</html>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-138188246-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-138188246-1');
+</script>
+
+<script>
+  // Add the current window.location to the body of the
+  // feedback email message.
+  function sendFeedback(mailto, event) {
+    event.preventDefault();
+
+    var body = "Feedback/Problem on page: " + window.location + "\n";
+    var href = mailto + '&body=' + encodeURIComponent(body);
+
+    window.location = href;
+  }
+
+  $(document).ready(function() {
+    var feedbackLink = $('a[href^="mailto:"]:contains("Feedback")')[0];
+    var mailto = feedbackLink.href;
+    $(feedbackLink).on('click', function(event) { sendFeedback(mailto, event); });
+  });
+</script>
