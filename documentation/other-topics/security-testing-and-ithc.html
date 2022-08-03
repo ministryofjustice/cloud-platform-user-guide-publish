@@ -137,7 +137,7 @@
 <li><a href="https://docs.google.com/spreadsheets/d/1MX9aS7uKaNA2v8M_LK3VL3Ebe8vvlU4Zk_giJmFBpF4/edit#gid=0">ITHC scoping for service teams vs Cloud Platform</a></li>
 </ul>
 <p>This spreadsheet is a work in progress and we invite questions and suggestions to improve it.</p>
-<h2 id="notifiable-testing">Notifiable testing</h2><p>AWS require you to contact them if you do security testing on AWS services outside a small <a href="https://aws.amazon.com/security/penetration-testing/#Permitted_Services">Permitted Services</a> list. This list covers Cloud Platform&rsquo;s Kubernetes cluster and RDS, for example. But other services like ElastiCache or ECR <strong>do</strong> require notifying AWS, if they are involved in your security test. In this case, please get in touch with the Cloud Platform team to coordinate with contacting AWS.</p>
+<h2 id="notifiable-testing">Notifiable testing</h2><p>AWS require you to contact them if you do security testing on AWS services outside a small <a href="https://aws.amazon.com/security/penetration-testing/#Permitted_Services">Permitted Services</a> list. This list covers Cloud Platform&rsquo;s Kubernetes cluster nodes (but not the EKS API endpoint) and RDS, for example. But other services like ElastiCache or ECR <strong>do</strong> require notifying AWS, if they are involved in your security test. In this case, please get in touch with the Cloud Platform team to coordinate with contacting AWS.</p>
 <h2 id="load-stress-testing">Load / stress testing</h2><p>A test that sends a sustained high volume of traffic to your service may become an issue for the Platform&rsquo;s ingress controllers, and degrade connectivity to other Cloud Platform tenants. Please coordinate with the Cloud Platform when planning these tests.</p>
 <p>In addition, please note the <a href="https://aws.amazon.com/ec2/testing/">Amazon EC2 testing policy</a> that forbids network stress testing / load testing, where the traffic is:</p>
 
@@ -155,16 +155,16 @@
 <p>See also the limitations on <a href="#load-stress-testing">load / stress testing</a></p>
 
 
-              <div data-module='page-expiry' data-last-reviewed-on="2022-10-29">
+              <div data-module='page-expiry' data-last-reviewed-on="2022-11-02">
     <div class='page-expiry--not-expired'>
-      This page was last reviewed on 29 July 2022.
+      This page was last reviewed on 2 August 2022.
 
-        It needs to be reviewed again on 29 October 2022
+        It needs to be reviewed again on 2 November 2022
 .
     </div>
 
     <div class='page-expiry--expired'>
-      This page was set to be reviewed before 29 October 2022.
+      This page was set to be reviewed before 2 November 2022.
       This might mean the content is out of date.
     </div>
   </div>
